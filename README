@@ -1,4 +1,8 @@
-Pragma is a programming language I decided to build to make systems development easier.  It uses very verbose, Java-like syntax but with more clarity and completeness.
+Pragma is a programming language and operating system.  The below explains the language, then after details the OS.
+Currently both in testing as of this writing, with the OS far behind the language.
+
+LANGUAGE:
+- Uses intuitive, Java-like syntax but with more clarity and completeness.
 - Transpiles to C
 - Repository includes the following tools:
 -- flags for quick AOT sanitzation through A/T/UBSan, CBMC, simple custom array out-of-bounds checker
@@ -15,9 +19,11 @@ How?
 Blockchain technology
 
 Hashes your source file with SHA-256 — that hash is the code's permanent identity.  When you run the verification pipeline, every tool's full output is collected, hashed, 
-and bundled into JSON alongside the source hash and tool versions.  This is hosted on Pinata, which right now gives you 1 GB of space on the free tier.
-Whenever someone requests the hash through IPFS, it checks and finds that hosting node and downloads it.  
+and bundled into JSON alongside the source hash and tool versions.  The output is a CID officially, but it is ultimately the hash.
+The hash is hosted on Pinata, which right now gives you 1 GB of space on the free tier.
+Whenever someone requests the original timestamped hash through IPFS, it checks and finds the Pinata hosting node and downloads it.
 It'll look something like this:
+
   "tool_results": [
     { "tool": "cbmc",     "version": "5.95.1", "passed": true,
   "output_hash": "a3f..." },
@@ -28,5 +34,38 @@ It'll look something like this:
   ]
 
 To verify any piece of code: hash the file yourself with sha256sum file.c, look up that hash in the on-chain registry, fetch the attestation from IPFS using the stored CID, and
-optionally re-run CBMC and the sanitizers yourself if they used those.  You'll get byte-for-byte identical results. No trust required at any step. Same safety as Rust, less headache.
+optionally re-run CBMC and the sanitizers yourself if they used those.  You'll get byte-for-byte identical results.
+No trust required, same safety as Rust with the option to not fight the compiler over it if you want to.
+
 Basically the LLM's have made it where the mathematical part is now doable for everyday people - everything else was already there.  
+
+OPERATING SYSTEM
+
+Running ML workloads for my last project, I learned about quantization, formatting/prepping data for the tensor cores, but overall still ran pretty slow on long production runs.
+So I started looking into other ways to speed things up, found I couldn't 100% pin threads to cores (although you can get pretty much all the way there), and that led me into 
+researching lightweight operating systems.  As I learned more about context switches, driver bloat, and other non-configurable settings, I found exokernels, unikernels, and microkernels.
+From there it kept snowballing and then I ran into FaaS where they spin up instances on-demand at CDN PoP's.  I found that the kernel space is heating up a bit, and learned about quite a
+few very interesting and unique kernel designs from ongoing Linux kernel discussions and non-Windows/Linux kernels (single address space, MINIX with far less driver risk, another repo building
+an OS in Nim, etc).  This is a work in progress and as of the time of this writing, I have a virtual FS, disk FS interface (e.g. init the FS objects through traversal), shell with output and a couple FS commands, and a couple drivers. 
+I'm stepping back to work on design more before plunging further.  I tried to write it in Nim because I honestly didn't want to use C despite that being blasphemous.  The more I used Nim,
+the more I didn't like it.  So I stepped back once more and got a programming language that's easier on my eyes and probably a lot of others not as familiar with C.  
+
+GOALS:
+- lightweight (maybe double digit MB) 
+- push a ton of config into userspace
+- allow config at hardware level (think Dasharo, coreboot, Linuxboot, etc.)
+- get rid of IO races and other common safety issues via newer methods (basically legacy code rewritten)
+- make ML workloads and system optimization first-class citizens through both structure and UX features
+- and overall - have fun and learn <- my biggest goal
+
+TARGET USERBASE:
+- self-hosted instances
+- throwing coins into a well for the possibility of a CDN/edge or cloud provider to take interest on very heavy load metal/DC's
+
+One interesting detail: 
+Many are forecasting that natural gas prices will rise substantially in the next couple years as it's believed there won't be enough natural gas to go around and meet all the new DC load from AI demand
+40-70% of DC's operating costs are electricity, so they watch PUE (a power efficiency metric) quite a bit.  They are even building on-site turbines to generate power in some instances.
+Less memory used = less power.  Lower RAM surface + customized boot sequence = very fast spin-up for FaaS.
+Safety would probably take a backseat just based off it not being battle tested.  Even heavily-backed Rust OS projects are not seeing quick adoption.  
+
+Feel free to create a pull request to contact me.  This will probably be a long one.  The graveyard of OS projects on GitHub that didn't make it past "fiddle-around" I've found is pretty big.
