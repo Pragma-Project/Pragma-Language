@@ -33,7 +33,7 @@ Basically the LLM's have made it where the mathematical part is now doable for e
 It hashes your source file with SHA-256.  When you run the verification pipeline, every tool's full output is collected, hashed, 
 and bundled into JSON alongside the source hash and tool versions.  The output is a CID officially, but it is ultimately the hash.
 The hash is hosted on Pinata, which right now gives you 1 GB of space on the free tier.  The glue is Solidity, a type of smart contract on Ethereum.
-Pinata sits on the peer-to-peer IPFS network, which basically is just a bunch peer network of hashes.  Whenever someone requests the original timestamped 
+Pinata sits on the IPFS network, which is just a P2P network of hashes.  Whenever someone requests the original timestamped 
 hash through IPFS, it checks and finds the hosting node and downloads it.  It'll look something like this:
 
   "tool_results": [
