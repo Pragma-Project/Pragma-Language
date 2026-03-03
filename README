@@ -52,13 +52,13 @@ No trust required, same safety as Rust with the option to not fight the compiler
 
 I made two modes of signed code: MemResistant and MemProof.  The former has a lot of tools perform static analysis (listed at top), while the latter does that and formally proves safety mathematically.
 So you get 3 options: unsigned, signed as confidence in safety, signed as proven safe.  Gives you the ability to at least in many cases have some confidence that someone didn't bound a buffer somewhere,
-to formally proven using essentially the same math that Rust uses.  
+to formally proven using the same math that Rust uses.  
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 OPERATING SYSTEM
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Running ML workloads for my last project, I learned about quantization, formatting/prepping data for the tensor cores, but overall still ran pretty slow on long production runs.
+Running ML workloads for my last project, I learned about quantization, formatting/prepping data for the tensor cores, but overall still had pretty high runtimes on long runs.
 So I started looking into other ways to speed things up, found I couldn't 100% pin threads to cores (although you can get pretty much all the way there), and that led me into 
 researching lightweight operating systems.  As I learned more about context switches, driver bloat, and other non-configurable settings, I found exokernels, unikernels, and microkernels.
 From there it kept snowballing and then I ran into FaaS where they spin up instances on-demand at CDN PoP's.  I found that the kernel space is heating up a bit, and learned about quite a
@@ -85,4 +85,4 @@ Many are forecasting that natural gas prices will rise substantially in the next
 Less memory used = less power.  Lower RAM surface + customized boot sequence = very fast spin-up for FaaS.
 Safety would probably take a backseat just based off it not being battle tested.  Even heavily-backed Rust OS projects are not seeing quick adoption.  
 
-Feel free to create a pull request to contact me.  This will probably be a long one.  The graveyard of OS projects on GitHub that didn't make it past "fiddle-around" I've found is pretty big.
+Feel free to create a pull request or discussion thread to contact me.  This will probably be a long one.  The graveyard of OS projects on GitHub that didn't make it past "fiddle-around" I've found is pretty big.
