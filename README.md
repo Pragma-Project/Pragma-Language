@@ -1,6 +1,4 @@
-#Pragma is a project encompassing a programming language, hardware optimization algorithm, and operating system written in #the language.
-#The below explains the language.  Currently in testing as of this writing, with the OS far behind the language.
-#To read more about the Pragma project, go here: 
+Pragma is a project encompassing a programming language, hardware optimization algorithm, and operating system written in the language. The below explains the language.  Currently in testing as of this writing, with the OS far behind the language.  To read more about the Pragma project, go here: 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 LANGUAGE
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
