@@ -342,7 +342,7 @@ println!(<span class="str">"{}"</span>, arr[<span class="num">7</span>]);
 
 <div class="note">
   <strong>Pragma catches this earlier than Rust.</strong>
-  Rust's bounds check is a runtime panic. Pragma's WP proof rejects it before the program compiles. There is no binary to ship. No test run needed.
+  Rust's bounds check is a runtime panic. Pragma's WP proof rejects it before the program compiles. There is no binary to ship and no test run needed.
 </div>
 
 <h3>Use-after-free</h3>
@@ -386,7 +386,7 @@ println!(<span class="str">"{}"</span>, p);
 
 <h2 id="functional-correctness">A Further Option: Functional Correctness</h2>
 
-<p>Memory safety means your program doesn't corrupt memory. Functional correctness means your program <em>does what it's supposed to do</em>. These are different things. A memory-safe program can still sort a list in the wrong order, return the wrong value, or silently drop data. No crash. Just wrong.</p>
+<p>Memory safety means your program doesn't corrupt memory. Functional correctness means your program <em>does what it's supposed to do</em>. These are different things. A memory-safe program can still sort a list in the wrong order, return the wrong value, or silently drop data. There's no crash, but it's wrong.</p>
 
 <p>This is where Pragma goes further than Rust. Rust's type system can prove a function won't crash. It <strong>cannot prove the function returns the right answer</strong>. In contrast, Pragma can do this. You write a contract stating what the function promises, and the verifier proves every line of code upholds that promise for every possible input — <em>not by testing, by proof</em>.</p>
 
@@ -545,7 +545,7 @@ println!(<span class="str">"{}"</span>, p);
 
 <p>To verify a piece of Pragma code you received, you just run MemProof and it compiles, takes the hash of what you just compiled, and compares it to what is recorded on-chain. If they match, it says so and you know you are looking at the exact code that was formally proven — byte for byte, character for character. If they don't, it tells you and you know the code has been modified since it was certified.</p>
 
-<p>You don't need to trust a developer, a registry, or a central authority. The math and the blockchain do it all for you.</p>
+<p>You don't need to trust a developer, a registry, or a central authority. Instead, the math and the blockchain do it all for you.</p>
 
 <div class="note">
   <strong>MemResistant runs are recorded too.</strong>
