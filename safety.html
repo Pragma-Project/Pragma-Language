@@ -118,7 +118,7 @@ pre code { background: none; color: inherit; padding: 0; }
 .ty  { color: #89dceb; }
 .str { color: #a6e3a1; }
 .num { color: #fab387; }
-.cm  { color: #585b70; font-style: italic; }
+.cm  { color: #ffffff; font-style: italic; }
 .op  { color: #89b4fa; }
 .fn  { color: #f9e2af; }
 .ann { color: #f38ba8; }
@@ -282,10 +282,10 @@ td:first-child { color: #5c2d91; font-family: 'Share Tech Mono', monospace; font
 
 <div class="hero">
   <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap;">
-    <div class="hero-headline" style="flex:1;">Even more than Rust safety — without Rust ergonomics.</div>
+    <div class="hero-headline" style="flex:1;">Formal verification, memory safety, and digital signing — built in from day one.</div>
     <a href="#how-it-works" style="flex-shrink:0; background:rgba(203,166,247,0.18); border:1px solid #cba6f7; color:#cba6f7; text-decoration:none; padding:8px 20px; border-radius:4px; font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:0.1em; white-space:nowrap; align-self:center; transition:background 0.15s;" onmouseover="this.style.background='rgba(203,166,247,0.35)'" onmouseout="this.style.background='rgba(203,166,247,0.18)'">See How ↓</a>
   </div>
-  <p class="hero-sub" style="margin-top:12px;">Faster builds. Mathematically proven memory safety. Functional correctness — the kind Rust can't do. Every proof is digitally signed and publicly verifiable on a blockchain.</p>
+  <p class="hero-sub" style="margin-top:12px;">Faster builds. Mathematically proven memory safety. Functional correctness. Every proof is digitally signed and publicly verifiable on a blockchain. None of this is new — the difference is it's all bundled in from the start, not bolted on after.</p>
 </div>
 
 <p style="font-family:'Share Tech Mono',monospace; font-size:17px; font-weight:bold; letter-spacing:0.15em; text-transform:uppercase; color:#585b70; margin-bottom:8px;">Jump To</p>
@@ -341,8 +341,8 @@ println!(<span class="str">"{}"</span>, arr[<span class="num">7</span>]);
 </div>
 
 <div class="note">
-  <strong>Pragma catches this earlier than Rust.</strong>
-  Rust's bounds check is a runtime panic. Pragma's WP proof rejects it before the program compiles. There is no binary to ship and no test run needed.
+  <strong>Pragma catches this at compile time.</strong>
+  The WP proof rejects it before the program compiles. There is no binary to ship and no test run needed.
 </div>
 
 <h3>Use-after-free</h3>
@@ -388,7 +388,7 @@ println!(<span class="str">"{}"</span>, p);
 
 <p>Memory safety means your program doesn't corrupt memory. Functional correctness means your program <em>does what it's supposed to do</em>. These are different things. A memory-safe program can still sort a list in the wrong order, return the wrong value, or silently drop data. There's no crash, but it's wrong.</p>
 
-<p>This is where Pragma goes further than Rust. Rust's type system can prove a function won't crash. It <strong>cannot prove the function returns the right answer</strong>. In contrast, Pragma can do this. You write a contract stating what the function promises, and the verifier proves every line of code upholds that promise for every possible input — <em>not by testing, by proof</em>.</p>
+<p>Rust's type system can prove a function won't crash, but it cannot prove the function returns the right answer. Tools like Prusti and Verus can do this for Rust — Pragma can do it too. You write a contract stating what the function promises, and the verifier proves every line of code upholds that promise for every possible input — <em>not by testing, by proof</em>. The difference is that in Pragma the toolchain is already there. Nothing extra to install or configure.</p>
 
 <h3>The bug that looks correct</h3>
 
@@ -436,7 +436,7 @@ println!(<span class="str">"{}"</span>, p);
   </div>
 </div>
 
-<p>The contract is three lines. It fully specifies what <code>clamp</code> must do. The verifier doesn't need to know where the bug is — it tries to prove the contract holds and fails. The developer finds the bug before a binary exists. <strong>This is all optional.</strong> They're features if you want them, but not features you have to use — unlike Rust's memory safety.</p>
+<p>The contract is three lines. It fully specifies what <code>clamp</code> must do. The verifier doesn't need to know where the bug is — it tries to prove the contract holds and fails. The developer finds the bug before a binary exists. <strong>This is all optional.</strong> They're features if you want them, but not features you have to use.</p>
 
 <h3>What you can put in a contract</h3>
 
