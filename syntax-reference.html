@@ -368,6 +368,9 @@ hr { border: none; margin: 48px 0; }
   <div class="nav-section">I/O &amp; Errors</div>
   <a href="#print">Print</a>
   <a href="#try-catch">Try / Catch</a>
+
+  <div class="nav-section">Reference</div>
+  <a href="#coming-from-c">Coming from C</a>
 </nav>
 
 <!-- ══════════════════════════════════════════
@@ -410,7 +413,7 @@ hr { border: none; margin: 48px 0; }
 <p class="subtitle">Standard Pragma. Source files use the <code>.run</code> extension. For lower level programming with memory management, pointers, and bitwise operations, click <strong>Base</strong> on the left.</p>
 
 <h2 id="overview" class="anchor-target">Overview</h2>
-<p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be readable to anyone who has written code in any modern language. The guiding rule: <em>common operations use familiar lowercase syntax; anything that touches memory directly uses angle brackets <code>&lt; &gt;</code> as a visual signal.</em> If you see <code>&lt; &gt;</code> in Base Pragma code, you are operating at the memory level.</p>
+<p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be readable to anyone who has written code in any modern language. The guiding rule: <em>common operations use familiar lowercase syntax; anything that touches memory directly uses angle brackets <code>&lt; &gt;</code> as a visual signal.</em></p>
 <p>Every program has at least a <code>main</code> function. Functions, objects, and constants are declared at file scope above it.</p>
 
 <hr>
@@ -725,6 +728,53 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player(<span clas
   <span class="kw">print</span> <span class="str">"runtime error"</span>
 <span class="kw">end catch</span>
 <span class="kw">end try</span></pre>
+
+
+<hr>
+
+<h2 id="coming-from-c" class="anchor-target">Coming from C</h2>
+<p>Pragma is designed to be readable and explicit. If you know C, most of the language maps directly — the main differences are in syntax and naming.</p>
+
+<h3>Syntax structure</h3>
+<table>
+  <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
+  <tr><td><code>{ }</code> blocks</td><td><code>end keyword</code></td><td>Every block closes with <code>end if</code>, <code>end function</code>, <code>end object</code>, etc.</td></tr>
+  <tr><td>Semicolons <code>;</code></td><td>Newlines</td><td>No semicolons. One statement per line.</td></tr>
+  <tr><td><code>// comment</code></td><td><code># comment</code></td><td>Line comments only at this level.</td></tr>
+  <tr><td><code>(int)x</code></td><td><code>int(x)</code></td><td>Explicit cast. Works for <code>float</code>, <code>string</code>, <code>bool</code> too.</td></tr>
+</table>
+
+<h3>Keywords</h3>
+<table>
+  <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
+  <tr><td><code>struct { ... }</code></td><td><code>object ... end object</code></td><td>Same concept. Pragma objects can also have methods, inheritance, and interfaces — but plain field declarations compile identically to a C struct.</td></tr>
+  <tr><td><code>enum { A=1 }</code></td><td><code>mandate ... end mandate</code></td><td>Access members as <code>MandateName_member</code></td></tr>
+  <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed and scoped — no preprocessor macro</td></tr>
+  <tr><td><code>NULL</code></td><td><code>EMPTY</code></td><td>Null literal</td></tr>
+  <tr><td><code>printf(...)</code></td><td><code>print x</code></td><td>Use <code>string(x)</code> to convert a value before printing or concatenating</td></tr>
+  <tr><td><code>break</code></td><td><code>escape</code></td><td>Exit a loop</td></tr>
+  <tr><td><code>continue</code></td><td><code>skip</code></td><td>Skip to next iteration</td></tr>
+</table>
+
+<h3>Operators</h3>
+<table>
+  <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
+  <tr><td><code>&amp;&amp;</code></td><td><code>and</code></td><td>Logical AND</td></tr>
+  <tr><td><code>||</code></td><td><code>or</code></td><td>Logical OR</td></tr>
+  <tr><td><code>!</code></td><td><code>not</code></td><td>Logical NOT</td></tr>
+  <tr><td><code>==</code></td><td><code>matches</code></td><td>Equality</td></tr>
+  <tr><td><code>!=</code></td><td><code>not matches</code></td><td>Inequality</td></tr>
+</table>
+
+<h3>Switch / match</h3>
+<table>
+  <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
+  <tr><td><code>switch</code> (falls through)</td><td><code>switch</code></td><td>Identical fall-through behaviour</td></tr>
+  <tr><td>—</td><td><code>match</code></td><td>No fall-through. Stops at first match. Use this by default.</td></tr>
+</table>
+
+<h3>Strings</h3>
+<p><code>string</code> is a first-class type in Pragma. There is no <code>char*</code> or null-terminated array at this level — the runtime handles it. Use <code>string(x)</code> to convert any value to a string.</p>
 
 </div><!-- /content-standard -->
 
