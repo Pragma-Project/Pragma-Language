@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------
 # PRAGMA LANGUAGE
-
+[This Web Page is more up-to-date than this Readme file](https://pragma-project.github.io/Pragma-Language/syntax-reference.html)
 -------------------------------------------------------------------------------------
 Transpiles to C, uses intuitive, Java-like syntax but with more clarity and completeness
 
