@@ -47,15 +47,27 @@ body.theme-default {
   background: #fafaf8;
 }
 
-body.theme-default #mode-toggle-top,
-body.theme-default .nav-toggle-btn {
+body.theme-default #mode-toggle-top {
   background: #1e1e2e;
   color: #cba6f7;
   border: 1px solid #313244;
 }
-body.theme-default #mode-toggle-top:hover,
-body.theme-default .nav-toggle-btn:hover {
+body.theme-default #mode-toggle-top:hover {
   background: #313244;
+}
+body.theme-default .tab-btn {
+  background: transparent;
+  color: #585b70;
+  border: 1px solid #313244;
+}
+body.theme-default .tab-btn:hover {
+  background: #313244;
+  color: #a6adc8;
+}
+body.theme-default .tab-btn.tab-active {
+  background: #5c2d91;
+  color: #fff;
+  border-color: #5c2d91;
 }
 
 body.theme-default nav {
@@ -109,17 +121,30 @@ body.theme-base {
   background: #000;
 }
 
-body.theme-base #mode-toggle-top,
-body.theme-base .nav-toggle-btn {
+body.theme-base #mode-toggle-top {
   background: #000;
   color: #e0e0e0;
   border: 1px solid #555;
   font-family: 'Share Tech Mono', monospace;
 }
-body.theme-base #mode-toggle-top:hover,
-body.theme-base .nav-toggle-btn:hover {
+body.theme-base #mode-toggle-top:hover {
   background: #111;
   border-color: #aaa;
+}
+body.theme-base .tab-btn {
+  background: transparent;
+  color: #555;
+  border: 1px solid #2a2a2a;
+  font-family: 'Share Tech Mono', monospace;
+}
+body.theme-base .tab-btn:hover {
+  background: #111;
+  color: #aaa;
+}
+body.theme-base .tab-btn.tab-active {
+  background: #2a2a2a;
+  color: #fff;
+  border-color: #666;
 }
 
 body.theme-base nav {
@@ -202,18 +227,22 @@ nav {
   margin-bottom: 4px;
 }
 
-.nav-toggle-btn {
-  display: block;
-  width: calc(100% - 40px);
+.mode-tabs {
+  display: flex;
   margin: 0 20px 16px;
-  padding: 6px 10px;
+  gap: 6px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 5px 0;
   font-size: 12px;
   font-family: 'Share Tech Mono', 'Courier New', monospace;
   cursor: pointer;
   border-radius: 3px;
   letter-spacing: 0.04em;
   text-align: center;
-  transition: all 0.2s;
+  transition: all 0.15s;
   border-width: 1px;
   border-style: solid;
 }
@@ -294,14 +323,17 @@ hr { border: none; margin: 48px 0; }
 </head>
 <body class="theme-default">
 
-<button id="mode-toggle-top" onclick="toggleMode()">⚙ Base Pragma</button>
+<button id="mode-toggle-top" onclick="toggleMode()">Standard Pragma</button>
 
 <!-- ══════════════════════════════════════════
      SIDEBAR — STANDARD
 ══════════════════════════════════════════ -->
 <nav id="nav-standard">
   <div class="nav-title">Pragma</div>
-  <button class="nav-toggle-btn" onclick="toggleMode()">⚙ Base Pragma</button>
+  <div class="mode-tabs">
+    <button class="tab-btn tab-active" data-mode="standard" onclick="setMode('standard')">Standard</button>
+    <button class="tab-btn" data-mode="base" onclick="setMode('base')">Base</button>
+  </div>
 
   <div class="nav-section">Basics</div>
   <a href="#overview">Overview</a>
@@ -343,7 +375,10 @@ hr { border: none; margin: 48px 0; }
 ══════════════════════════════════════════ -->
 <nav id="nav-base" style="display:none">
   <div class="nav-title">Base Pragma</div>
-  <button class="nav-toggle-btn" onclick="toggleMode()">◈ Standard</button>
+  <div class="mode-tabs">
+    <button class="tab-btn" data-mode="standard" onclick="setMode('standard')">Standard</button>
+    <button class="tab-btn tab-active" data-mode="base" onclick="setMode('base')">Base</button>
+  </div>
 
   <div class="nav-section">Memory</div>
   <a href="#base-pointers">Pointers</a>
@@ -919,29 +954,37 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 </main>
 
 <script>
-function toggleMode() {
-  var body      = document.body;
-  var btnTop    = document.getElementById('mode-toggle-top');
-  var stdC      = document.getElementById('content-standard');
-  var baseC     = document.getElementById('content-base');
-  var navStd    = document.getElementById('nav-standard');
-  var navBase   = document.getElementById('nav-base');
+function setMode(mode) {
+  var body    = document.body;
+  var btnTop  = document.getElementById('mode-toggle-top');
+  var stdC    = document.getElementById('content-standard');
+  var baseC   = document.getElementById('content-base');
+  var navStd  = document.getElementById('nav-standard');
+  var navBase = document.getElementById('nav-base');
 
-  if (body.classList.contains('theme-default')) {
+  if (mode === 'base') {
     body.classList.replace('theme-default', 'theme-base');
-    btnTop.textContent = '◈ Standard Pragma';
-    stdC.style.display  = 'none';
-    baseC.style.display = 'block';
+    btnTop.textContent   = 'Base Pragma';
+    stdC.style.display   = 'none';
+    baseC.style.display  = 'block';
     navStd.style.display = 'none';
     navBase.style.display = 'block';
   } else {
     body.classList.replace('theme-base', 'theme-default');
-    btnTop.textContent = '⚙ Base Pragma';
-    stdC.style.display  = 'block';
-    baseC.style.display = 'none';
+    btnTop.textContent   = 'Standard Pragma';
+    stdC.style.display   = 'block';
+    baseC.style.display  = 'none';
     navStd.style.display = 'block';
     navBase.style.display = 'none';
   }
+
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.classList.toggle('tab-active', btn.dataset.mode === mode);
+  });
+}
+
+function toggleMode() {
+  setMode(document.body.classList.contains('theme-base') ? 'standard' : 'base');
 }
 </script>
 </body>
