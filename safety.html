@@ -243,7 +243,8 @@ td:first-child { color: #5c2d91; font-family: 'Share Tech Mono', monospace; font
 }
 .lang-label {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
+  font-size: 13px;
+  font-weight: bold;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -415,15 +416,15 @@ println!(<span class="str">"{}"</span>, p);
   </div>
   <div>
     <div class="lang-label lang-pragma">Pragma</div>
-    <pre><span class="ann">@requires lo &lt;= hi</span>
-<span class="ann">@ensures  lo &lt;= result and result &lt;= hi</span>
-<span class="ann">@ensures  v &lt; lo  -&gt; result == lo</span>
-<span class="ann">@ensures  v &gt; hi  -&gt; result == hi</span>
+    <pre><span class="ann">@requires</span>
+<span class="ann">  lo &lt;= hi,</span>
+<span class="ann">  lo &lt;= result and result &lt;= hi,</span>
+<span class="ann">  v &lt; lo and result == lo, v &gt; hi and result == hi</span>
+<span class="ann">end requires</span>
 <span class="kw">function</span> <span class="fn">clamp</span>(<span class="ty">int</span> v, <span class="ty">int</span> lo, <span class="ty">int</span> hi) <span class="kw">returns</span> <span class="ty">int</span>
   <span class="kw">if</span> v <span class="op">&lt;</span> lo
     <span class="kw">return</span> lo
-  <span class="kw">end if</span>
-  <span class="kw">if</span> v <span class="op">&gt;</span> hi
+  <span class="kw">else if</span> v <span class="op">&gt;</span> hi
     <span class="kw">return</span> lo  <span class="cm">// bug</span>
   <span class="kw">end if</span>
   <span class="kw">return</span> v
@@ -435,7 +436,7 @@ println!(<span class="str">"{}"</span>, p);
   </div>
 </div>
 
-<p>The contract is four lines. It fully specifies what <code>clamp</code> must do. The verifier doesn't need to know where the bug is — it tries to prove the contract holds and fails. The developer finds the bug before a binary exists.</p>
+<p>The contract is three lines. It fully specifies what <code>clamp</code> must do. The verifier doesn't need to know where the bug is — it tries to prove the contract holds and fails. The developer finds the bug before a binary exists. <strong>This is all optional.</strong> Features if you want them, but not features you have to use — unlike Rust's memory safety.</p>
 
 <h3>What you can put in a contract</h3>
 
@@ -487,12 +488,13 @@ println!(<span class="str">"{}"</span>, p);
 
 <h3>MemResistant — hardened, not proven</h3>
 
-<p>MemResistant doesn't prove. It arms. The binary is built with a full stack of runtime safety detectors that catch unsafe behavior the moment it occurs, aborting with a precise diagnostic instead of silently corrupting memory.</p>
+<p>If you don't want to go through formal proof — you don't have to. MemResistant is the alternative. It doesn't prove. It arms. The binary is built with a full stack of runtime safety detectors that catch unsafe behavior the moment it occurs, aborting with a precise diagnostic instead of silently corrupting memory.</p>
 
 <table>
   <tr><th>Detector</th><th>Catches</th></tr>
   <tr><td>AddressSanitizer (ASan)</td><td>Use-after-free, heap overflow, stack overflow, use-after-return</td></tr>
   <tr><td>UndefinedBehaviorSanitizer (UBSan)</td><td>Signed integer overflow, null pointer dereference, misaligned access, bad shifts</td></tr>
+  <tr><td>ThreadSanitizer (TSan)</td><td>Data races, lock-order violations, and other concurrency bugs</td></tr>
   <tr><td>CBMC</td><td>Bounded model checking — explores all execution paths up to a configurable loop depth</td></tr>
   <tr><td>Bounds checker</td><td>Every array access checked against its declared size at runtime</td></tr>
 </table>
@@ -558,7 +560,7 @@ pragma verify  program.run</pre>
 
 <div class="warn">
   <strong><code>pragma certify</code> and <code>pragma verify</code> are in development.</strong>
-  The pipeline is designed. The tooling is coming.
+  The pipeline is designed and the tooling is being built.
 </div>
 
 </main>
