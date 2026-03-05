@@ -4,234 +4,331 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pragma Language Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    font-family: 'Georgia', serif;
-    font-size: 16px;
-    line-height: 1.7;
-    color: #1a1a1a;
-    background: #fafaf8;
-    display: flex;
-    min-height: 100vh;
-  }
+/* ════════════════════════════════════════════════════
+   BASE RESET
+════════════════════════════════════════════════════ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ── Sidebar ── */
-  nav {
-    position: fixed;
-    top: 0; left: 0;
-    width: 230px;
-    height: 100vh;
-    overflow-y: auto;
-    background: #1e1e2e;
-    color: #cdd6f4;
-    padding: 24px 0 40px;
-    border-right: 1px solid #313244;
-    z-index: 100;
-  }
+body {
+  display: flex;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
 
-  nav .nav-title {
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
-    font-weight: bold;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #cba6f7;
-    padding: 0 20px 16px;
-    border-bottom: 1px solid #313244;
-    margin-bottom: 12px;
-  }
+/* ════════════════════════════════════════════════════
+   TOGGLE BUTTON
+════════════════════════════════════════════════════ */
+#mode-toggle {
+  position: fixed;
+  top: 14px;
+  right: 20px;
+  z-index: 300;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  cursor: pointer;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
 
-  nav a {
-    display: block;
-    padding: 5px 20px;
-    color: #a6adc8;
-    text-decoration: none;
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
-    transition: background 0.15s, color 0.15s;
-    border-left: 3px solid transparent;
-  }
+/* ════════════════════════════════════════════════════
+   ── DEFAULT THEME (dark purple / warm white) ──
+════════════════════════════════════════════════════ */
+body.theme-default {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1a1a1a;
+  background: #fafaf8;
+}
 
-  nav a:hover {
-    background: #313244;
-    color: #cdd6f4;
-    border-left-color: #cba6f7;
-  }
+body.theme-default #mode-toggle {
+  background: #1e1e2e;
+  color: #cba6f7;
+  border: 1px solid #313244;
+}
+body.theme-default #mode-toggle:hover { background: #313244; }
 
-  nav .nav-section {
-    margin-top: 14px;
-    padding: 3px 20px;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #585b70;
-    font-family: sans-serif;
-    font-weight: bold;
-  }
+/* Sidebar */
+body.theme-default nav {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-right: 1px solid #313244;
+}
+body.theme-default nav .nav-title { color: #cba6f7; border-bottom: 1px solid #313244; }
+body.theme-default nav a { color: #a6adc8; border-left: 3px solid transparent; }
+body.theme-default nav a:hover { background: #313244; color: #cdd6f4; border-left-color: #cba6f7; }
+body.theme-default nav .nav-section { color: #585b70; }
 
-  /* ── Main content ── */
-  main {
-    margin-left: 230px;
-    padding: 60px 80px 100px 72px;
-    max-width: 900px;
-    width: 100%;
-  }
+/* Main */
+body.theme-default main h1 { color: #1a1a1a; border-bottom: 2px solid #e0d8f0; }
+body.theme-default main h2 { color: #2d1b69; border-bottom: 1px solid #e0d8f0; }
+body.theme-default main h3 { color: #333; }
+body.theme-default main p { color: #2a2a2a; }
+body.theme-default .subtitle { color: #666; }
 
-  h1 {
-    font-size: 2.2rem;
-    font-weight: normal;
-    color: #1a1a1a;
-    margin-bottom: 8px;
-    border-bottom: 2px solid #e0d8f0;
-    padding-bottom: 14px;
-  }
+body.theme-default pre {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-left: 3px solid #cba6f7;
+}
+body.theme-default code { background: #ede8f5; color: #5c2d91; }
+body.theme-default pre code { background: none; color: inherit; }
 
-  .subtitle {
-    color: #666;
-    font-size: 1rem;
-    margin-bottom: 48px;
-    font-style: italic;
-  }
+body.theme-default .note { background: #f0f4ff; border-left: 4px solid #6c7ef7; }
+body.theme-default .warn { background: #fff8e8; border-left: 4px solid #f5a623; }
 
-  h2 {
-    font-size: 1.55rem;
-    font-weight: normal;
-    color: #2d1b69;
-    margin-top: 64px;
-    margin-bottom: 4px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #e0d8f0;
-    scroll-margin-top: 32px;
-  }
+body.theme-default table th { background: #1e1e2e; color: #cba6f7; }
+body.theme-default table td { border-bottom: 1px solid #eee; }
+body.theme-default table tr:nth-child(even) td { background: #f5f3fb; }
+body.theme-default table td:first-child { color: #5c2d91; }
 
-  h3 {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #333;
-    margin-top: 32px;
-    margin-bottom: 8px;
-    scroll-margin-top: 32px;
-  }
+body.theme-default .kw  { color: #cba6f7; }
+body.theme-default .ty  { color: #89dceb; }
+body.theme-default .str { color: #a6e3a1; }
+body.theme-default .num { color: #fab387; }
+body.theme-default .cm  { color: #585b70; font-style: italic; }
+body.theme-default .cap { color: #f38ba8; }
+body.theme-default hr   { border-top: 1px solid #e8e4f0; }
 
-  p {
-    margin-bottom: 14px;
-    color: #2a2a2a;
-  }
+/* ════════════════════════════════════════════════════
+   ── SYSTEMS THEME (VT-100 terminal) ──
+════════════════════════════════════════════════════ */
+body.theme-systems {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #c8c8c8;
+  background: #000000;
+}
 
-  /* ── Code blocks ── */
-  pre {
-    background: #1e1e2e;
-    color: #cdd6f4;
-    padding: 18px 22px;
-    border-radius: 6px;
-    overflow-x: auto;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    margin: 14px 0 20px;
-    border-left: 3px solid #cba6f7;
-  }
+body.theme-systems #mode-toggle {
+  background: #000;
+  color: #fff;
+  border: 1px solid #555;
+  font-family: 'Share Tech Mono', monospace;
+}
+body.theme-systems #mode-toggle:hover { background: #111; border-color: #aaa; }
 
-  code {
-    background: #ede8f5;
-    color: #5c2d91;
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-  }
+/* Sidebar */
+body.theme-systems nav {
+  background: #000;
+  color: #c8c8c8;
+  border-right: 1px solid #333;
+}
+body.theme-systems nav .nav-title {
+  color: #fff;
+  border-bottom: 1px solid #333;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  letter-spacing: 0.2em;
+}
+body.theme-systems nav a { color: #999; border-left: 3px solid transparent; font-family: 'Share Tech Mono', monospace; }
+body.theme-systems nav a:hover { background: #111; color: #fff; border-left-color: #fff; }
+body.theme-systems nav .nav-section { color: #555; }
 
-  pre code {
-    background: none;
-    color: inherit;
-    padding: 0;
-  }
+/* Main */
+body.theme-systems main h1 {
+  color: #fff;
+  border-bottom: 1px solid #333;
+  font-family: 'VT323', monospace;
+  font-size: 2.4rem;
+  letter-spacing: 0.1em;
+}
+body.theme-systems main h2 {
+  color: #fff;
+  border-bottom: 1px solid #333;
+  font-family: 'VT323', monospace;
+  font-size: 1.8rem;
+  letter-spacing: 0.08em;
+}
+body.theme-systems main h3 { color: #ddd; font-family: 'Share Tech Mono', monospace; }
+body.theme-systems main p { color: #c8c8c8; }
+body.theme-systems .subtitle { color: #888; }
 
-  /* Syntax coloring in pre blocks */
-  .kw  { color: #cba6f7; }   /* keywords */
-  .ty  { color: #89dceb; }   /* types */
-  .str { color: #a6e3a1; }   /* strings */
-  .num { color: #fab387; }   /* numbers */
-  .cm  { color: #585b70; font-style: italic; } /* comments */
-  .op  { color: #89dceb; }   /* operators */
-  .cap { color: #f38ba8; }   /* RAW/caps keywords */
+body.theme-systems pre {
+  background: #0a0a0a;
+  color: #b8b8b8;
+  border-left: 3px solid #555;
+}
+body.theme-systems code { background: #111; color: #e0e0e0; }
+body.theme-systems pre code { background: none; color: inherit; }
 
-  /* ── Notes and callouts ── */
-  .note {
-    background: #f0f4ff;
-    border-left: 4px solid #6c7ef7;
-    padding: 12px 16px;
-    margin: 16px 0;
-    border-radius: 0 4px 4px 0;
-    font-size: 15px;
-  }
+body.theme-systems .note { background: #0a0a0a; border-left: 4px solid #666; }
+body.theme-systems .warn { background: #0d0a00; border-left: 4px solid #888; }
 
-  .warn {
-    background: #fff8e8;
-    border-left: 4px solid #f5a623;
-    padding: 12px 16px;
-    margin: 16px 0;
-    border-radius: 0 4px 4px 0;
-    font-size: 15px;
-  }
+body.theme-systems table th { background: #111; color: #ddd; }
+body.theme-systems table td { border-bottom: 1px solid #222; color: #c8c8c8; }
+body.theme-systems table tr:nth-child(even) td { background: #080808; }
+body.theme-systems table td:first-child { color: #e0e0e0; }
 
-  .warn strong, .note strong {
-    display: block;
-    margin-bottom: 4px;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    opacity: 0.7;
-  }
+body.theme-systems .kw  { color: #ffffff; }
+body.theme-systems .ty  { color: #cccccc; }
+body.theme-systems .str { color: #b0b0b0; }
+body.theme-systems .num { color: #dddddd; }
+body.theme-systems .cm  { color: #666666; }
+body.theme-systems .cap { color: #eeeeee; font-weight: bold; }
+body.theme-systems hr   { border-top: 1px solid #222; }
 
-  /* ── Type table ── */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0 24px;
-    font-size: 15px;
-  }
+/* ════════════════════════════════════════════════════
+   SHARED LAYOUT
+════════════════════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0; left: 0;
+  width: 230px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0 40px;
+  z-index: 100;
+}
 
-  th {
-    text-align: left;
-    padding: 8px 12px;
-    background: #1e1e2e;
-    color: #cba6f7;
-    font-family: 'Courier New', monospace;
-    font-weight: normal;
-    font-size: 13px;
-  }
+nav .nav-title {
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0 20px 16px;
+  margin-bottom: 12px;
+}
 
-  td {
-    padding: 7px 12px;
-    border-bottom: 1px solid #eee;
-    vertical-align: top;
-  }
+nav a {
+  display: block;
+  padding: 5px 20px;
+  text-decoration: none;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  transition: background 0.15s, color 0.15s;
+}
 
-  tr:nth-child(even) td { background: #f5f3fb; }
+nav .nav-section {
+  margin-top: 14px;
+  padding: 3px 20px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  font-weight: bold;
+}
 
-  td:first-child {
-    font-family: 'Courier New', monospace;
-    color: #5c2d91;
-    white-space: nowrap;
-  }
+main {
+  margin-left: 230px;
+  padding: 56px 80px 100px 72px;
+  max-width: 920px;
+  width: 100%;
+}
 
-  /* ── Divider ── */
-  hr {
-    border: none;
-    border-top: 1px solid #e8e4f0;
-    margin: 48px 0;
-  }
+h1 {
+  font-size: 2.2rem;
+  font-weight: normal;
+  margin-bottom: 8px;
+  padding-bottom: 14px;
+}
 
-  .anchor-target { scroll-margin-top: 30px; }
+.subtitle {
+  font-size: 1rem;
+  margin-bottom: 48px;
+  font-style: italic;
+}
+
+h2 {
+  font-size: 1.55rem;
+  font-weight: normal;
+  margin-top: 64px;
+  margin-bottom: 4px;
+  padding-bottom: 6px;
+  scroll-margin-top: 32px;
+}
+
+h3 {
+  font-size: 1.05rem;
+  font-weight: bold;
+  margin-top: 32px;
+  margin-bottom: 8px;
+  scroll-margin-top: 32px;
+}
+
+p { margin-bottom: 14px; }
+
+pre {
+  padding: 18px 22px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 14px 0 20px;
+}
+
+code {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 14px;
+}
+
+pre code { background: none; color: inherit; padding: 0; }
+
+.note, .warn {
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 15px;
+}
+
+.note strong, .warn strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-size: 15px;
+}
+
+th {
+  text-align: left;
+  padding: 8px 12px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+td {
+  padding: 7px 12px;
+  vertical-align: top;
+}
+
+td:first-child {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  white-space: nowrap;
+}
+
+hr { border: none; margin: 48px 0; }
+
+.anchor-target { scroll-margin-top: 30px; }
+
 </style>
 </head>
-<body>
+<body class="theme-default">
 
-<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
-<nav>
+<button id="mode-toggle" onclick="toggleMode()">⚙ Systems Mode</button>
+
+<!-- ════════════════════════════════════════════════
+     SIDEBAR — STANDARD
+════════════════════════════════════════════════ -->
+<nav id="nav-standard">
   <div class="nav-title">Pragma</div>
 
   <div class="nav-section">Basics</div>
@@ -254,74 +351,95 @@
   <a href="#while">While</a>
   <a href="#for">For</a>
   <a href="#foreach">For Each</a>
-  <a href="#conditions">Conditions</a>
+  <a href="#match">Match</a>
+  <a href="#switch">Switch</a>
   <a href="#loop-control">Loop Control</a>
 
-  <div class="nav-section">Structure</div>
+  <div class="nav-section">Code</div>
   <a href="#functions">Functions</a>
   <a href="#objects">Objects</a>
   <a href="#interfaces">Interfaces</a>
   <a href="#mandates">Mandates</a>
 
-  <div class="nav-section">I/O &amp; Errors</div>
+  <div class="nav-section">I/O</div>
   <a href="#print">Print</a>
   <a href="#try-catch">Try / Catch</a>
-
-  <div class="nav-section">Low-Level</div>
-  <a href="#raw">RAW Block</a>
-  <a href="#pointers">Pointers</a>
-  <a href="#memory">Memory Access</a>
-  <a href="#bitwise">Bitwise Ops</a>
 </nav>
 
-<!-- ═══════════════════ CONTENT ═══════════════════ -->
+<!-- ════════════════════════════════════════════════
+     SIDEBAR — SYSTEMS
+════════════════════════════════════════════════ -->
+<nav id="nav-systems" style="display:none">
+  <div class="nav-title">Pragma / SYS</div>
+
+  <div class="nav-section">Memory</div>
+  <a href="#sys-pointers">Pointers</a>
+  <a href="#sys-address">ADDRESS &amp; DEREF</a>
+  <a href="#sys-mem">MEM Access</a>
+  <a href="#sys-arithmetic">Pointer Arithmetic</a>
+  <a href="#sys-size">SIZE</a>
+  <a href="#sys-nothing">nothing POINTER</a>
+
+  <div class="nav-section">Bitwise</div>
+  <a href="#sys-bitwise">All Bitwise Ops</a>
+  <a href="#sys-bitfields">Bit Fields</a>
+
+  <div class="nav-section">Layout</div>
+  <a href="#sys-pack">pack()</a>
+  <a href="#sys-uint">uint Types</a>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     MAIN — STANDARD CONTENT
+════════════════════════════════════════════════ -->
 <main>
+<div id="content-standard">
 
 <h1>Pragma Language Reference</h1>
-<p class="subtitle">A concise guide to Pragma syntax. Source files use the <code>.run</code> extension.</p>
+<p class="subtitle">Source files use the <code>.run</code> extension. Click <strong>⚙ Systems Mode</strong> for low-level memory and bitwise operations.</p>
 
 <!-- ─── Overview ─── -->
 <h2 id="overview" class="anchor-target">Overview</h2>
-<p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be readable to programmers familiar with Java or Python while giving full access to low-level memory operations when needed. The two layers are kept visually distinct: ordinary code uses familiar lowercase keywords; anything that crosses into manual memory management is written in <strong>ALL CAPS</strong> to signal you are no longer in safe territory.</p>
-<p>Every program has at least one <code>GLOBAL</code> block (declarations) and one <code>MAIN</code> block (entry point). Blocks are closed with <code>end keyword</code> rather than braces.</p>
+<p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be immediately readable to programmers from any background. The guiding rule is simple: <em>everything common and agreed-upon is lowercase; everything that is uniquely low-level or unfamiliar to non-C programmers is written in ALL CAPS.</em></p>
+<p>If you see a word in caps, you are touching memory directly or doing something that does not exist in Python, Java, or most other modern languages. A simple program never has to see those words.</p>
+<p>Every program has at least a <code>main</code> function. Everything else — functions, objects, constants — is declared at file scope above it.</p>
 
 <hr>
 
 <!-- ─── Program Structure ─── -->
 <h2 id="structure" class="anchor-target">Program Structure</h2>
-<p>All top-level declarations (functions, objects, constants, types) live in <code>GLOBAL</code>. Executable entry-point code lives in <code>MAIN</code>.</p>
+<p>Declarations live at file scope. The entry point is a function named <code>main</code>. No wrapper blocks required.</p>
 
-<pre><span class="kw">GLOBAL</span>
+<pre><span class="cm">// file scope: constants, objects, functions declared here</span>
 
-  <span class="cm">// global declarations go here</span>
+<span class="kw">constant</span> <span class="ty">int</span> MAX_SIZE <span class="op">=</span> <span class="num">100</span>
 
-<span class="kw">END GLOBAL</span>
+<span class="kw">function</span> helper() <span class="cap">VOID</span>
+  <span class="cm">// ...</span>
+<span class="kw">end function</span>
 
-<span class="kw">MAIN</span>
-
-  <span class="cm">// program entry point</span>
-
-<span class="kw">END MAIN</span></pre>
+<span class="kw">function</span> main()
+  <span class="cm">// entry point</span>
+<span class="kw">end function</span></pre>
 
 <div class="note">
   <strong>Note</strong>
-  A file may contain multiple <code>GLOBAL</code> and <code>MAIN</code> blocks; they are concatenated in order. In practice, one of each is the norm.
+  <code>main</code> or <code>MAIN</code> are both accepted as the entry point name.
 </div>
 
 <hr>
 
 <!-- ─── Comments ─── -->
 <h2 id="comments" class="anchor-target">Comments</h2>
-<p>Single-line comments begin with <code>//</code>. There are no multi-line comment delimiters.</p>
+<p>Single-line only. No multi-line comment syntax.</p>
 
-<pre><span class="cm">// this entire line is a comment</span>
-<span class="ty">int</span> x <span class="op">=</span> <span class="num">10</span>  <span class="cm">// inline comment after code</span></pre>
+<pre><span class="cm">// full line comment</span>
+<span class="ty">int</span> x <span class="op">=</span> <span class="num">10</span>  <span class="cm">// inline comment</span></pre>
 
 <hr>
 
 <!-- ─── Imports ─── -->
 <h2 id="imports" class="anchor-target">Imports</h2>
-<p>Bring in an external module by name. The module name is an identifier, not a path string.</p>
 
 <pre><span class="kw">import</span> Math
 <span class="kw">import</span> Collections</pre>
@@ -332,73 +450,62 @@
 <h2 id="types" class="anchor-target">Types &amp; Sizes</h2>
 
 <table>
-  <tr><th>Keyword(s)</th><th>Size</th><th>Range / Notes</th></tr>
-  <tr><td>int / integer</td><td>32-bit signed</td><td>−2,147,483,648 to 2,147,483,647. <code>int</code> and <code>integer</code> are identical.</td></tr>
+  <tr><th>Keyword</th><th>Size</th><th>Range / Notes</th></tr>
+  <tr><td>int / integer</td><td>32-bit signed</td><td>−2,147,483,648 to 2,147,483,647</td></tr>
   <tr><td>int8 / integer8</td><td>8-bit signed</td><td>−128 to 127</td></tr>
   <tr><td>int16 / integer16</td><td>16-bit signed</td><td>−32,768 to 32,767</td></tr>
-  <tr><td>int32 / integer32</td><td>32-bit signed</td><td>Same as <code>int</code>; explicit alias.</td></tr>
+  <tr><td>int32 / integer32</td><td>32-bit signed</td><td>Alias for <code>int</code></td></tr>
   <tr><td>int64 / integer64</td><td>64-bit signed</td><td>±9.2 × 10¹⁸</td></tr>
-  <tr><td>uint8</td><td>8-bit unsigned</td><td>0 to 255. Common for byte buffers.</td></tr>
-  <tr><td>uint16</td><td>16-bit unsigned</td><td>0 to 65,535</td></tr>
-  <tr><td>uint32</td><td>32-bit unsigned</td><td>0 to 4,294,967,295</td></tr>
-  <tr><td>uint64</td><td>64-bit unsigned</td><td>0 to 18.4 × 10¹⁸</td></tr>
-  <tr><td>float</td><td>32-bit IEEE 754</td><td>~6–7 significant decimal digits</td></tr>
-  <tr><td>double</td><td>64-bit IEEE 754</td><td>~15–16 significant decimal digits</td></tr>
-  <tr><td>String</td><td>variable</td><td>UTF-8. Note the capital S — it is not a primitive.</td></tr>
+  <tr><td>float</td><td>32-bit IEEE 754</td><td>~6–7 significant digits. Suffix <code>f</code> not required.</td></tr>
+  <tr><td>double</td><td>64-bit IEEE 754</td><td>~15–16 significant digits</td></tr>
+  <tr><td>string</td><td>variable</td><td>UTF-8. Lowercase — it is a first-class type.</td></tr>
   <tr><td>bool</td><td>1 byte</td><td><code>true</code> or <code>false</code></td></tr>
-  <tr><td>void</td><td>—</td><td>Return type only; no <code>void</code> variables.</td></tr>
+  <tr><td>complex</td><td>2 × 64-bit</td><td>Complex number. Use <code>complex(real, imag)</code> constructor.</td></tr>
+  <tr><td>VOID</td><td>—</td><td>Return type only. Caps because Python has no equivalent concept.</td></tr>
 </table>
 
-<div class="note">
-  <strong>Note</strong>
-  Pragma has no implicit type promotion. Mixing <code>int</code> and <code>float</code> in an expression requires an explicit <code>change()</code> cast.
-</div>
+<p>For <code>uint8</code>, <code>uint16</code>, <code>uint32</code>, <code>uint64</code> and bit-field types, see <strong>Systems Mode</strong>.</p>
 
 <hr>
 
 <!-- ─── Variables ─── -->
 <h2 id="variables" class="anchor-target">Variables</h2>
-<p>Declaration syntax is <code>type name</code> with an optional initializer. Variables are always declared before use; there is no inference.</p>
+<p>Always <code>type name</code> with an optional initializer. No type inference.</p>
 
 <pre><span class="ty">int</span> x <span class="op">=</span> <span class="num">10</span>
 <span class="ty">float</span> pi <span class="op">=</span> <span class="num">3.14159</span>
-<span class="ty">String</span> msg <span class="op">=</span> <span class="str">"hello world"</span>
+<span class="ty">string</span> msg <span class="op">=</span> <span class="str">"hello"</span>
 <span class="ty">bool</span> active <span class="op">=</span> <span class="kw">true</span>
-<span class="ty">int</span> uninit            <span class="cm">// declared without value — defaults to 0</span></pre>
+<span class="ty">complex</span> z <span class="op">=</span> complex(<span class="num">3</span>, <span class="num">4</span>)   <span class="cm">// 3 + 4i</span>
+<span class="ty">int</span> n                       <span class="cm">// declared without value, defaults to 0</span></pre>
 
-<p>Assignment and compound assignment:</p>
-
+<p>Assignment operators:</p>
 <pre>x <span class="op">=</span> <span class="num">42</span>
-x <span class="op">+=</span> <span class="num">5</span>
-x <span class="op">-=</span> <span class="num">2</span>
-x <span class="op">*=</span> <span class="num">3</span>
-x <span class="op">/=</span> <span class="num">4</span>
-x<span class="op">++</span>
-x<span class="op">--</span></pre>
+x <span class="op">+=</span> <span class="num">5</span>    x <span class="op">-=</span> <span class="num">2</span>    x <span class="op">*=</span> <span class="num">3</span>    x <span class="op">/=</span> <span class="num">4</span>
+x<span class="op">++</span>        x<span class="op">--</span></pre>
 
 <hr>
 
 <!-- ─── Constants ─── -->
 <h2 id="constants" class="anchor-target">Constants</h2>
-<p>Constants must be initialized at declaration and cannot be reassigned. They are declared inside <code>GLOBAL</code>.</p>
+<p>Declared at file scope. Cannot be reassigned.</p>
 
 <pre><span class="kw">constant</span> <span class="ty">int</span> MAX_SPEED <span class="op">=</span> <span class="num">100</span>
-<span class="kw">constant</span> <span class="ty">float</span> G <span class="op">=</span> <span class="num">9.81</span>
-<span class="kw">constant</span> <span class="ty">String</span> APP_NAME <span class="op">=</span> <span class="str">"Pragma"</span></pre>
+<span class="kw">constant</span> <span class="ty">string</span> APP_NAME <span class="op">=</span> <span class="str">"Pragma"</span></pre>
 
 <hr>
 
 <!-- ─── Literals ─── -->
 <h2 id="literals" class="anchor-target">Literals</h2>
 <table>
-  <tr><th>Literal</th><th>Meaning</th></tr>
-  <tr><td>42</td><td>Integer</td></tr>
-  <tr><td>3.14</td><td>Float (requires a decimal point)</td></tr>
-  <tr><td>"hello"</td><td>String. Supports <code>\"</code> and <code>\\</code> escapes.</td></tr>
-  <tr><td>true / false</td><td>Boolean</td></tr>
-  <tr><td>0xFF</td><td>Hexadecimal integer</td></tr>
-  <tr><td>null</td><td>Null reference (for object types)</td></tr>
-  <tr><td>empty</td><td>Zero / empty value for the declared type</td></tr>
+  <tr><th>Literal</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>42</td><td>int</td><td></td></tr>
+  <tr><td>3.14</td><td>float</td><td>Decimal point required.</td></tr>
+  <tr><td>"hello"</td><td>string</td><td>Supports <code>\"</code> and <code>\\</code> escapes.</td></tr>
+  <tr><td>true / false</td><td>bool</td><td></td></tr>
+  <tr><td>0xFF</td><td>int</td><td>Hexadecimal integer.</td></tr>
+  <tr><td>EMPTY</td><td>—</td><td>Null reference. Use for any object/pointer variable that holds nothing.</td></tr>
+  <tr><td>complex(3, 4)</td><td>complex</td><td>Real and imaginary parts as arguments.</td></tr>
 </table>
 
 <hr>
@@ -407,29 +514,35 @@ x<span class="op">--</span></pre>
 <h2 id="collections" class="anchor-target">Collections</h2>
 
 <h3>array</h3>
-<p>Fixed-size, homogeneous. Size is determined by the initializer. Element type goes in brackets.</p>
+<p>Fixed-size. Size is part of the type declaration and is required. Element count goes inside a second set of brackets. Zero-indexed everywhere.</p>
 
-<pre><span class="ty">array</span>[<span class="ty">int</span>] scores <span class="op">=</span> [<span class="num">95</span>, <span class="num">87</span>, <span class="num">72</span>, <span class="num">100</span>]
-<span class="ty">array</span>[<span class="ty">float</span>] coords     <span class="cm">// empty array</span>
+<pre><span class="ty">array</span>[<span class="ty">int</span>[<span class="num">4</span>]] scores <span class="op">=</span> [<span class="num">95</span>, <span class="num">87</span>, <span class="num">72</span>, <span class="num">100</span>]
+scores[<span class="num">0</span>]          <span class="cm">// 95</span>
+scores[<span class="num">3</span>]          <span class="cm">// 100</span></pre>
 
-scores[<span class="num">0</span>]               <span class="cm">// index access — zero-based</span></pre>
-
-<h3>List</h3>
-<p>Dynamic, resizable. Same bracket-type syntax.</p>
-
-<pre><span class="ty">List</span>[<span class="ty">String</span>] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>]
-names.add(<span class="str">"Dave"</span>)
-names[<span class="num">1</span>]                <span class="cm">// "Bob"</span></pre>
-
-<h3>Map</h3>
-<p>Key-value store. Both key and value types are declared.</p>
-
-<pre><span class="ty">Map</span>[<span class="ty">String</span>, <span class="ty">int</span>] scores</pre>
+<p>Multi-dimensional: first index is rows, second is columns.</p>
+<pre><span class="ty">array</span>[<span class="ty">string</span>[<span class="num">2</span>][<span class="num">4</span>]] grid    <span class="cm">// 2 rows, 4 columns</span>
+grid[<span class="num">0</span>][<span class="num">0</span>] <span class="op">=</span> <span class="str">"a"</span></pre>
 
 <div class="note">
   <strong>Note</strong>
-  <code>array</code> is stack-friendly and maps directly to a C array. <code>List</code> and <code>Map</code> are heap-allocated.
+  Size must be declared. <code>array[int[]]</code> is only valid when an initializer is present — the compiler infers the count. Without an initializer, size is required.
 </div>
+
+<h3>list</h3>
+<p>Dynamic, resizable. Bracket holds element type and optional initial capacity.</p>
+
+<pre><span class="ty">list</span>[<span class="ty">string</span>[<span class="num">3</span>]] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>]
+names.add(<span class="str">"Dave"</span>)
+names[<span class="num">1</span>]           <span class="cm">// "Bob"</span>
+
+<span class="ty">list</span>[<span class="ty">int</span>[]] nums   <span class="cm">// empty list, no capacity hint</span></pre>
+
+<h3>map</h3>
+<p>Key-value store. Brackets after the type hold optional initial capacity; <code>[]</code> means unbounded dynamic.</p>
+
+<pre><span class="ty">map</span>[<span class="ty">string</span>, <span class="ty">int</span>][] wordCount        <span class="cm">// unbounded</span>
+<span class="ty">map</span>[<span class="ty">string</span>, <span class="ty">float</span>][<span class="num">10</span>] scores      <span class="cm">// initial capacity hint of 10</span></pre>
 
 <hr>
 
@@ -437,56 +550,63 @@ names[<span class="num">1</span>]                <span class="cm">// "Bob"</span
 <h2 id="operators" class="anchor-target">Operators</h2>
 
 <table>
-  <tr><th>Category</th><th>Syntax</th><th>Notes</th></tr>
-  <tr><td>Arithmetic</td><td><code>+ - * / %</code></td><td>Standard. No implicit float promotion.</td></tr>
-  <tr><td>Comparison</td><td><code>== != &lt; &gt; &lt;= &gt;=</code></td><td>Returns <code>bool</code>.</td></tr>
-  <tr><td>Logical AND</td><td><code>&amp;</code></td><td>Also bitwise AND on integers.</td></tr>
-  <tr><td>Logical OR</td><td><code>|</code></td><td>Also bitwise OR on integers.</td></tr>
-  <tr><td>Logical NOT</td><td><code>!</code></td><td></td></tr>
-  <tr><td>XOR</td><td><code>a delta b</code></td><td>Word form to keep it readable.</td></tr>
-  <tr><td>Bitwise NOT</td><td><code>flip a</code></td><td>Inverts all bits.</td></tr>
-  <tr><td>Left shift</td><td><code>a left n</code></td><td>Equivalent to <code>a &lt;&lt; n</code> in C.</td></tr>
-  <tr><td>Right shift</td><td><code>a right n</code></td><td>Equivalent to <code>a &gt;&gt; n</code> in C.</td></tr>
-  <tr><td>Increment</td><td><code>x++</code> / <code>x--</code></td><td>Postfix only.</td></tr>
-  <tr><td>Compound assign</td><td><code>+= -= *= /=</code></td><td></td></tr>
+  <tr><th>Category</th><th>Pragma</th><th>C equivalent</th></tr>
+  <tr><td>Logical AND</td><td><code>and</code></td><td><code>&amp;&amp;</code></td></tr>
+  <tr><td>Logical OR</td><td><code>or</code></td><td><code>||</code></td></tr>
+  <tr><td>Logical NOT (prefix)</td><td><code>not x</code></td><td><code>!x</code></td></tr>
+  <tr><td>Equal</td><td><code>matches</code></td><td><code>==</code></td></tr>
+  <tr><td>Not equal (infix)</td><td><code>not</code></td><td><code>!=</code></td></tr>
+  <tr><td>Comparison</td><td><code>&lt;  &gt;  &lt;=  &gt;=</code></td><td>same</td></tr>
+  <tr><td>Arithmetic</td><td><code>+  -  *  /  %</code></td><td>same</td></tr>
+  <tr><td>Compound assign</td><td><code>+=  -=  *=  /=</code></td><td>same</td></tr>
+  <tr><td>Increment / decrement</td><td><code>x++  x--</code></td><td>same (postfix only)</td></tr>
 </table>
 
+<pre><span class="cm">// logical</span>
+<span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span> <span class="kw">and</span> y <span class="op">&gt;</span> <span class="num">0</span>
+<span class="kw">if</span> done <span class="kw">or</span> cancelled
+<span class="kw">if</span> <span class="kw">not</span> active
+
+<span class="cm">// equality</span>
+<span class="kw">if</span> x <span class="kw">matches</span> <span class="num">5</span>       <span class="cm">// x == 5</span>
+<span class="kw">if</span> name <span class="kw">not</span> <span class="str">"admin"</span>  <span class="cm">// name != "admin"</span></pre>
+
 <div class="warn">
-  <strong>C Programmer Note</strong>
-  <code>&amp;</code> and <code>|</code> are both logical and bitwise depending on context. There is no <code>&amp;&amp;</code> or <code>||</code>. Short-circuit evaluation behavior depends on the transpiler.
+  <strong>Note on no implicit promotion</strong>
+  Pragma does not implicitly promote types. Mixing <code>int</code> and <code>float</code> in an expression requires an explicit cast. See Casting below.
 </div>
 
 <hr>
 
 <!-- ─── Casting ─── -->
 <h2 id="casting" class="anchor-target">Casting</h2>
-<p>Explicit type conversion uses <code>change(expr)-&gt;type</code>. Truncates floats to integers (no rounding).</p>
+<p>Use the type name as a function call. Truncates on float-to-int (no rounding). The transpiler handles the underlying C conversion.</p>
 
 <pre><span class="ty">float</span> f <span class="op">=</span> <span class="num">3.9</span>
-<span class="ty">int</span> n <span class="op">=</span> <span class="kw">change</span>(f)<span class="op">-&gt;</span><span class="ty">int</span>   <span class="cm">// n = 3, truncated</span>
-
-<span class="ty">int</span> raw <span class="op">=</span> <span class="num">65</span>
-<span class="ty">String</span> s <span class="op">=</span> <span class="kw">change</span>(raw)<span class="op">-&gt;</span><span class="ty">String</span></pre>
+<span class="ty">int</span> n <span class="op">=</span> <span class="ty">int</span>(f)         <span class="cm">// n = 3</span>
+<span class="ty">string</span> s <span class="op">=</span> <span class="ty">string</span>(<span class="num">42</span>)  <span class="cm">// s = "42"</span>
+<span class="ty">float</span> g <span class="op">=</span> <span class="ty">float</span>(<span class="num">10</span>)    <span class="cm">// g = 10.0</span>
+<span class="ty">bool</span> b <span class="op">=</span> <span class="ty">bool</span>(<span class="num">1</span>)       <span class="cm">// b = true</span></pre>
 
 <hr>
 
 <!-- ─── If ─── -->
 <h2 id="if" class="anchor-target">If / Else</h2>
-<p>No parentheses around the condition. Blocks close with <code>end if</code>. The <code>else</code> block closes with <code>end else</code> before the final <code>end if</code>.</p>
+<p>No parentheses around the condition.</p>
 
-<pre><span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">100</span>
-  <span class="kw">print</span> <span class="str">"large"</span>
-<span class="kw">else if</span> x <span class="op">&gt;</span> <span class="num">50</span>
-  <span class="kw">print</span> <span class="str">"medium"</span>
+<pre><span class="kw">if</span> score <span class="op">&gt;</span> <span class="num">200</span>
+  <span class="kw">print</span> <span class="str">"high score"</span>
+<span class="kw">else if</span> score <span class="op">&gt;</span> <span class="num">100</span>
+  <span class="kw">print</span> <span class="str">"good score"</span>
 <span class="kw">else</span>
-  <span class="kw">print</span> <span class="str">"small"</span>
+  <span class="kw">print</span> <span class="str">"keep trying"</span>
 <span class="kw">end if</span></pre>
 
 <hr>
 
 <!-- ─── While ─── -->
 <h2 id="while" class="anchor-target">While</h2>
-<p>The condition is followed by the word <code>do</code>. The block closes with <code>end do</code>.</p>
+<p>Condition followed by <code>do</code>. Closes with <code>end do</code>.</p>
 
 <pre><span class="ty">int</span> count <span class="op">=</span> <span class="num">0</span>
 <span class="kw">while</span> count <span class="op">&lt;</span> <span class="num">5</span> <span class="kw">do</span>
@@ -498,21 +618,26 @@ names[<span class="num">1</span>]                <span class="cm">// "Bob"</span
 
 <!-- ─── For ─── -->
 <h2 id="for" class="anchor-target">For</h2>
-<p>C-style three-part loop on one line: <code>for type var = init while condition do step</code>. Body closes with <code>end for</code>.</p>
+<p>Two forms — use whichever reads better for the situation.</p>
 
-<pre><span class="kw">for</span> <span class="ty">int</span> i <span class="op">=</span> <span class="num">0</span> <span class="kw">while</span> i <span class="op">&lt;</span> <span class="num">10</span> <span class="kw">do</span> i<span class="op">++</span>
+<pre><span class="cm">// Expressive form</span>
+<span class="kw">for</span> <span class="ty">int</span> i <span class="op">=</span> <span class="num">0</span> <span class="kw">while</span> i <span class="op">&lt;</span> <span class="num">10</span> <span class="kw">do</span> i<span class="op">++</span>
+  <span class="kw">print</span> i
+<span class="kw">end for</span>
+
+<span class="cm">// C-style form (commas separate init, condition, step)</span>
+<span class="kw">for</span> i<span class="op">=</span><span class="num">0</span>, i<span class="op">&lt;</span><span class="num">10</span>, i<span class="op">++</span>
   <span class="kw">print</span> i
 <span class="kw">end for</span></pre>
 
-<p>The step expression supports <code>++</code>, <code>--</code>, and compound assignment (<code>i += 2</code>).</p>
+<p>The step supports <code>++</code>, <code>--</code>, and compound assign (<code>i += 2</code>).</p>
 
 <hr>
 
 <!-- ─── For Each ─── -->
 <h2 id="foreach" class="anchor-target">For Each</h2>
-<p>Iterates over any collection. The loop variable is inferred from the collection element type.</p>
 
-<pre><span class="ty">List</span>[<span class="ty">String</span>] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>]
+<pre><span class="ty">list</span>[<span class="ty">string</span>[<span class="num">3</span>]] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>]
 
 <span class="kw">for each</span> name <span class="kw">in</span> names
   <span class="kw">print</span> name
@@ -520,116 +645,117 @@ names[<span class="num">1</span>]                <span class="cm">// "Bob"</span
 
 <hr>
 
-<!-- ─── Conditions ─── -->
-<h2 id="conditions" class="anchor-target">Conditions (Switch)</h2>
-<p>Pattern-matches on a single expression. Single-statement cases use a colon on the same line. Multi-statement cases start on the next line with no colon. Falls through to <code>default</code> if no case matches. No fall-through between cases.</p>
+<!-- ─── Match ─── -->
+<h2 id="match" class="anchor-target">Match (no fall-through)</h2>
+<p>Pattern-matches on a single expression. No case bleeds into the next. Single-statement cases use a colon on the same line; multi-statement cases follow the colon on the next line.</p>
 
 <pre><span class="ty">int</span> code <span class="op">=</span> <span class="num">2</span>
 
-<span class="kw">conditions</span> code
+<span class="kw">match</span> code
   <span class="num">1</span>: <span class="kw">print</span> <span class="str">"one"</span>
   <span class="num">2</span>: <span class="kw">print</span> <span class="str">"two"</span>
-  <span class="num">3</span>
+  <span class="num">3</span>:
     <span class="kw">print</span> <span class="str">"three"</span>
     <span class="kw">print</span> <span class="str">"still three"</span>
   <span class="kw">default</span>: <span class="kw">print</span> <span class="str">"other"</span>
-<span class="kw">end conditions</span></pre>
+<span class="kw">end match</span></pre>
 
-<div class="note">
-  <strong>Note</strong>
-  Unlike C <code>switch</code>, there is no fall-through. Each case is independent. No <code>escape</code> needed to stop one case bleeding into the next.
-</div>
+<hr>
+
+<!-- ─── Switch ─── -->
+<h2 id="switch" class="anchor-target">Switch (fall-through)</h2>
+<p>Like C <code>switch</code> — execution falls through from one case into the next unless <code>escape</code> is used. Use when you need that behavior explicitly.</p>
+
+<pre><span class="kw">switch</span> code
+  <span class="num">1</span>:
+  <span class="num">2</span>:
+    <span class="kw">print</span> <span class="str">"one or two"</span>  <span class="cm">// runs for both 1 and 2</span>
+    <span class="kw">escape</span>
+  <span class="num">3</span>:
+    <span class="kw">print</span> <span class="str">"three"</span>
+    <span class="kw">escape</span>
+<span class="kw">end switch</span></pre>
 
 <hr>
 
 <!-- ─── Loop Control ─── -->
 <h2 id="loop-control" class="anchor-target">Loop Control</h2>
 <table>
-  <tr><th>Keyword</th><th>Equivalent</th><th>Effect</th></tr>
-  <tr><td>escape</td><td>break</td><td>Exit the innermost loop immediately.</td></tr>
-  <tr><td>skip</td><td>continue</td><td>Jump to the next iteration.</td></tr>
+  <tr><th>Pragma</th><th>Meaning</th><th>C equivalent</th></tr>
+  <tr><td>escape</td><td>Exit the innermost loop immediately</td><td>break</td></tr>
+  <tr><td>skip</td><td>Jump to the next iteration</td><td>continue</td></tr>
 </table>
-
-<pre><span class="kw">while</span> j <span class="op">&lt;</span> <span class="num">10</span> <span class="kw">do</span>
-  j<span class="op">++</span>
-  <span class="kw">if</span> j <span class="op">==</span> <span class="num">5</span>
-    <span class="kw">escape</span>     <span class="cm">// break out of loop</span>
-  <span class="kw">end if</span>
-  <span class="kw">if</span> j <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>
-    <span class="kw">skip</span>       <span class="cm">// skip even numbers</span>
-  <span class="kw">end if</span>
-  <span class="kw">print</span> j
-<span class="kw">end do</span></pre>
 
 <hr>
 
 <!-- ─── Functions ─── -->
 <h2 id="functions" class="anchor-target">Functions</h2>
-<p>Declared in <code>GLOBAL</code>. Parameters are typed. Return type follows <code>returns</code>. Omit <code>returns</code> for void functions. Parentheses are required even with no parameters.</p>
+<p>Use <code>returns type</code> for the return type. For functions that return nothing, use <code>VOID</code> — or omit the return type entirely (defaults to <code>VOID</code>).</p>
 
-<pre><span class="kw">function</span> Add(<span class="ty">int</span> a, <span class="ty">int</span> b) <span class="kw">returns</span> <span class="ty">int</span>
+<pre><span class="kw">function</span> add(<span class="ty">int</span> a, <span class="ty">int</span> b) <span class="kw">returns</span> <span class="ty">int</span>
   <span class="kw">return</span> a <span class="op">+</span> b
 <span class="kw">end function</span>
 
-<span class="kw">function</span> Greet()       <span class="cm">// void, no 'returns'</span>
-  <span class="kw">print</span> <span class="str">"hello"</span>
+<span class="kw">function</span> greet(<span class="ty">string</span> name) <span class="kw">returns</span> <span class="cap">VOID</span>
+  <span class="kw">print</span> <span class="str">"Hello, "</span> <span class="op">+</span> name
+<span class="kw">end function</span>
+
+<span class="kw">function</span> doSomething()    <span class="cm">// VOID implied — both forms are identical</span>
 <span class="kw">end function</span></pre>
 
 <p>Recursive functions work normally:</p>
-
-<pre><span class="kw">function</span> Factorial(<span class="ty">int</span> n) <span class="kw">returns</span> <span class="ty">int</span>
+<pre><span class="kw">function</span> factorial(<span class="ty">int</span> n) <span class="kw">returns</span> <span class="ty">int</span>
   <span class="kw">if</span> n <span class="op">&lt;=</span> <span class="num">1</span>
     <span class="kw">return</span> <span class="num">1</span>
   <span class="kw">end if</span>
-  <span class="kw">return</span> n <span class="op">*</span> Factorial(n <span class="op">-</span> <span class="num">1</span>)
+  <span class="kw">return</span> n <span class="op">*</span> factorial(n <span class="op">-</span> <span class="num">1</span>)
 <span class="kw">end function</span></pre>
 
 <hr>
 
 <!-- ─── Objects ─── -->
 <h2 id="objects" class="anchor-target">Objects</h2>
-<p>Pragma's equivalent of a class. Fields are declared at the top; methods follow. Instantiate with <code>new TypeName[args]</code> using square brackets, not parentheses.</p>
+<p>Fields at top, methods below. Instantiate with <code>new TypeName(args)</code>. Single inheritance via <code>inherits</code>. Multiple interface compliance via <code>interfaces A, B</code>.</p>
 
-<pre><span class="kw">object</span> Runner
-  <span class="ty">String</span> name
+<pre><span class="kw">object</span> Player
+  <span class="ty">string</span> name
   <span class="ty">int</span> age
-  <span class="ty">float</span> speed <span class="op">=</span> <span class="num">0.0</span>   <span class="cm">// field default</span>
-<span class="kw">end object</span>
+  <span class="ty">float</span> score <span class="op">=</span> <span class="num">0.0</span>
 
-<span class="cm">// Inheritance and interface implementation on one line:</span>
-<span class="kw">object</span> Cyclist <span class="kw">inherits</span> Runner <span class="kw">interfaces</span> Athlete
-  <span class="ty">int</span> bikeType
-
-  <span class="kw">function</span> GetSpeed() <span class="kw">returns</span> <span class="ty">int</span>
-    <span class="kw">return</span> <span class="kw">change</span>(<span class="kw">self</span>.speed)<span class="op">-&gt;</span><span class="ty">int</span>
+  <span class="kw">function</span> greet() <span class="kw">returns</span> <span class="cap">VOID</span>
+    <span class="kw">print</span> <span class="str">"Hi, I am "</span> <span class="op">+</span> <span class="kw">self</span>.name
   <span class="kw">end function</span>
 <span class="kw">end object</span>
 
-<span class="cm">// Instantiation — square brackets, not parentheses:</span>
-<span class="ty">Runner</span> r <span class="op">=</span> <span class="kw">new</span> Runner[<span class="str">"Jake"</span>, <span class="num">24</span>, <span class="num">9.8</span>]
-<span class="kw">print</span> r.name</pre>
+<span class="kw">object</span> ProPlayer <span class="kw">inherits</span> Player <span class="kw">interfaces</span> Ranked
+  <span class="ty">int</span> rank
+<span class="kw">end object</span>
+
+<span class="cm">// Instantiation — parentheses like everyone else</span>
+Player p <span class="op">=</span> <span class="kw">new</span> Player(<span class="str">"Alex"</span>, <span class="num">25</span>, <span class="num">98.5</span>)
+<span class="kw">print</span> p.name</pre>
 
 <div class="note">
   <strong>Note</strong>
-  Pragma has single inheritance only (<code>inherits</code>). Multiple interface compliance is expressed with <code>interfaces A, B, C</code>.
+  Single inheritance only. Multiple interface compliance is allowed.
 </div>
 
 <hr>
 
 <!-- ─── Interfaces ─── -->
 <h2 id="interfaces" class="anchor-target">Interfaces</h2>
-<p>Define a contract — method signatures with no body. An object that declares <code>interfaces Foo</code> must implement every method in <code>Foo</code>.</p>
+<p>Method signatures only — no body. Any object declaring <code>interfaces Foo</code> must implement all methods.</p>
 
-<pre><span class="kw">interface</span> Athlete
-  <span class="kw">function</span> Train()
-  <span class="kw">function</span> GetSpeed() <span class="kw">returns</span> <span class="ty">int</span>
+<pre><span class="kw">interface</span> Ranked
+  <span class="kw">function</span> getRank() <span class="kw">returns</span> <span class="ty">int</span>
+  <span class="kw">function</span> promote() <span class="kw">returns</span> <span class="cap">VOID</span>
 <span class="kw">end interface</span></pre>
 
 <hr>
 
 <!-- ─── Mandates ─── -->
 <h2 id="mandates" class="anchor-target">Mandates (Enumerations)</h2>
-<p>Named integer constants grouped under one name — equivalent to an enum. Members can have explicit integer values or be auto-assigned. Access a member with <code>Name_member</code>.</p>
+<p>Named integer constants. Access a member as <code>MandateName_member</code>.</p>
 
 <pre><span class="kw">mandate</span> Priority
   low    <span class="op">=</span> <span class="num">1</span>
@@ -637,105 +763,224 @@ names[<span class="num">1</span>]                <span class="cm">// "Bob"</span
   high   <span class="op">=</span> <span class="num">3</span>
 <span class="kw">end mandate</span>
 
-<span class="ty">int</span> p <span class="op">=</span> Priority_high   <span class="cm">// p = 3</span></pre>
-
-<p>Inline form for short enumerations:</p>
-
-<pre><span class="kw">mandate</span> Direction low <span class="op">=</span> <span class="num">0</span>, high <span class="op">=</span> <span class="num">1</span> <span class="kw">end mandate</span></pre>
+<span class="ty">int</span> p <span class="op">=</span> Priority_high    <span class="cm">// p = 3</span></pre>
 
 <hr>
 
 <!-- ─── Print ─── -->
 <h2 id="print" class="anchor-target">Print</h2>
-<p>Outputs any expression to standard out followed by a newline. No format string required.</p>
+<p>Outputs any expression to standard out. String concatenation with <code>+</code>. No format strings.</p>
 
 <pre><span class="kw">print</span> <span class="str">"hello world"</span>
-<span class="kw">print</span> x
-<span class="kw">print</span> Add(<span class="num">3</span>, <span class="num">7</span>)
-<span class="kw">print</span> r.name</pre>
+<span class="kw">print</span> <span class="str">"Score: "</span> <span class="op">+</span> <span class="ty">string</span>(score)
+<span class="kw">print</span> add(<span class="num">3</span>, <span class="num">7</span>)</pre>
 
 <hr>
 
-<!-- ─── Try / Catch ─── -->
+<!-- ─── Try/Catch ─── -->
 <h2 id="try-catch" class="anchor-target">Try / Catch</h2>
-<p>Runtime errors are caught by exception type. Multiple exception types in one catch clause are separated by <code>|</code>. Each catch closes with <code>end catch</code>; the whole block closes with <code>end try</code>.</p>
+<p>Multiple exception types in one catch use <code>or</code>.</p>
 
 <pre><span class="kw">try</span>
-  <span class="cm">// code that might throw</span>
+  <span class="cm">// risky code</span>
 <span class="kw">catch</span>(IOException err)
-  <span class="kw">print</span> <span class="str">"io error"</span>
+  <span class="kw">print</span> <span class="str">"IO error: "</span> <span class="op">+</span> <span class="ty">string</span>(err)
 <span class="kw">end catch</span>
-<span class="kw">catch</span>(RuntimeError <span class="op">|</span> ValueError err)
-  <span class="kw">print</span> <span class="str">"runtime or value error"</span>
+<span class="kw">catch</span>(RuntimeError <span class="kw">or</span> ValueError err)
+  <span class="kw">print</span> <span class="str">"runtime error"</span>
 <span class="kw">end catch</span>
 <span class="kw">end try</span></pre>
 
-<hr>
+</div><!-- end content-standard -->
 
-<!-- ─── RAW Block ─── -->
-<h2 id="raw" class="anchor-target">RAW Block</h2>
-<p>The <code>RAW</code> block is where manual memory management lives. Everything inside that does not exist at the high level — pointers, direct memory reads, address-of — is written in ALL CAPS. This is intentional: it signals to the reader that they have left the managed layer and are operating directly on memory.</p>
+<!-- ════════════════════════════════════════════════
+     MAIN — SYSTEMS CONTENT
+════════════════════════════════════════════════ -->
+<div id="content-systems" style="display:none">
 
-<pre><span class="cap">RAW</span>
-  <span class="cm">// pointer declarations, MEM access, DEREF — all go here</span>
-<span class="cap">END RAW</span></pre>
-
-<div class="warn">
-  <strong>Warning</strong>
-  Code inside a RAW block bypasses safety guarantees. The transpiler does not insert bounds checks or null guards within RAW. If you are using MemProof or MemResistant signing, RAW sections are flagged and must be reviewed manually.
-</div>
+<h1>Pragma / Systems Reference</h1>
+<p class="subtitle">Low-level operations. Every keyword here is in ALL CAPS — a deliberate signal that you are managing memory directly. These do not exist as accessible concepts in Python, Java, or most other modern languages.</p>
 
 <hr>
 
 <!-- ─── Pointers ─── -->
-<h2 id="pointers" class="anchor-target">Pointers</h2>
-<p>Declared inside a <code>RAW</code> block. The type comes first, then <code>POINTER</code>, then the name, assigned to <code>ADDRESS&lt;variable&gt;</code>. The pointed-to variable must already be declared.</p>
+<h2 id="sys-pointers" class="anchor-target">Pointers</h2>
+<p>A pointer holds a memory address. The type of pointer tells the compiler how to interpret the bytes at that address. Declared as <code>TYPE POINTER name</code>.</p>
 
-<pre><span class="cap">RAW</span>
-  <span class="ty">int8</span> x <span class="op">=</span> <span class="num">42</span>
-  <span class="cap">INT8 POINTER</span> p <span class="op">=</span> <span class="cap">ADDRESS</span><span class="op">&lt;</span>x<span class="op">&gt;</span>
-<span class="cap">END RAW</span></pre>
+<pre><span class="ty">int</span> x <span class="op">=</span> <span class="num">42</span>
+<span class="cap">INT POINTER</span> p <span class="op">=</span> <span class="cap">ADDRESS</span>&lt;x&gt;     <span class="cm">// p holds the address of x</span>
+
+<span class="ty">int8</span> b <span class="op">=</span> <span class="num">7</span>
+<span class="cap">INT8 POINTER</span> bp <span class="op">=</span> <span class="cap">ADDRESS</span>&lt;b&gt;</span></pre>
+
+<div class="note">
+  <strong>Note</strong>
+  The type before <code>POINTER</code> is always caps because you are working at the memory level.
+</div>
+
+<hr>
+
+<!-- ─── ADDRESS and DEREF ─── -->
+<h2 id="sys-address" class="anchor-target">ADDRESS and DEREF</h2>
 
 <table>
-  <tr><th>Operator</th><th>Meaning</th></tr>
-  <tr><td>ADDRESS&lt;x&gt;</td><td>Take the address of variable x (like &amp;x in C)</td></tr>
-  <tr><td>DEREF&lt;p&gt;</td><td>Dereference pointer p (like *p in C)</td></tr>
-  <tr><td>MEM&lt;addr&gt;</td><td>Read/write at a raw numeric address</td></tr>
-  <tr><td>SIZE&lt;type&gt;</td><td>Byte size of a type (like sizeof in C)</td></tr>
+  <tr><th>Pragma</th><th>C equivalent</th><th>Meaning</th></tr>
+  <tr><td>ADDRESS&lt;x&gt;</td><td>&amp;x</td><td>Take the address of variable x</td></tr>
+  <tr><td>DEREF&lt;p&gt;</td><td>*p</td><td>Read the value at the address stored in p</td></tr>
 </table>
 
-<hr>
-
-<!-- ─── Memory Access ─── -->
-<h2 id="memory" class="anchor-target">Memory Access</h2>
-<p>Read or write any memory address directly. The address can be an integer expression or a pointer variable.</p>
-
-<pre><span class="cap">RAW</span>
-  <span class="ty">uint32</span> addr <span class="op">=</span> <span class="num">0xDEAD0000</span>
-  <span class="cap">MEM</span><span class="op">&lt;</span>addr<span class="op">&gt;</span>                 <span class="cm">// read at addr</span>
-
-  <span class="ty">int</span> val <span class="op">=</span> <span class="num">7</span>
-  <span class="cap">UINT32 POINTER</span> p <span class="op">=</span> <span class="cap">ADDRESS</span><span class="op">&lt;</span>val<span class="op">&gt;</span>
-  <span class="cap">DEREF</span><span class="op">&lt;</span>p<span class="op">&gt;</span>                   <span class="cm">// dereference p</span>
-
-  <span class="ty">int</span> bytes <span class="op">=</span> <span class="cap">SIZE</span><span class="op">&lt;</span><span class="ty">int64</span><span class="op">&gt;</span>    <span class="cm">// bytes = 8</span>
-<span class="cap">END RAW</span></pre>
+<pre><span class="ty">int</span> val <span class="op">=</span> <span class="num">99</span>
+<span class="cap">INT POINTER</span> p <span class="op">=</span> <span class="cap">ADDRESS</span>&lt;val&gt;
+<span class="ty">int</span> copy <span class="op">=</span> <span class="cap">DEREF</span>&lt;p&gt;          <span class="cm">// copy = 99</span></pre>
 
 <hr>
 
-<!-- ─── Bitwise ─── -->
-<h2 id="bitwise" class="anchor-target">Bitwise Operations</h2>
-<p>Bitwise operators use the same symbols as logical operators (<code>&amp;</code>, <code>|</code>) plus three word-form operators. The word form makes it impossible to confuse bit manipulation with logic at a glance.</p>
+<!-- ─── MEM ─── -->
+<h2 id="sys-mem" class="anchor-target">MEM — Raw Memory Access</h2>
+<p>Read or write at any numeric memory address. Used for memory-mapped I/O and hardware register access.</p>
 
-<pre><span class="ty">int</span> flags <span class="op">=</span> <span class="num">0</span>
+<pre><span class="cap">UINT32 POINTER</span> reg <span class="op">=</span> <span class="cap">ADDRESS</span>&lt;someVar&gt;
+<span class="cap">MEM</span>&lt;reg&gt;                    <span class="cm">// read at address reg</span>
+<span class="cap">MEM</span>&lt;<span class="num">0xDEAD0000</span>&gt;             <span class="cm">// read at hard-coded address</span></pre>
 
-flags <span class="op">=</span> flags <span class="op">|</span> <span class="num">4</span>         <span class="cm">// set bit 2</span>
-flags <span class="op">=</span> flags <span class="op">&amp;</span> <span class="num">0xFF</span>      <span class="cm">// mask low byte</span>
-flags <span class="op">=</span> flags <span class="kw">delta</span> <span class="num">1</span>     <span class="cm">// XOR bit 0</span>
-flags <span class="op">=</span> flags <span class="kw">left</span> <span class="num">2</span>      <span class="cm">// shift left  (flags &lt;&lt; 2 in C)</span>
-flags <span class="op">=</span> flags <span class="kw">right</span> <span class="num">1</span>     <span class="cm">// shift right (flags &gt;&gt; 1 in C)</span>
-flags <span class="op">=</span> <span class="kw">flip</span> flags         <span class="cm">// bitwise NOT (~flags in C)</span></pre>
+<hr>
 
+<!-- ─── Pointer Arithmetic ─── -->
+<h2 id="sys-arithmetic" class="anchor-target">Pointer Arithmetic</h2>
+<p>Offset a pointer using angle brackets. The offset is in units of the pointer's element type (not raw bytes).</p>
+
+<pre><span class="cap">INT POINTER</span> p <span class="op">=</span> <span class="cap">ADDRESS</span>&lt;arr&gt;
+p&lt;<span class="num">0</span>&gt;            <span class="cm">// element 0   — same as DEREF&lt;p&gt;</span>
+p&lt;<span class="num">5</span>&gt;            <span class="cm">// element 5   — like *(p + 5) in C</span>
+p&lt;i <span class="op">+</span> <span class="num">2</span>&gt;        <span class="cm">// element i+2 — arbitrary expression</span>
+p&lt;<span class="op">+</span><span class="num">3</span>&gt;           <span class="cm">// advance 3 from current position</span></pre>
+
+<hr>
+
+<!-- ─── SIZE ─── -->
+<h2 id="sys-size" class="anchor-target">SIZE</h2>
+<p>Returns the byte size of a type. Equivalent to <code>sizeof</code> in C.</p>
+
+<pre><span class="ty">int</span> bytes <span class="op">=</span> <span class="cap">SIZE</span>&lt;<span class="ty">int64</span>&gt;    <span class="cm">// 8</span>
+<span class="ty">int</span> s <span class="op">=</span> <span class="cap">SIZE</span>&lt;<span class="ty">float</span>&gt;         <span class="cm">// 4</span></pre>
+
+<hr>
+
+<!-- ─── nothing POINTER ─── -->
+<h2 id="sys-nothing" class="anchor-target">nothing POINTER — Generic Pointer</h2>
+<p>A pointer with no specific type — it points to "nothing in particular." Equivalent to <code>void*</code> in C. Use when you need to pass a pointer whose type is determined at runtime.</p>
+
+<pre>nothing <span class="cap">POINTER</span> generic <span class="op">=</span> <span class="cap">ADDRESS</span>&lt;anyVar&gt;
+
+<span class="cm">// Cast it to a typed pointer before use:</span>
+<span class="cap">INT POINTER</span> typed <span class="op">=</span> <span class="cap">INT POINTER</span>(generic)</pre>
+
+<hr>
+
+<!-- ─── Bitwise Ops ─── -->
+<h2 id="sys-bitwise" class="anchor-target">Bitwise Operations</h2>
+<p>All bitwise operators are in ALL CAPS — they operate at the bit level and behave differently on signed vs unsigned integers. Use <code>uint</code> types when doing bit manipulation to avoid sign-bit surprises.</p>
+
+<table>
+  <tr><th>Pragma</th><th>C</th><th>Meaning</th></tr>
+  <tr><td>BOTH1</td><td>&amp;</td><td>Bitwise AND — result bit is 1 only if both input bits are 1</td></tr>
+  <tr><td>BOTH0</td><td>!(a) &amp;&amp; !(b) / ~(a|b)</td><td>Both values are 0 / zero — bitwise NOR</td></tr>
+  <tr><td>EITHER1</td><td>|</td><td>Bitwise OR — result bit is 1 if either input bit is 1</td></tr>
+  <tr><td>DELTA</td><td>^</td><td>Bitwise XOR — result bit is 1 if the bits differ</td></tr>
+  <tr><td>BITFLIP x</td><td>~x</td><td>Bitwise NOT — inverts every bit. Use on uint types.</td></tr>
+  <tr><td>NEGATE x</td><td>-x</td><td>Arithmetic negation</td></tr>
+  <tr><td>x LEFT n</td><td>x &lt;&lt; n</td><td>Left shift — multiply by 2ⁿ</td></tr>
+  <tr><td>x RIGHT n</td><td>x &gt;&gt; n</td><td>Right shift — divide by 2ⁿ (logical on uint)</td></tr>
+  <tr><td>LEFT=</td><td>&lt;&lt;=</td><td>Left shift assign</td></tr>
+  <tr><td>RIGHT=</td><td>&gt;&gt;=</td><td>Right shift assign</td></tr>
+</table>
+
+<pre><span class="ty">uint32</span> flags <span class="op">=</span> <span class="num">0</span>
+flags <span class="op">=</span> flags <span class="cap">EITHER1</span> <span class="num">4</span>       <span class="cm">// set bit 2</span>
+flags <span class="op">=</span> flags <span class="cap">BOTH1</span> <span class="num">0xFF</span>      <span class="cm">// mask low byte</span>
+flags <span class="op">=</span> flags <span class="cap">DELTA</span> <span class="num">1</span>          <span class="cm">// toggle bit 0</span>
+flags <span class="op">=</span> flags <span class="cap">LEFT</span> <span class="num">2</span>           <span class="cm">// shift left 2</span>
+flags <span class="op">=</span> flags <span class="cap">RIGHT</span> <span class="num">1</span>          <span class="cm">// shift right 1</span>
+flags <span class="op">=</span> <span class="cap">BITFLIP</span> flags           <span class="cm">// invert all bits</span></pre>
+
+<div class="warn">
+  <strong>Warning — BITFLIP on signed integers</strong>
+  <code>BITFLIP</code> on a signed <code>int</code> flips the sign bit, producing a negative number. <code>BITFLIP 5</code> gives <code>-6</code>, not <code>250</code>. Always use <code>uint</code> types for bit manipulation.
+</div>
+
+<hr>
+
+<!-- ─── Bit Fields ─── -->
+<h2 id="sys-bitfields" class="anchor-target">Bit Fields</h2>
+<p>Declare fields with a specific number of bits using angle brackets. Fields in sequence pack into adjacent bits. Group them inside an object to control layout.</p>
+
+<pre><span class="kw">object</span> PackedHeader
+  <span class="ty">uint</span> is_valid &lt;<span class="num">1</span>&gt;    <span class="cm">// 1 bit</span>
+  <span class="ty">uint</span> count    &lt;<span class="num">7</span>&gt;    <span class="cm">// 7 bits — together = 1 byte</span>
+  <span class="ty">uint32</span> value         <span class="cm">// 4 bytes, no bit field</span>
+<span class="kw">end object</span></pre>
+
+<div class="note">
+  <strong>Note</strong>
+  Bit fields only apply inside objects. They map directly to C bit fields. The total bits for a group should align to a byte boundary (8, 16, 32, 64) for predictable layout.
+</div>
+
+<hr>
+
+<!-- ─── pack() ─── -->
+<h2 id="sys-pack" class="anchor-target">pack() — Struct Packing</h2>
+<p>By default the compiler may insert padding between fields to align memory. <code>pack()</code> removes that padding — every field follows immediately after the previous one with no gaps. Used for network packets, file headers, and hardware register maps where byte layout must be exact.</p>
+
+<pre>pack(PackedHeader)    <span class="cm">// no padding between fields</span></pre>
+
+<div class="warn">
+  <strong>Warning</strong>
+  Packed structs can cause misaligned memory access on some architectures, which may trigger a hardware fault or a silent performance penalty. Only use when byte-exact layout is required.
+</div>
+
+<hr>
+
+<!-- ─── uint Types ─── -->
+<h2 id="sys-uint" class="anchor-target">Unsigned Integer Types</h2>
+
+<table>
+  <tr><th>Type</th><th>Size</th><th>Range</th></tr>
+  <tr><td>uint8</td><td>8-bit unsigned</td><td>0 to 255. Common for byte buffers.</td></tr>
+  <tr><td>uint16</td><td>16-bit unsigned</td><td>0 to 65,535</td></tr>
+  <tr><td>uint32</td><td>32-bit unsigned</td><td>0 to 4,294,967,295</td></tr>
+  <tr><td>uint64</td><td>64-bit unsigned</td><td>0 to 18.4 × 10¹⁸</td></tr>
+</table>
+
+<p>Prefer unsigned types for any value that is never negative and for all bit manipulation. <code>BITFLIP</code>, <code>LEFT</code>, and <code>RIGHT</code> all behave predictably on unsigned types.</p>
+
+</div><!-- end content-systems -->
 </main>
+
+<script>
+function toggleMode() {
+  var body = document.body;
+  var btn = document.getElementById('mode-toggle');
+  var std = document.getElementById('content-standard');
+  var sys = document.getElementById('content-systems');
+  var navStd = document.getElementById('nav-standard');
+  var navSys = document.getElementById('nav-systems');
+
+  if (body.classList.contains('theme-default')) {
+    body.classList.replace('theme-default', 'theme-systems');
+    btn.textContent = '⌂ Standard Mode';
+    std.style.display = 'none';
+    sys.style.display = 'block';
+    navStd.style.display = 'none';
+    navSys.style.display = 'block';
+  } else {
+    body.classList.replace('theme-systems', 'theme-default');
+    btn.textContent = '⚙ Systems Mode';
+    std.style.display = 'block';
+    sys.style.display = 'none';
+    navStd.style.display = 'block';
+    navSys.style.display = 'none';
+  }
+}
+</script>
 </body>
 </html>
