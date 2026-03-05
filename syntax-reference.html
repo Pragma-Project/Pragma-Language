@@ -414,7 +414,7 @@ hr { border: none; margin: 48px 0; }
 <p class="subtitle">Standard Pragma. Source files use the <code>.run</code> extension. For lower level programming with memory management, pointers, and bitwise operations, click <strong>Base</strong> on the left.</p>
 
 <h2 id="overview" class="anchor-target">Overview</h2>
-<p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be readable to anyone who has written code in any modern language. The guiding rule: <em>common operations use familiar lowercase syntax; anything that touches memory directly uses angle brackets <code>&lt; &gt;</code> as a visual signal.</em></p>
+<p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be readable to anyone who has written code in any modern language.</p>
 <p>Every program has at least a <code>main</code> function. Functions, objects, and constants are declared at file scope above it. This both acknowledges the older C language syntax and adds some clarity for beginners.</p>
 
 <hr>
@@ -497,7 +497,7 @@ x<span class="op">++</span>        x<span class="op">--</span></pre>
   <tr><td>"hello"</td><td>string</td><td>Supports <code>\"</code> and <code>\\</code> escapes.</td></tr>
   <tr><td>true / false</td><td>bool</td><td></td></tr>
   <tr><td>0xFF</td><td>int</td><td>Hexadecimal integer.</td></tr>
-  <tr><td>EMPTY</td><td>—</td><td>Null reference. Holds nothing.</td></tr>
+  <tr><td>empty</td><td>—</td><td>Null reference. Holds nothing.</td></tr>
   <tr><td>complex(3, 4)</td><td>complex</td><td>Real then imaginary.</td></tr>
 </table>
 
@@ -545,7 +545,7 @@ names[<span class="num">1</span>]           <span class="cm">// "Bob"</span>
   <tr><td>Not equal (infix)</td><td><code>x not y</code></td><td><code>x != y</code></td></tr>
   <tr><td>Comparison</td><td><code>&lt;  &gt;  &lt;=  &gt;=</code></td><td>same</td></tr>
   <tr><td>Arithmetic</td><td><code>+  -  *  /  %</code></td><td>same</td></tr>
-  <tr><td>Compound assign</td><td><code>+=  -=  *=  /=</code></td><td>same</td></tr>
+  <tr><td>Compound assign</td><td><code>+=  -=  *=  /=  %=</code></td><td>same</td></tr>
   <tr><td>Increment / decrement</td><td><code>x++  x--</code></td><td>same (postfix only)</td></tr>
 </table>
 
@@ -557,7 +557,7 @@ names[<span class="num">1</span>]           <span class="cm">// "Bob"</span>
 
 <div class="note">
   <strong>Note — no implicit type promotion</strong>
-  Mixing <code>int</code> and <code>float</code> in an expression requires an explicit cast. See Casting.
+  Mixing <code>int</code> and <code>float</code> in an expression requires an explicit cast. See casting below.
 </div>
 
 <hr>
@@ -751,7 +751,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player(<span clas
   <tr><td><code>struct { ... }</code></td><td><code>object ... end object</code></td><td>Same concept. Pragma objects can also have methods, inheritance, and interfaces — but plain field declarations compile identically to a C struct.</td></tr>
   <tr><td><code>enum { A=1 }</code></td><td><code>mandate ... end mandate</code></td><td>Access members as <code>MandateName_member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed and scoped — no preprocessor macro</td></tr>
-  <tr><td><code>NULL</code></td><td><code>EMPTY</code></td><td>Null literal</td></tr>
+  <tr><td><code>NULL</code></td><td><code>empty</code></td><td>Null literal</td></tr>
   <tr><td><code>printf(...)</code></td><td><code>print x</code></td><td>Use <code>string(x)</code> to convert a value before printing or concatenating</td></tr>
   <tr><td><code>break</code></td><td><code>escape</code></td><td>Exit a loop</td></tr>
   <tr><td><code>continue</code></td><td><code>skip</code></td><td>Skip to next iteration</td></tr>
@@ -941,7 +941,7 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 <hr>
 
 <h2 id="why-base-pragma" class="anchor-target">Why Base Pragma?</h2>
-<p>Not every program needs to manage memory, work with pointers, or think in bits. Most application code never touches any of this. Separating it into its own file type means beginners and those who don't need these details are never forced to encounter them. A <code>.run</code> file stays clean. A <code>.base</code> file signals immediately that something lower-level is happening here. That separation makes programming more comfortable for people who aren't ready for it, and clearer for those who are.</p>
+<p>Not every program needs to manage memory, work with pointers, or think in bits. Most application code never touches any of this. Separating it into its own file type means beginners and those who don't need these details are never forced to encounter them. A <code>.run</code> file stays clean. A <code>.base</code> file signals immediately that something lower-level is happening. That separation makes programming more comfortable for people who aren't ready for it, and clearer for those who are.</p>
 
 <hr>
 
@@ -955,7 +955,7 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   <tr><td><code>enum { A=1, B=2 }</code></td><td><code>mandate ... end mandate</code></td><td>Access as <code>MandateName_member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed, scoped constant — no preprocessor</td></tr>
   <tr><td><code>void *ptr</code></td><td><code>nothing pointer ptr</code></td><td>Generic pointer — cast before reading</td></tr>
-  <tr><td><code>NULL</code></td><td><code>EMPTY</code></td><td>Null literal</td></tr>
+  <tr><td><code>NULL</code></td><td><code>empty</code></td><td>Null literal</td></tr>
   <tr><td><code>void</code> (return)</td><td><code>nothing</code></td><td>Function returns nothing</td></tr>
   <tr><td><code>__attribute__((packed))</code></td><td><code>pack(TypeName)</code></td><td>Remove struct padding</td></tr>
 </table>
