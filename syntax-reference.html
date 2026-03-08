@@ -674,7 +674,7 @@ body.theme-base .readme-btn:hover {
 
 <div class="cfc">
   <strong>Coming from C</strong>
-  <code>string</code> is a first-class type — no <code>char*</code>, no null terminator, no manual memory. <code>string(x)</code> converts any value to a string. <code>int</code> compiles to a 32-bit signed integer, same as <code>int32_t</code> in C.
+  <code>string</code> is a first-class type — no <code>char*</code>, no null terminator, no manual memory. <code>change(x)-&gt;string</code> converts any value to a string. <code>int</code> compiles to a 32-bit signed integer, same as <code>int32_t</code> in C.
 </div>
 
 <hr>
@@ -786,12 +786,12 @@ x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// 
 <hr>
 
 <h2 id="casting" class="anchor-target">Casting</h2>
-<p>Use the type name as a call. Float-to-int truncates — no rounding.</p>
+<p>Use <code>change(value)-&gt;type</code>. Float-to-int truncates — no rounding.</p>
 <pre><span class="ty">float</span> f <span class="op">=</span> <span class="num">3.9</span>
-<span class="ty">int</span> n   <span class="op">=</span> <span class="ty">int</span>(f)          <span class="cm">// 3</span>
-<span class="ty">string</span> s <span class="op">=</span> <span class="ty">string</span>(<span class="num">42</span>)    <span class="cm">// "42"</span>
-<span class="ty">float</span> g  <span class="op">=</span> <span class="ty">float</span>(<span class="num">10</span>)     <span class="cm">// 10.0</span>
-<span class="ty">bool</span> b   <span class="op">=</span> <span class="ty">bool</span>(<span class="num">1</span>)       <span class="cm">// true</span></pre>
+<span class="ty">int</span> n    <span class="op">=</span> <span class="kw">change</span>(f)<span class="op">-&gt;</span><span class="ty">int</span>       <span class="cm">// 3</span>
+<span class="ty">string</span> s <span class="op">=</span> <span class="kw">change</span>(<span class="num">42</span>)<span class="op">-&gt;</span><span class="ty">string</span>   <span class="cm">// "42"</span>
+<span class="ty">float</span> g  <span class="op">=</span> <span class="kw">change</span>(<span class="num">10</span>)<span class="op">-&gt;</span><span class="ty">float</span>    <span class="cm">// 10.0</span>
+<span class="ty">bool</span> b   <span class="op">=</span> <span class="kw">change</span>(<span class="num">1</span>)<span class="op">-&gt;</span><span class="ty">bool</span>     <span class="cm">// true</span></pre>
 
 <hr>
 
@@ -973,7 +973,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player(<span clas
   <tr><td><code>{ }</code> blocks</td><td><code>end keyword</code></td><td>Every block closes with <code>end if</code>, <code>end function</code>, <code>end object</code>, etc.</td></tr>
   <tr><td>Semicolons <code>;</code></td><td>Newlines</td><td>No semicolons. One statement per line.</td></tr>
   <tr><td><code>// comment</code></td><td><code>// comment</code></td><td>Identical.</td></tr>
-  <tr><td><code>(int)x</code></td><td><code>int(x)</code></td><td>Explicit cast. Works for <code>float</code>, <code>string</code>, <code>bool</code> too.</td></tr>
+  <tr><td><code>(int)x</code></td><td><code>change(x)-&gt;int</code></td><td>Explicit cast. Works for <code>float</code>, <code>string</code>, <code>bool</code> too.</td></tr>
 </table>
 
 <h3>Keywords</h3>
@@ -983,7 +983,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player(<span clas
   <tr><td><code>enum { A=1 }</code></td><td><code>fixed ... end fixed</code></td><td>Access members as <code>Name.member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed and scoped — no preprocessor macro</td></tr>
   <tr><td><code>NULL</code></td><td><code>empty</code></td><td>Null literal</td></tr>
-  <tr><td><code>printf(...)</code></td><td><code>print x</code></td><td>Use <code>string(x)</code> to convert a value before printing or concatenating</td></tr>
+  <tr><td><code>printf(...)</code></td><td><code>print x</code></td><td>Use <code>change(x)-&gt;string</code> to convert a value before printing or concatenating</td></tr>
   <tr><td><code>break</code></td><td><code>escape</code></td><td>Exit a loop</td></tr>
   <tr><td><code>continue</code></td><td><code>continue</code></td><td>Identical.</td></tr>
 </table>
@@ -1007,7 +1007,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player(<span clas
 
 <div class="cfc">
   <strong>Coming from C — Strings</strong>
-  <code>string</code> is a first-class type. There is no <code>char*</code> or null-terminated array — the runtime handles it. Use <code>string(x)</code> to convert any value to a string.
+  <code>string</code> is a first-class type. There is no <code>char*</code> or null-terminated array — the runtime handles it. Use <code>change(x)-&gt;string</code> to convert any value to a string.
 </div>
 
 </div><!-- /content-standard -->
@@ -1249,8 +1249,8 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 <h3>I/O and Casting</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>printf("%d\n", x)</code></td><td><code>print x</code></td><td>Use <code>string(x)</code> to convert before concatenation</td></tr>
-  <tr><td><code>(int)x</code></td><td><code>int(x)</code></td><td>Explicit type cast — same for float, string, bool</td></tr>
+  <tr><td><code>printf("%d\n", x)</code></td><td><code>print x</code></td><td>Use <code>change(x)-&gt;string</code> to convert before concatenation</td></tr>
+  <tr><td><code>(int)x</code></td><td><code>change(x)-&gt;int</code></td><td>Explicit type cast — same for float, string, bool</td></tr>
 </table>
 
 <div class="note">
