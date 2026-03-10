@@ -15,6 +15,38 @@ Pragma is a statically-typed systems language that transpiles to C. Designed to 
 
 Standard Pragma reads like natural language. Base Pragma adds memory management, pointers, and bitwise operations in the same file — no mode switch, no separate language.
 
+**Example — `container_of`.** Recovering a struct from a pointer to one of its members. A pattern used throughout the Linux kernel.
+
+<table>
+<tr>
+<th>C — linux/container_of.h</th>
+<th>Pragma</th>
+</tr>
+<tr>
+<td>
+
+```c
+#define container_of(ptr, type, member) ({              \
+    void *__mptr = (void *)(ptr);                       \
+    static_assert(__same_type(*(ptr), ((type *)0)->member) || \
+              __same_type(*(ptr), void),                \
+              "pointer type mismatch in container_of"); \
+    ((type *)(__mptr - offsetof(type, member))); })
+```
+
+</td>
+<td>
+
+```
+none <raw>   = change(<list_ptr>)->none      // cast to byte pointer
+raw          = raw - offset(Device, list)    // walk back to struct start
+Device <dev> = change(raw)-><Device>         // typed pointer to struct
+```
+
+</td>
+</tr>
+</table>
+
 ## Compiler
 
 Requires Python 3 and clang or gcc.
