@@ -1,0 +1,69 @@
+mandate Priority low = 1, medium = 2, high = 3 end mandate
+
+object Animal
+  String name
+  int age
+
+  function speak() returns void
+    print self.name
+  end function
+end object
+
+object Dog inherits Animal
+  String breed
+
+  function speak() returns void
+    print self.breed
+  end function
+end object
+
+function main()
+  // Constants
+  constant int MAX = 100
+  constant double PI = 3.14159
+  print MAX
+  print PI
+
+  // Mandate (enum)
+  Priority p = Priority_high
+  print p
+
+  // Casting
+  double d = 7.9
+  int truncated = change(d)->int
+  print truncated
+
+  int x = 65
+  double asFloat = change(x)->double
+  print asFloat
+
+  // Bitwise ops
+  int a = 0b1010
+  int b = 0b0110
+  int xored = a delta b
+  print xored
+
+  int shifted = 1 left 3
+  print shifted
+
+  int flipped_bits = bitflip 0b11110000
+  print flipped_bits
+
+  // else if chain
+  int score = 75
+  if score >= 90
+    print "A"
+  else if score >= 75
+    print "B"
+  else if score >= 60
+    print "C"
+  else
+    print "F"
+  end if
+
+  // Inheritance
+  Animal a1 = new Animal["Cat", 3]
+  Dog d1 = new Dog["Rex", 5, "Labrador"]
+  a1.speak()
+  d1.speak()
+end function

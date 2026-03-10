@@ -1,0 +1,143 @@
+constant int TOK_NUM = 0
+constant int TOK_TRUE = 1
+constant int TOK_FALSE = 2
+constant int TOK_NULL = 3
+constant int TOK_LBRACE = 4
+constant int TOK_RBRACE = 5
+constant int TOK_LBRACKET = 6
+constant int TOK_RBRACKET = 7
+constant int TOK_COLON = 8
+constant int TOK_COMMA = 9
+constant int TOK_STRING = 10
+constant int TOK_EOF = 11
+constant int TOK_ERROR = 12
+
+type Token
+  int kind
+  double num
+  chararray_64 str
+end type
+
+type Lexer
+  string src
+  int pos
+end type
+
+function skip_ws(Lexer <L>) returns void
+  while (((L.src[L.pos] == 32) or (L.src[L.pos] == 9)) or (L.src[L.pos] == 10)) or (L.src[L.pos] == 13) do
+    L.pos++
+  end do
+end function
+
+function next_token(Lexer <L>) returns Token
+  Token t
+  skip_ws(L)
+  char c = L.src[L.pos]
+  if c == 0
+    t.kind = TOK_EOF
+    return t
+  end if
+  if c == 123
+    t.kind = TOK_LBRACE
+    L.pos++
+    return t
+  end if
+  if c == 125
+    t.kind = TOK_RBRACE
+    L.pos++
+    return t
+  end if
+  if c == 91
+    t.kind = TOK_LBRACKET
+    L.pos++
+    return t
+  end if
+  if c == 93
+    t.kind = TOK_RBRACKET
+    L.pos++
+    return t
+  end if
+  if c == 58
+    t.kind = TOK_COLON
+    L.pos++
+    return t
+  end if
+  if c == 44
+    t.kind = TOK_COMMA
+    L.pos++
+    return t
+  end if
+  if c == 34
+    L.pos++
+    int i = 0
+    while ((L.src[L.pos] != 34) and (L.src[L.pos] != 0)) and (i < 63) do
+      t.str[i++] = L.src[L.pos++]
+    end do
+    t.str[i] = 0
+    if L.src[L.pos] == 34
+      L.pos++
+    end if
+    t.kind = TOK_STRING
+    return t
+  end if
+  if (c == 45) or ((c >= 48) and (c <= 57))
+    chararray_32 buf
+    int i = 0
+    if c == 45
+      buf[i++] = L.src[L.pos++]
+    end if
+    while ((L.src[L.pos] >= 48) and (L.src[L.pos] <= 57)) and (i < 30) do
+      buf[i++] = L.src[L.pos++]
+    end do
+    if L.src[L.pos] == 46
+      buf[i++] = L.src[L.pos++]
+      while ((L.src[L.pos] >= 48) and (L.src[L.pos] <= 57)) and (i < 30) do
+        buf[i++] = L.src[L.pos++]
+      end do
+    end if
+    buf[i] = 0
+    t.kind = TOK_NUM
+    t.num = atof(buf)
+    return t
+  end if
+  if strncmp(L.src + L.pos, "true", 4) == 0
+    t.kind = TOK_TRUE
+    L.pos += 4
+    return t
+  end if
+  if strncmp(L.src + L.pos, "false", 5) == 0
+    t.kind = TOK_FALSE
+    L.pos += 5
+    return t
+  end if
+  if strncmp(L.src + L.pos, "null", 4) == 0
+    t.kind = TOK_NULL
+    L.pos += 4
+    return t
+  end if
+  t.kind = TOK_ERROR
+  return t
+end function
+
+function count_tokens(string json) returns int
+  Lexer L
+  L.src = json
+  L.pos = 0
+  int count = 0
+  while 1 do
+    Token t = next_token(address(L))
+    if (t.kind == TOK_EOF) or (t.kind == TOK_ERROR)
+      escape
+    end if
+    count++
+  end do
+  return count
+end function
+
+function main()
+  string j1 = "{\"name\": \"Alice\", \"age\": 30, \"active\": true}"
+  string j2 = "[1, 2.5, null, false, 42]"
+  print count_tokens(j1)
+  print count_tokens(j2)
+  return 0
+end function

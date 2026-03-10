@@ -1,0 +1,27 @@
+map [string,int][10] wordcount
+
+function main()
+  wordcount["hello"] = 1
+  wordcount["world"] = 2
+  wordcount["hello"] = wordcount["hello"] + 1
+
+  print wordcount["hello"]
+  print wordcount["world"]
+
+  if wordcount_has("hello")
+    print "hello exists"
+  end if
+
+  if wordcount_has("missing")
+    print "should not print"
+  end if
+
+  wordcount_remove("world")
+
+  if wordcount_has("world")
+    print "should not print"
+  end if
+
+  print "done"
+  return 0
+end function

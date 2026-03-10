@@ -1,0 +1,69 @@
+type StrBuf
+  string buf
+  int len
+  int cap
+end type
+
+function sb_new(int initial_cap) returns StrBuf
+  StrBuf s
+  s.buf = change(malloc(initial_cap))->string
+  s.buf[0] = 0
+  s.len = 0
+  s.cap = initial_cap
+  return s
+end function
+
+function sb_grow(StrBuf <s>, int needed) returns void
+  while s.cap <= needed do
+    s.cap *= 2
+  end do
+  s.buf = change(realloc(s.buf, s.cap))->string
+end function
+
+function sb_append(StrBuf <s>, string str) returns void
+  int slen = change(strlen(str))->int
+  if ((s.len + slen) + 1) >= s.cap
+    sb_grow(s, (s.len + slen) + 1)
+  end if
+  memcpy(s.buf + s.len, str, slen + 1)
+  s.len += slen
+end function
+
+function sb_append_char(StrBuf <s>, char c) returns void
+  if (s.len + 2) >= s.cap
+    sb_grow(s, s.len + 2)
+  end if
+  s.buf[s.len] = c
+  s.buf[s.len + 1] = 0
+  s.len += 1
+end function
+
+function sb_find(StrBuf <s>, char c) returns int
+  for int i = 0 while i < s.len do i++
+    if s.buf[i] == c
+      return i
+    end if
+  end for
+  return -1
+end function
+
+function sb_free(StrBuf <s>) returns void
+  free(s.buf)
+  s.buf = NULL
+  s.len = 0
+  s.cap = 0
+end function
+
+function main()
+  StrBuf s = sb_new(16)
+  sb_append(address(s), "Hello")
+  sb_append_char(address(s), 44)
+  sb_append_char(address(s), 32)
+  sb_append(address(s), "world")
+  sb_append_char(address(s), 33)
+  print s.buf
+  print s.len
+  print sb_find(address(s), 119)
+  sb_free(address(s))
+  return 0
+end function

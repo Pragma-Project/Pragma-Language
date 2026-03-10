@@ -11,17 +11,6 @@ from typing import List, Optional, Any
 
 @dataclass
 class Program:
-    globals: List[Any] = field(default_factory=list)   # list of GlobalBlock
-    mains:   List[Any] = field(default_factory=list)   # list of MainBlock
-
-
-@dataclass
-class GlobalBlock:
-    body: List[Any] = field(default_factory=list)
-
-
-@dataclass
-class MainBlock:
     body: List[Any] = field(default_factory=list)
 
 
@@ -50,25 +39,36 @@ class ConstantDecl:
 
 @dataclass
 class ArrayDecl:
-    """array[String] ToDoList = [...]"""
+    """array int[5] a = [...]  or  array int[5][3] grid"""
     elem_type: str
     name: str
+    dims: List[int] = field(default_factory=list)   # [] = no size declared
     init: List[Any] = field(default_factory=list)
 
 
 @dataclass
 class ListDecl:
-    """List[String] Errands = [...]"""
+    """list string[3] names = [...]"""
     elem_type: str
     name: str
+    dims: List[int] = field(default_factory=list)
     init: List[Any] = field(default_factory=list)
+
+
+@dataclass
+class MapDecl:
+    """map [string,int][50] wordCount"""
+    key_type: str
+    val_type: str
+    capacity: Optional[int]    # None = unbounded
+    name: str
 
 
 @dataclass
 class FunctionDecl:
     name: str
     return_type: str
-    params: List[Any] = field(default_factory=list)   # list of Param
+    params: List[Any] = field(default_factory=list)
     body: List[Any] = field(default_factory=list)
 
 
@@ -80,11 +80,12 @@ class Param:
 
 @dataclass
 class ObjectDecl:
+    """type Node ... end type  (compiles to C struct)"""
     name: str
-    parent: Optional[str] = None              # inherits ParentName
-    ifaces: List[str] = field(default_factory=list)   # interfaces A, B, C
-    fields: List[Any] = field(default_factory=list)   # list of ObjectField
-    methods: List[Any] = field(default_factory=list)  # list of FunctionDecl
+    parent: Optional[str] = None
+    ifaces: List[str] = field(default_factory=list)
+    fields: List[Any] = field(default_factory=list)
+    methods: List[Any] = field(default_factory=list)
 
 
 @dataclass
@@ -92,35 +93,48 @@ class ObjectField:
     type_name: str
     name: str
     default: Optional[Any] = None
+    bits: Optional[int] = None    # set for bit fields: uint.bits=7 count
 
 
 @dataclass
 class InterfaceDecl:
-    """interface Athlete ... end interface"""
     name: str
-    methods: List[Any] = field(default_factory=list)   # FunctionDecl with empty body
+    methods: List[Any] = field(default_factory=list)
 
 
 @dataclass
-class MandateMember:
+class FixedMember:
     name: str
-    value: Optional[int] = None   # explicit value, or None (auto-increment)
+    value: Optional[int] = None
 
 
 @dataclass
-class MandateDecl:
-    """mandate Priority low = 1, medium = 2, high = 3 end mandate"""
+class FixedDecl:
+    """fixed Priority low=1, medium=2, high=3 end fixed"""
     name: str
-    members: List[MandateMember] = field(default_factory=list)
+    members: List[FixedMember] = field(default_factory=list)
+
+
+@dataclass
+class VariantField:
+    """A single field in a variant (union) type"""
+    type_name: str
+    name: str
+
+
+@dataclass
+class VariantDecl:
+    """variant Packet ... end variant  (compiles to C union)"""
+    name: str
+    fields: List[Any] = field(default_factory=list)
 
 
 # ─── Statements ───────────────────────────────────────────────────────────────
 
 @dataclass
 class AssignStmt:
-    """name = expr  or  name op= expr"""
-    target: Any       # Identifier or FieldAccess
-    op: str           # '=' '+=' '-=' '*=' '/='
+    target: Any
+    op: str
     value: Any
 
 
@@ -138,7 +152,7 @@ class PrintStmt:
 class IfStmt:
     condition: Any
     body: List[Any] = field(default_factory=list)
-    elif_clauses: List[Any] = field(default_factory=list)   # list of ElifClause
+    elif_clauses: List[Any] = field(default_factory=list)
     else_body: Optional[List[Any]] = None
 
 
@@ -157,16 +171,16 @@ class ForEachStmt:
 
 @dataclass
 class ForStmt:
-    """for int i = 0 while i < 10 do i++"""
-    init: Any          # VarDecl
+    """for int i = 0 while i < 10 do i++  or  for i=0, i<10, i++"""
+    init: Any          # VarDecl (expressive) or AssignStmt (C-style)
     condition: Any
     step: Any
     body: List[Any] = field(default_factory=list)
+    c_style: bool = False
 
 
 @dataclass
 class WhileStmt:
-    """while x < 5 do ... end do"""
     condition: Any
     body: List[Any] = field(default_factory=list)
 
@@ -174,52 +188,60 @@ class WhileStmt:
 @dataclass
 class TryStmt:
     body: List[Any] = field(default_factory=list)
-    catches: List[Any] = field(default_factory=list)   # list of CatchClause
+    catches: List[Any] = field(default_factory=list)
 
 
 @dataclass
 class CatchClause:
-    exceptions: List[str]    # one or more exception type names
+    exceptions: List[str]
     var: str
     body: List[Any] = field(default_factory=list)
 
 
 @dataclass
 class NewStmt:
-    """new Runner  or  new Cyclist["Jake", 17, 1.6]"""
     type_name: str
     args: List[Any] = field(default_factory=list)
 
 
 @dataclass
 class EscapeStmt:
-    """escape — breaks out of the nearest loop or conditions block"""
+    """escape — break out of loop"""
     pass
 
 
 @dataclass
-class SkipStmt:
-    """skip — continues to the next loop iteration"""
+class ContinueStmt:
+    """continue — next loop iteration"""
     pass
 
 
 @dataclass
-class RawBlock:
-    body: List[Any] = field(default_factory=list)
+class RaiseStmt:
+    """raise ExceptionType "message"  — throw an exception"""
+    exc_type: str
+    message: Optional[Any] = None
 
 
 @dataclass
-class ConditionsCase:
-    value: Optional[Any]     # None when is_default=True
+class MatchCase:
+    value: Optional[Any]
     is_default: bool
     body: List[Any] = field(default_factory=list)
 
 
 @dataclass
-class ConditionsStmt:
-    """conditions x ... end conditions"""
+class MatchStmt:
+    """match x ... end match  — no fall-through"""
     expr: Any
-    cases: List[ConditionsCase] = field(default_factory=list)
+    cases: List[MatchCase] = field(default_factory=list)
+
+
+@dataclass
+class SwitchStmt:
+    """iterate x ... end iterate  — fall-through (C behaviour)"""
+    expr: Any
+    cases: List[MatchCase] = field(default_factory=list)
 
 
 # ─── Expressions ──────────────────────────────────────────────────────────────
@@ -231,21 +253,18 @@ class Identifier:
 
 @dataclass
 class SuperRef:
-    """Represents 'super' — the parent object reference."""
     pass
 
 
 @dataclass
 class FieldAccess:
-    """Runner.age  or  super.Method"""
     obj: Any
     field: str
 
 
 @dataclass
 class CallExpr:
-    """AddNums(a, b)  or  obj.method(args)"""
-    func: Any          # Identifier or FieldAccess
+    func: Any
     args: List[Any] = field(default_factory=list)
 
 
@@ -258,19 +277,18 @@ class BinOp:
 
 @dataclass
 class UnaryOp:
-    op: str            # '!' or '-' or 'flip'
+    op: str
     operand: Any
 
 
 @dataclass
 class PostfixOp:
-    op: str            # '++' or '--'
+    op: str
     operand: Any
 
 
 @dataclass
 class IndexExpr:
-    """arr[i]"""
     array: Any
     index: Any
 
@@ -312,34 +330,27 @@ class EmptyLit:
     pass
 
 
-# ─── Memory (RAW blocks) ──────────────────────────────────────────────────────
-
-@dataclass
-class PointerDecl:
-    """pointer int64 p = ADDRESS<num1>"""
-    type_name: str
-    name: str
-    target: Any        # AddressOf node
-
+# ─── Memory ───────────────────────────────────────────────────────────────────
 
 @dataclass
 class AddressOf:
-    target: str        # variable name
+    """address(x) or address(<p>) — take the address of an expression"""
+    target: Any    # expression (Identifier or other)
 
 
 @dataclass
 class MemAccess:
-    """MEM<0xDEADBEEF>"""
+    """mem(0xDEAD0000) — read/write at a raw address"""
     address: Any
 
 
 @dataclass
 class DerefExpr:
-    """DEREF<p>"""
+    """deref(<p>) — read value at the address p holds"""
     pointer: Any
 
 
 @dataclass
 class SizeOf:
-    """SIZE<Type>"""
+    """size(Type) — byte size of a type"""
     type_name: str

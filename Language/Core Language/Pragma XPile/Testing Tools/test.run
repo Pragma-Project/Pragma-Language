@@ -126,11 +126,11 @@ MAIN
 
   # Bitwise operations
   int flags = 0
-  flags = flags | 4
+  flags = flags or 4
   flags = flags delta 1
   flags = flags left 2
   flags = flags right 1
-  flags = flip flags
+  flags = bitflip flags
   print flags
 
   # Casting

@@ -1,0 +1,49 @@
+interface Describable
+  function describe() returns void
+end interface
+
+object Shape interfaces Describable
+  String color
+
+  function describe() returns void
+    print self.color
+  end function
+
+  function area() returns double
+    return 0.0
+  end function
+end object
+
+object Circle inherits Shape
+  double radius
+
+  function describe() returns void
+    super.describe()
+    print self.radius
+  end function
+
+  function area() returns double
+    return 3.14159 * self.radius * self.radius
+  end function
+end object
+
+function classify(String s) returns void
+  conditions s
+    "red":   print "warm"
+    "blue":  print "cool"
+    "green": print "cool"
+    default: print "unknown"
+  end conditions
+end function
+
+function main()
+  // Interface + inheritance with super
+  Circle c = new Circle["blue", 5.0]
+  c.describe()
+  print c.area()
+
+  // String conditions
+  classify("red")
+  classify("blue")
+  classify("other")
+end function

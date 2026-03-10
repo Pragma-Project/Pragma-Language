@@ -1,0 +1,103 @@
+variant Number
+  int i
+  double d
+end variant
+
+variant ByteWord
+  int raw
+  chararray_4 bytes
+end variant
+
+function add(int a, int b) returns int
+  return a + b
+end function
+
+function sub(int a, int b) returns int
+  return a - b
+end function
+
+function mul(int a, int b) returns int
+  return a * b
+end function
+
+function square(int x) returns int
+  return x * x
+end function
+
+function apply(none <op>, int a, int b) returns int
+  return op(a, b)
+end function
+
+function transform(int <arr>, int n, none <fn>) returns void
+  for int i = 0 while i < n do i++
+    arr[i] = fn(arr[i])
+  end for
+end function
+
+function season(int month) returns string
+  switch month
+  when 12
+  when 1
+  when 2
+    return "winter"
+  when 3
+  when 4
+  when 5
+    return "spring"
+  when 6
+  when 7
+  when 8
+    return "summer"
+  when 9
+  when 10
+  when 11
+    return "autumn"
+  default
+    return "unknown"
+  end switch
+end function
+
+function grade(int score) returns int
+  switch score / 10
+  when 10
+  when 9
+    return 1
+  when 8
+    return 2
+  when 7
+    return 3
+  when 6
+    return 4
+  default
+    return 5
+  end switch
+end function
+
+function main()
+  Number n
+  n.i = 42
+  print n.i
+  n.d = 3.14
+  print n.d
+  ByteWord bw
+  bw.raw = 0x01020304
+  print bw.bytes[3]
+  print bw.bytes[2]
+  print apply(add, 10, 3)
+  print apply(sub, 10, 3)
+  print apply(mul, 10, 3)
+  none <fp> = square()
+  print fp(7)
+  array int[4] arr = [1, 2, 3, 4]
+  transform(arr, 4, square)
+  for int i = 0 while i < 4 do i++
+    print arr[i]
+  end for
+  print season(1)
+  print season(7)
+  print season(10)
+  print grade(95)
+  print grade(83)
+  print grade(55)
+  return 0
+end function

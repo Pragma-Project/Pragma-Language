@@ -1,0 +1,34 @@
+function divide(int a, int b) returns int
+  if b == 0
+    error DivisionByZero "Cannot divide by zero"
+  end if
+  return a / b
+end function
+
+function main()
+  try
+    int result = divide(10, 2)
+    print result
+  catch(DivisionByZero e)
+    print "caught division by zero"
+  end catch
+  end try
+
+  try
+    int r2 = divide(6, 0)
+    print r2
+  catch(DivisionByZero e)
+    print "caught: divide by zero as expected"
+  end catch
+  end try
+
+  try
+    int r3 = divide(20, 4)
+    print r3
+  catch(DivisionByZero e)
+    print "should not happen"
+  end catch
+  end try
+
+  return 0
+end function

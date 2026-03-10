@@ -1,0 +1,35 @@
+function clamp(int val, int lo, int hi) returns int
+  if val < lo
+    return lo
+  end if
+  if val > hi
+    return hi
+  end if
+  return val
+end function
+
+function main()
+  int num1 = 42
+  int64 <p> = address(num1)
+  print deref(p)
+
+  int s = size(int)
+  print s
+
+  // Clamp
+  print clamp(150, 0, 100)
+  print clamp(-5, 0, 100)
+  print clamp(50, 0, 100)
+
+  // Array search with escape
+  int found = 0
+  int target = 7
+  array[int] data = [3, 1, 7, 9, 2]
+  for int i = 0 while i < 5 do i++
+    if data[i] == target
+      found = 1
+      escape
+    end if
+  end for
+  print found
+end function

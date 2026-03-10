@@ -1,0 +1,49 @@
+function factorial(int n) returns int
+  if n <= 1
+    return 1
+  end if
+  return n * factorial(n - 1)
+end function
+
+function sum_to(int n) returns int
+  int total = 0
+  int i = 1
+  while i <= n do
+    total += i
+    i++
+  end do
+  return total
+end function
+
+function main()
+  // While loop
+  int count = 0
+  while count < 5 do
+    count++
+    print count
+  end do
+
+  // C-style for loop
+  for int i = 0 while i < 4 do i++
+    print i
+  end for
+
+  // Recursive function
+  print factorial(6)
+
+  // Function returning value
+  print sum_to(10)
+
+  // escape (break) and skip (continue)
+  int j = 0
+  while j < 10 do
+    j++
+    if j == 6
+      escape
+    end if
+    if j % 2 == 0
+      skip
+    end if
+    print j
+  end do
+end function

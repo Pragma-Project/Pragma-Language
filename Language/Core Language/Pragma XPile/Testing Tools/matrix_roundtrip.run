@@ -1,0 +1,80 @@
+constant int N = 3
+
+object Mat3
+  array[array[double]] data
+end object
+
+function mat3_zero() returns Mat3
+  Mat3 m
+  for int i = 0 while i < N do i++
+    for int j = 0 while j < N do j++
+      m.data[i][j] = 0.0
+    end for
+  end for
+  return m
+end function
+
+function mat3_identity() returns Mat3
+  Mat3 m = mat3_zero()
+  for int i = 0 while i < N do i++
+    m.data[i][i] = 1.0
+  end for
+  return m
+end function
+
+function mat3_add(Mat3 a, Mat3 b) returns Mat3
+  Mat3 r = mat3_zero()
+  for int i = 0 while i < N do i++
+    for int j = 0 while j < N do j++
+      r.data[i][j] = a.data[i][j] + b.data[i][j]
+    end for
+  end for
+  return r
+end function
+
+function mat3_mul(Mat3 a, Mat3 b) returns Mat3
+  Mat3 r = mat3_zero()
+  for int i = 0 while i < N do i++
+    for int j = 0 while j < N do j++
+      for int k = 0 while k < N do k++
+        r.data[i][j] += a.data[i][k] * b.data[k][j]
+      end for
+    end for
+  end for
+  return r
+end function
+
+function mat3_trace(Mat3 m) returns double
+  double t = 0.0
+  for int i = 0 while i < N do i++
+    t += m.data[i][i]
+  end for
+  return t
+end function
+
+function mat3_print(Mat3 m) returns void
+  for int i = 0 while i < N do i++
+    for int j = 0 while j < N do j++
+      print m.data[i][j]
+    end for
+    print ""
+  end for
+end function
+
+function main()
+  Mat3 I = mat3_identity()
+  Mat3 A = mat3_zero()
+  A.data[0][0] = 1.0
+  A.data[0][1] = 2.0
+  A.data[0][2] = 3.0
+  A.data[1][0] = 4.0
+  A.data[1][1] = 5.0
+  A.data[1][2] = 6.0
+  A.data[2][0] = 7.0
+  A.data[2][1] = 8.0
+  A.data[2][2] = 9.0
+  Mat3 R = mat3_mul(A, I)
+  mat3_print(R)
+  print mat3_trace(A)
+  return 0
+end function

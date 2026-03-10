@@ -3,7 +3,6 @@ Pragma Lexer
 Tokenizes .run source files into a stream of tokens.
 """
 
-import re
 from enum import Enum, auto
 from dataclasses import dataclass
 from typing import List, Optional
@@ -12,130 +11,139 @@ from typing import List, Optional
 class TT(Enum):
     """Token types."""
     # Literals
-    INT_LIT     = auto()
-    FLOAT_LIT   = auto()
-    STRING_LIT  = auto()
-    BOOL_LIT    = auto()
-    NULL        = auto()
-    EMPTY       = auto()
+    INT_LIT      = auto()
+    FLOAT_LIT    = auto()
+    STRING_LIT   = auto()
+    BOOL_LIT     = auto()
+    NULL         = auto()
+    EMPTY        = auto()
 
     # Identifiers and types
-    IDENT       = auto()
-    TYPE        = auto()
+    IDENT        = auto()
+    TYPE         = auto()
 
     # Keywords - structure
-    GLOBAL      = auto()
-    END_GLOBAL  = auto()
-    MAIN        = auto()
-    END_MAIN    = auto()
+    GLOBAL       = auto()
+    END_GLOBAL   = auto()
+    MAIN         = auto()
+    END_MAIN     = auto()
 
     # Keywords - blocks
-    FUNCTION    = auto()
-    END_FUNCTION= auto()
-    OBJECT      = auto()
-    END_OBJECT  = auto()
-    INTERFACE   = auto()
-    END_INTERFACE = auto()
-    IF          = auto()
-    ELSE_IF     = auto()
-    ELSE        = auto()
-    END_ELSE    = auto()
-    END_IF      = auto()
-    FOR         = auto()
-    END_FOR     = auto()
-    FOR_EACH    = auto()
-    WHILE       = auto()
-    END_DO      = auto()
-    TRY         = auto()
-    END_TRY     = auto()
-    CATCH       = auto()
-    END_CATCH   = auto()
-    RAW         = auto()
-    END_RAW     = auto()
-    MANDATE     = auto()
-    END_MANDATE = auto()
-    CONDITIONS  = auto()
-    END_CONDITIONS = auto()
+    FUNCTION     = auto()
+    END_FUNCTION = auto()
+    TYPEBLOCK    = auto()    # 'type' ... 'end type'  (struct declaration)
+    END_TYPEBLOCK= auto()
+    INTERFACE    = auto()
+    END_INTERFACE= auto()
+    IF           = auto()
+    ELSE_IF      = auto()
+    ELSE         = auto()
+    END_ELSE     = auto()
+    END_IF       = auto()
+    FOR          = auto()
+    END_FOR      = auto()
+    FOR_EACH     = auto()
+    WHILE        = auto()
+    END_DO       = auto()
+    TRY          = auto()
+    END_TRY      = auto()
+    CATCH        = auto()
+    END_CATCH    = auto()
+    FIXED        = auto()    # enum declaration  (was MANDATE)
+    END_FIXED    = auto()
+    MATCH        = auto()    # no-fall-through switch  (was CONDITIONS)
+    END_MATCH    = auto()
+    ITERATE      = auto()    # fall-through iterate
+    END_ITERATE  = auto()
+    VARIANT      = auto()    # union type: variant Foo ... end variant
+    END_VARIANT  = auto()
 
     # Keywords - control
-    RETURNS     = auto()
-    INPUTS      = auto()
-    RETURN      = auto()
-    NEW         = auto()
-    IMPORT      = auto()
-    IN          = auto()
-    DO          = auto()
-    PRINT       = auto()
-    ESCAPE      = auto()   # break
-    SKIP        = auto()   # continue
-    DEFAULT     = auto()   # conditions default case
+    RETURNS      = auto()
+    INPUTS       = auto()
+    RETURN       = auto()
+    NEW          = auto()
+    IMPORT       = auto()
+    IN           = auto()
+    DO           = auto()
+    PRINT        = auto()
+    ESCAPE       = auto()    # break
+    CONTINUE     = auto()    # continue  (was SKIP)
+    DEFAULT      = auto()    # match/iterate default case
+    WHEN         = auto()    # match/iterate case label: when VALUE
+    RAISE        = auto()    # error ExceptionType "msg"
 
     # Keywords - declarations
-    CONSTANT    = auto()   # const
-    INHERITS    = auto()   # extends / inherits
-    INTERFACES  = auto()   # implements (plural, used in object decl)
-    SUPER       = auto()   # super
-    CHANGE      = auto()   # cast: change(x)->type
+    CONSTANT     = auto()
+    INHERITS     = auto()
+    INTERFACES   = auto()
+    SUPER        = auto()
+    CHANGE       = auto()    # cast: change(x)->type
 
-    # Keywords - operators (word-form)
-    DELTA       = auto()   # XOR:         a delta b
-    FLIP        = auto()   # bitwise NOT: flip a
-    LEFT        = auto()   # left shift:  a left n
-    RIGHT       = auto()   # right shift: a right n
+    # Keywords - word operators
+    DELTA        = auto()    # XOR:          a delta b
+    FLIP         = auto()    # bitwise NOT:  bitflip a
+    LEFT         = auto()    # left shift:   a left n
+    RIGHT        = auto()    # right shift:  a right n
+    BAND         = auto()    # bitwise AND:  a both1 b
+    BOR          = auto()    # bitwise OR:   a either1 b
+    BNOR         = auto()    # bitwise NOR:  a both0 b
+    NEGATE       = auto()    # arithmetic negation: negate x
+    EQUALS       = auto()    # == alternative: x equals y
 
-    # Memory (RAW only, must be caps)
-    POINTER     = auto()
-    ADDRESS     = auto()
-    MEM         = auto()
-    DEREF       = auto()
-    SIZE        = auto()
+    # Memory
+    ADDRESS      = auto()
+    MEM          = auto()
+    DEREF        = auto()
+    SIZE         = auto()
 
     # Arithmetic operators
-    PLUS        = auto()
-    MINUS       = auto()
-    STAR        = auto()
-    SLASH       = auto()
-    MODULO      = auto()   # %
+    PLUS         = auto()
+    MINUS        = auto()
+    STAR         = auto()
+    SLASH        = auto()
+    MODULO       = auto()
 
-    # Comparison / assignment operators
-    ASSIGN      = auto()
-    EQ          = auto()
-    NEQ         = auto()
-    LT          = auto()   # defined but lexer emits LANGLE for '<'
-    GT          = auto()   # defined but lexer emits RANGLE for '>'
-    LTE         = auto()
-    GTE         = auto()
+    # Comparison / assignment
+    ASSIGN       = auto()
+    EQ           = auto()
+    NEQ          = auto()
+    LT           = auto()
+    GT           = auto()
+    LTE          = auto()
+    GTE          = auto()
 
     # Logical operators
-    AND         = auto()   # &  (also bitwise AND on ints)
-    OR          = auto()   # |  (also bitwise OR on ints, and catch separator)
-    NOT         = auto()   # !
+    AND          = auto()    # 'and'  logical AND
+    OR           = auto()    # 'or'   logical OR
+    NOT          = auto()    # '!' or 'not'
 
     # Increment / compound assign
-    INCREMENT   = auto()
-    DECREMENT   = auto()
-    PLUS_ASSIGN = auto()
-    MINUS_ASSIGN= auto()
-    STAR_ASSIGN = auto()
-    SLASH_ASSIGN= auto()
+    INCREMENT    = auto()
+    DECREMENT    = auto()
+    PLUS_ASSIGN  = auto()
+    MINUS_ASSIGN = auto()
+    STAR_ASSIGN  = auto()
+    SLASH_ASSIGN = auto()
+    LEFT_ASSIGN  = auto()    # <<=  (left=)
+    RIGHT_ASSIGN = auto()    # >>=  (right=)
 
     # Special
-    ARROW       = auto()   # ->  (for change(x)->type)
+    ARROW        = auto()    # ->
 
     # Delimiters
-    LPAREN      = auto()
-    RPAREN      = auto()
-    LBRACKET    = auto()
-    RBRACKET    = auto()
-    LANGLE      = auto()   # <  (comparison or memory op delimiter)
-    RANGLE      = auto()   # >
-    DOT         = auto()
-    COMMA       = auto()
-    COLON       = auto()
+    LPAREN       = auto()
+    RPAREN       = auto()
+    LBRACKET     = auto()
+    RBRACKET     = auto()
+    LANGLE       = auto()    # <  (pointer brackets)
+    RANGLE       = auto()    # >
+    DOT          = auto()
+    COMMA        = auto()
+    COLON        = auto()
 
-    # Special
-    NEWLINE     = auto()
-    EOF         = auto()
+    NEWLINE      = auto()
+    EOF          = auto()
 
 
 @dataclass
@@ -153,85 +161,96 @@ TYPES = {
     'int16', 'integer16',
     'int32', 'integer32',
     'int64', 'integer64',
+    'uint',
     'uint8', 'uint16', 'uint32', 'uint64',
     'double', 'float',
-    'String', 'bool', 'void',
+    'string', 'String',
+    'bool',
+    'char',
+    'none',      # no-value / void pointer: none <p> → void*
 }
 
 # ── Keyword map ────────────────────────────────────────────────────────────────
 
 KEYWORDS = {
     # Structure
-    'GLOBAL':       TT.GLOBAL,
-    'MAIN':         TT.MAIN,
+    'GLOBAL':     TT.GLOBAL,
+    'MAIN':       TT.MAIN,
     # Blocks
-    'function':     TT.FUNCTION,
-    'object':       TT.OBJECT,
-    'Object':       TT.OBJECT,
-    'interface':    TT.INTERFACE,
-    'if':           TT.IF,
-    'else':         TT.ELSE,
-    'for':          TT.FOR,
-    'while':        TT.WHILE,
-    'try':          TT.TRY,
-    'catch':        TT.CATCH,
-    'RAW':          TT.RAW,
-    'mandate':      TT.MANDATE,
-    'conditions':   TT.CONDITIONS,
+    'function':   TT.FUNCTION,
+    'type':       TT.TYPEBLOCK,
+    'interface':  TT.INTERFACE,
+    'if':         TT.IF,
+    'else':       TT.ELSE,
+    'for':        TT.FOR,
+    'while':      TT.WHILE,
+    'try':        TT.TRY,
+    'catch':      TT.CATCH,
+    'fixed':      TT.FIXED,
+    'match':      TT.MATCH,
+    'iterate':    TT.ITERATE,
+    'variant':    TT.VARIANT,
     # Control
-    'returns':      TT.RETURNS,
-    'inputs':       TT.INPUTS,
-    'return':       TT.RETURN,
-    'new':          TT.NEW,
-    'import':       TT.IMPORT,
-    'in':           TT.IN,
-    'do':           TT.DO,
-    'print':        TT.PRINT,
-    'escape':       TT.ESCAPE,
-    'skip':         TT.SKIP,
-    'default':      TT.DEFAULT,
+    'returns':    TT.RETURNS,
+    'inputs':     TT.INPUTS,
+    'return':     TT.RETURN,
+    'new':        TT.NEW,
+    'import':     TT.IMPORT,
+    'in':         TT.IN,
+    'do':         TT.DO,
+    'print':      TT.PRINT,
+    'escape':     TT.ESCAPE,
+    'continue':   TT.CONTINUE,
+    'default':    TT.DEFAULT,
+    'when':       TT.WHEN,    # optional alias for match/iterate case syntax
+    'error':      TT.RAISE,
     # Declarations
-    'constant':     TT.CONSTANT,
-    'inherits':     TT.INHERITS,
-    'interfaces':   TT.INTERFACES,
-    'super':        TT.SUPER,
-    'change':       TT.CHANGE,
+    'constant':   TT.CONSTANT,
+    'inherits':   TT.INHERITS,
+    'change':     TT.CHANGE,
     # Word operators
-    'delta':        TT.DELTA,
-    'flip':         TT.FLIP,
-    'left':         TT.LEFT,
-    'right':        TT.RIGHT,
+    'and':        TT.AND,
+    'or':         TT.OR,
+    'not':        TT.NOT,
+    'equals':     TT.EQUALS,
+    'delta':      TT.DELTA,
+    'bitflip':    TT.FLIP,
+    'left':       TT.LEFT,
+    'right':      TT.RIGHT,
+    'both1':      TT.BAND,
+    'either1':    TT.BOR,
+    'both0':      TT.BNOR,
+    'negate':     TT.NEGATE,
     # Literals
-    'null':         TT.NULL,
-    'empty':        TT.EMPTY,
-    'true':         TT.BOOL_LIT,
-    'false':        TT.BOOL_LIT,
-    # Memory ops (caps-only)
-    'pointer':      TT.POINTER,
-    'ADDRESS':      TT.ADDRESS,
-    'MEM':          TT.MEM,
-    'DEREF':        TT.DEREF,
-    'SIZE':         TT.SIZE,
+    'null':       TT.NULL,
+    'empty':      TT.EMPTY,
+    'true':       TT.BOOL_LIT,
+    'false':      TT.BOOL_LIT,
+    # Memory ops
+    'address':    TT.ADDRESS,
+    'mem':        TT.MEM,
+    'deref':      TT.DEREF,
+    'size':       TT.SIZE,
 }
 
-# ── End-keyword map  (resolved after seeing 'end' or 'END') ───────────────────
+# ── End-keyword map ────────────────────────────────────────────────────────────
 
 END_KEYWORDS = {
-    'function':   TT.END_FUNCTION,
-    'object':     TT.END_OBJECT,
-    'Object':     TT.END_OBJECT,
-    'interface':  TT.END_INTERFACE,
-    'if':         TT.END_IF,
-    'else':       TT.END_ELSE,
-    'for':        TT.END_FOR,
-    'do':         TT.END_DO,
-    'try':        TT.END_TRY,
-    'catch':      TT.END_CATCH,
-    'GLOBAL':     TT.END_GLOBAL,
-    'MAIN':       TT.END_MAIN,
-    'RAW':        TT.END_RAW,
-    'mandate':    TT.END_MANDATE,
-    'conditions': TT.END_CONDITIONS,
+    'function':  TT.END_FUNCTION,
+    'type':      TT.END_TYPEBLOCK,
+    'interface': TT.END_INTERFACE,
+    'if':        TT.END_IF,
+    'else':      TT.END_ELSE,
+    'for':       TT.END_FOR,
+    'do':        TT.END_DO,
+    'try':       TT.END_TRY,
+    'catch':     TT.END_CATCH,
+    'GLOBAL':    TT.END_GLOBAL,
+    'MAIN':      TT.END_MAIN,
+    'fixed':     TT.END_FIXED,
+    'match':     TT.END_MATCH,
+    'iterate':   TT.END_ITERATE,
+    'variant':   TT.END_VARIANT,
 }
 
 
@@ -298,8 +317,8 @@ class Lexer:
             self.add(TT.NEWLINE, '\\n')
             return
 
-        # Comment
-        if ch == '#':
+        # Comment  (//)
+        if ch == '/' and self.peek(1) == '/':
             while self.peek() and self.peek() != '\n':
                 self.advance()
             return
@@ -309,13 +328,13 @@ class Lexer:
             self._string()
             return
 
-        # Number (check hex first)
+        # Number (hex / binary / decimal)
         if ch == '0' and self.peek(1) == 'x':
-            self._hex()
-            return
+            self._hex(); return
+        if ch == '0' and self.peek(1) == 'b':
+            self._binary(); return
         if ch and ch.isdigit():
-            self._number()
-            return
+            self._number(); return
 
         # ── Operators ─────────────────────────────────────────────────────────
 
@@ -379,7 +398,11 @@ class Lexer:
 
         if ch == '<':
             self.advance()
-            if self.peek() == '=':
+            # <<= (left-shift assign)
+            if self.peek() == '<' and self.peek(1) == '=':
+                self.advance(); self.advance()
+                self.add(TT.LEFT_ASSIGN, '<<=')
+            elif self.peek() == '=':
                 self.advance(); self.add(TT.LTE, '<=')
             else:
                 self.add(TT.LANGLE, '<')
@@ -387,36 +410,33 @@ class Lexer:
 
         if ch == '>':
             self.advance()
-            if self.peek() == '=':
+            # >>= (right-shift assign)
+            if self.peek() == '>' and self.peek(1) == '=':
+                self.advance(); self.advance()
+                self.add(TT.RIGHT_ASSIGN, '>>=')
+            elif self.peek() == '=':
                 self.advance(); self.add(TT.GTE, '>=')
             else:
                 self.add(TT.RANGLE, '>')
             return
 
-        if ch == '&':
-            self.advance(); self.add(TT.AND, '&')
+        if ch == '^':
+            self.advance(); self.add(TT.DELTA, '^')
             return
 
-        if ch == '|':
-            self.advance(); self.add(TT.OR, '|')
+        if ch == '~':
+            self.advance(); self.add(TT.FLIP, '~')
             return
 
         # ── Delimiters ────────────────────────────────────────────────────────
 
-        if ch == '(':
-            self.advance(); self.add(TT.LPAREN, '('); return
-        if ch == ')':
-            self.advance(); self.add(TT.RPAREN, ')'); return
-        if ch == '[':
-            self.advance(); self.add(TT.LBRACKET, '['); return
-        if ch == ']':
-            self.advance(); self.add(TT.RBRACKET, ']'); return
-        if ch == '.':
-            self.advance(); self.add(TT.DOT, '.'); return
-        if ch == ',':
-            self.advance(); self.add(TT.COMMA, ','); return
-        if ch == ':':
-            self.advance(); self.add(TT.COLON, ':'); return
+        if ch == '(': self.advance(); self.add(TT.LPAREN,   '('); return
+        if ch == ')': self.advance(); self.add(TT.RPAREN,   ')'); return
+        if ch == '[': self.advance(); self.add(TT.LBRACKET, '['); return
+        if ch == ']': self.advance(); self.add(TT.RBRACKET, ']'); return
+        if ch == '.': self.advance(); self.add(TT.DOT,      '.'); return
+        if ch == ',': self.advance(); self.add(TT.COMMA,    ','); return
+        if ch == ':': self.advance(); self.add(TT.COLON,    ':'); return
 
         # ── Identifier or keyword ─────────────────────────────────────────────
 
@@ -453,6 +473,13 @@ class Lexer:
         start = self.pos
         self.advance(); self.advance()      # 0x
         while self.peek() and self.peek() in '0123456789abcdefABCDEF':
+            self.advance()
+        self.add(TT.INT_LIT, self.src[start:self.pos])
+
+    def _binary(self):
+        start = self.pos
+        self.advance(); self.advance()      # 0b
+        while self.peek() and self.peek() in '01':
             self.advance()
         self.add(TT.INT_LIT, self.src[start:self.pos])
 
