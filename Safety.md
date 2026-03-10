@@ -1,10 +1,7 @@
-Pragma is a project encompassing a programming language, hardware optimization algorithm, and operating system written in the language.
-The below explains the language.  Currently in testing as of this writing, with the OS far behind the language.
-To read more about the Pragma project, go here: 
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-LANGUAGE
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+# Safety
+
+Pragma encompasses several ideas by safety is core:
 - Uses intuitive, Java-like syntax but with more clarity and completeness.
 - Transpiles to C
 - Repository includes the following tools:
