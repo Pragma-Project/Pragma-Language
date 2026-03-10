@@ -1,6 +1,6 @@
 Pragma is a project encompassing a programming language, hardware optimization algorithm, and operating system written in the language.
 The below explains the language.  Currently in testing as of this writing, with the OS far behind the language.
-To read more about the Pragma project, go here:
+To read more about the Pragma project, go here: 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 LANGUAGE
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -26,14 +26,14 @@ How?
 So not only is your code safe, but any libraries/packages you download that are signed are also safe.  And there's a level below full safety available
 where only regular sanitizers ran.
 
-Basically the LLM's have made it where the mathematical part is now doable for everyday people - everything else was already there.
+Basically the LLM's have made it where the mathematical part is now doable for everyday people - everything else was already there.  
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-It hashes your source file with SHA-256.  When you run the verification pipeline, every tool's full output is collected, hashed,
+It hashes your source file with SHA-256.  When you run the verification pipeline, every tool's full output is collected, hashed, 
 and bundled into JSON alongside the source hash and tool versions.  The output is a CID officially, but it is ultimately the hash.
 The hash is hosted on Pinata, which right now gives you 1 GB of space on the free tier.  The glue is Solidity, a type of smart contract on Ethereum.
-Pinata sits on the IPFS network, which is just a P2P network of hashes.  Whenever someone requests the original timestamped
+Pinata sits on the IPFS network, which is just a P2P network of hashes.  Whenever someone requests the original timestamped 
 hash through IPFS, it checks and finds the hosting node and downloads it.  It'll look something like this:
 
   "tool_results": [
@@ -52,4 +52,4 @@ No trust required, same safety as Rust with the option to not fight the compiler
 
 I made two modes of signed code: MemResistant and MemProof.  The former has a lot of tools perform static analysis (listed at top), while the latter does that and formally proves safety mathematically.
 So you get 3 options: unsigned, signed as confidence in safety, signed as proven safe.  Gives you the ability to at least in many cases have some confidence that someone didn't bound a buffer somewhere,
-to formally proven using the same math that Rust uses.
+to formally proven using the same math that Rust uses.  
