@@ -559,7 +559,7 @@ body.theme-base .readme-btn:hover {
   <a href="#for">For</a>
   <a href="#foreach">For Each</a>
   <a href="#match">Match</a>
-  <a href="#switch">Switch</a>
+  <a href="#iterate">Switch</a>
   <a href="#loop-control">Loop Control</a>
 
   <div class="nav-section">Code</div>
@@ -866,15 +866,15 @@ x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// 
 
 <hr>
 
-<h2 id="switch" class="anchor-target">Switch — fall-through</h2>
+<h2 id="iterate" class="anchor-target">Iterate — fall-through</h2>
 <p>Execution continues into the next case unless <code>escape</code> stops it.</p>
-<pre><span class="kw">switch</span> code
+<pre><span class="kw">iterate</span> code
   <span class="num">1</span>: <span class="kw">print</span> <span class="str">"one"</span>
   <span class="num">2</span>: <span class="kw">print</span> <span class="str">"two"</span>
      <span class="kw">escape</span>
   <span class="num">3</span>: <span class="kw">print</span> <span class="str">"three"</span>
      <span class="kw">escape</span>
-<span class="kw">end switch</span></pre>
+<span class="kw">end iterate</span></pre>
 
 <hr>
 
@@ -1012,10 +1012,10 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><td><code>!=</code></td><td><code>!=</code></td><td>Identical. Also accepts <code>not</code> as an alternative (<code>x not y</code>).</td></tr>
 </table>
 
-<h3>Switch / match</h3>
+<h3>Iterate / match</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>switch</code> (falls through)</td><td><code>switch</code></td><td>Identical fall-through behaviour</td></tr>
+  <tr><td><code>iterate</code> (falls through)</td><td><code>iterate</code></td><td>Identical fall-through behaviour</td></tr>
   <tr><td>—</td><td><code>match</code></td><td>No fall-through. Stops at first match. Use this by default.</td></tr>
 </table>
 
@@ -1246,8 +1246,8 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
   <tr><td><code>break</code></td><td><code>escape</code></td><td>Exit a loop</td></tr>
   <tr><td><code>continue</code></td><td><code>continue</code></td><td>Identical.</td></tr>
-  <tr><td><code>switch</code> (fall-through)</td><td><code>switch</code></td><td>Falls through by default — identical to C</td></tr>
-  <tr><td><code>switch</code> (no fall-through)</td><td><code>match</code></td><td>Pragma addition — stops at first match</td></tr>
+  <tr><td><code>iterate</code> (fall-through)</td><td><code>iterate</code></td><td>Falls through by default — identical to C</td></tr>
+  <tr><td><code>iterate</code> (no fall-through)</td><td><code>match</code></td><td>Pragma addition — stops at first match</td></tr>
 </table>
 
 <h3>Operators</h3>
