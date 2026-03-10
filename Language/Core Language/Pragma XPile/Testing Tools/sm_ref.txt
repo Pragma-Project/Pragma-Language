@@ -1,9 +1,0 @@
-Sunday
-Monday
-Tuesday
-Wednesday
-Thursday
-Friday
-Saturday
-a=vowel e=vowel b=other
-the=3 cat=2 sat=1 on=1 mat=1
