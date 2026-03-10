@@ -80,7 +80,7 @@ Pointer depth is explicit and enforced: `int <p>` is one level, `int <<pp>>` is 
 **Lists and for-each**
 ```pragma
 function main()
-  List[int] nums = [1, 2, 3, 4, 5]
+  list int[5] nums = [1, 2, 3, 4, 5]
   int total = 0
   for each n in nums
     total += n * n
