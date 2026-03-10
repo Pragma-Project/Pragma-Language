@@ -647,25 +647,25 @@ body.theme-base .glossary-btn:hover {
 <div id="content-standard">
 
 <h1>Pragma Language Reference</h1>
-<p class="subtitle">Standard Pragma. Source files use the <code>.run</code> extension. For lower level programming with memory management, pointers, and bitwise operations, click <strong>Base</strong> on the left.</p>
-
-<p class="cfc-intro"><em>Throughout this page, sections marked <strong>Coming from C</strong> compare Pragma to C syntax. If you are a beginner or don't have a C background, skip those sections — they are not necessary.</em></p>
 
 <div style="background:linear-gradient(135deg,#1e1e2e 0%,#2a1a5e 100%); border-radius:6px; padding:18px 24px; margin:24px 0; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
   <div style="color:#cba6f7; font-family:'Georgia',serif; font-size:1rem; font-style:italic; flex:1;">Mathematically-proven, Formally Verified and Digitally Signed Proof of Memory Safety — Bundled in from Day One.</div>
   <a href="safety.html" style="flex-shrink:0; background:rgba(203,166,247,0.18); border:1px solid #cba6f7; color:#cba6f7; text-decoration:none; padding:8px 20px; border-radius:4px; font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:0.1em; white-space:nowrap; transition:background 0.15s;" onmouseover="this.style.background='rgba(203,166,247,0.35)'" onmouseout="this.style.background='rgba(203,166,247,0.18)'">See How →</a>
 </div>
 
-<div style="border:1px solid #e0e0e0; border-top:3px solid #1a1a1a; border-radius:0 0 6px 6px; padding:20px 24px; margin:16px 0 32px; display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start;">
+<div style="border:1px solid #e0e0e0; border-top:3px solid #1a1a1a; border-radius:0 0 6px 6px; padding:20px 24px; margin:16px 0 8px; display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start;">
   <div>
-    <div style="font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:0.2em; color:#999; text-transform:uppercase; margin-bottom:10px;">Runtime Policy</div>
+    <div style="font-family:'Playfair Display',Georgia,serif; font-size:1.05rem; font-style:italic; font-weight:700; color:#1a1a1a; margin-bottom:10px;"><em>Dynamic Runtime</em> <span style="font-style:normal; font-size:0.8rem; font-family:'Share Tech Mono',monospace; font-weight:normal; color:#555;">(DR)</span></div>
     <div style="font-family:'Georgia',serif; font-size:0.95rem; color:#1a1a1a; line-height:1.65;">No defaults. Each file declares its own memory model. GC, manual, refcount, arena — the compiler enforces what you declare.</div>
   </div>
   <div style="background:#1a1a1a; border-radius:4px; padding:14px 16px; font-family:'Share Tech Mono',monospace; font-size:12px; line-height:2.1; color:#cdd6f4;">
-    <span style="color:#cba6f7">memory</span>: <span style="color:#a6e3a1">gc</span>           <span style="color:#444">// or manual · refcount · arena</span><br>
-    <span style="color:#cba6f7">safety</span>: <span style="color:#a6e3a1">checked</span>      <span style="color:#444">// or unchecked</span><br>
-    <span style="color:#cba6f7">int_width</span>: <span style="color:#fab387">32</span>       <span style="color:#444">// or 64, platform</span>
+    <span style="color:#cba6f7">memory</span>: <span style="color:#a6e3a1">gc</span>           <span style="color:#c8a030">// or manual · refcount · arena</span><br>
+    <span style="color:#cba6f7">safety</span>: <span style="color:#a6e3a1">checked</span>      <span style="color:#c8a030">// or unchecked</span><br>
+    <span style="color:#cba6f7">int_width</span>: <span style="color:#fab387">32</span>       <span style="color:#c8a030">// or 64, platform</span>
   </div>
+</div>
+<div style="margin:0 0 32px; display:flex; justify-content:flex-end;">
+  <a href="runtime-policy.html" style="background:transparent; border:1px solid #1a1a1a; color:#1a1a1a; text-decoration:none; padding:6px 16px; border-radius:4px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.1em; transition:all 0.15s;" onmouseover="this.style.background='#1a1a1a';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#1a1a1a'">Runtime Policy →</a>
 </div>
 
 <h2 id="overview" class="anchor-target">Overview</h2>
@@ -1066,6 +1066,8 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <code>string</code> is a first-class type. There is no <code>char*</code> or null-terminated array — the runtime handles it. Use <code>string(x)</code> to convert any value to a string.
 </div>
 
+<p class="subtitle" style="margin-top:48px;">Standard Pragma. Source files use the <code>.run</code> extension. For lower level programming with memory management, pointers, and bitwise operations, click <strong>Base</strong> on the left.</p>
+
 </div><!-- /content-standard -->
 
 <!-- ══════════════════════════════════════════
@@ -1074,9 +1076,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <div id="content-base" style="display:none">
 
 <h1>Base Pragma Reference</h1>
-<p class="subtitle">Low-level operations and systems work. These concepts may not exist or be as easily accessible in Python, Java, or other modern languages. The angle brackets <code>&lt; &gt;</code> are the signal that you are working at the memory level. Base Pragma files use the <code>.base</code> extension to denote difference.</p>
-
-<p class="cfc-intro"><em>Throughout this page, sections marked <strong>Coming from C</strong> compare Pragma to C syntax. If you are a beginner or don't have a C background, skip those sections — they are not necessary.</em></p>
+<p class="subtitle">Low-level operations and systems work. These concepts may not exist or be as easily accessible in Python, Java, or other modern languages. The angle brackets <code>&lt; &gt;</code> are the signal that you are working at the memory level.</p>
 
 <p><a href="#why-base-pragma" style="color:#cba6f7; font-family:'Share Tech Mono','Courier New',monospace; font-size:0.9rem; text-decoration:none;">Why Base Pragma?</a></p>
 
@@ -1321,6 +1321,8 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   <strong>type vs struct</strong>
   In C, a <code>struct</code> is a named group of typed fields — nothing more. A Pragma <code>type</code> is the same thing, with the option to add methods, inheritance, default field values, and constructors. If you ignore those features and just declare fields, it compiles to an identical struct. There is no separate <code>struct</code> keyword in Pragma because the only difference is capability, not concept.
 </div>
+
+<p class="subtitle" style="margin-top:48px;">Base Pragma files use the <code>.base</code> extension.</p>
 
 </div><!-- /content-base -->
 </main>
