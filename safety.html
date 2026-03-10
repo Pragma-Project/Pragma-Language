@@ -257,12 +257,25 @@ td:first-child { color: #5c2d91; font-family: 'Share Tech Mono', monospace; font
 .lang-compare > div { min-width: 0; }
 .lang-compare pre { margin: 0; font-size: 12px; overflow-x: auto; }
 
+#back-btn {
+  position: fixed; top: 14px; right: 20px; z-index: 300;
+  padding: 18px 16px; font-size: 11px;
+  font-family: 'VT323', monospace; letter-spacing: 0.2em;
+  cursor: pointer; border-radius: 4px; transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; line-height: 1;
+  background: #1e1e2e; color: #cba6f7; border: 1px solid #313244;
+}
+#back-btn .back-label { font-size: 22px; letter-spacing: 0.18em; }
+#back-btn:hover { background: #313244; }
+
 </style>
 </head>
 <body>
 
+<button id="back-btn" onclick="history.back()"><span class="back-label">BACK</span></button>
+
 <nav>
-  <div class="nav-title">Pragma Safety</div>
+  <a href="index.html" class="nav-title" style="text-decoration:none; display:block;">Pragma</a>
   <div class="nav-section">Sections</div>
   <a href="#memory-safety">Memory Safety</a>
   <a href="#functional-correctness">Functional Correctness</a>
@@ -270,7 +283,6 @@ td:first-child { color: #5c2d91; font-family: 'Share Tech Mono', monospace; font
   <a href="#memproof">MemProof &amp; MemResistant</a>
   <a href="#signing">Digital Signing</a>
   <div class="nav-section">Reference</div>
-  <a href="index.html">← Syntax Reference</a>
   <a href="https://github.com/Pragma-Project/Pragma-Language" target="_blank">GitHub ↗</a>
 </nav>
 
