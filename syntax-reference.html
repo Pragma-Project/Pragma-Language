@@ -564,7 +564,7 @@ body.theme-base .readme-btn:hover {
 
   <div class="nav-section">Code</div>
   <a href="#functions">Functions</a>
-  <a href="#objects">Objects</a>
+  <a href="#types">Types</a>
   <a href="#interfaces">Interfaces</a>
   <a href="#fixeds">Fixed</a>
 
@@ -628,7 +628,7 @@ body.theme-base .readme-btn:hover {
 
 <h2 id="overview" class="anchor-target">Overview</h2>
 <p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be readable to anyone who has written code in any modern language.</p>
-<p>Every Pragma program has at least a <code>main</code> function. Functions, objects, and constants are declared at file scope above it. This both acknowledges the older C language syntax and adds some clarity for beginners.</p>
+<p>Every Pragma program has at least a <code>main</code> function. Functions, types, and constants are declared at file scope above it. This both acknowledges the older C language syntax and adds some clarity for beginners.</p>
 
 <hr>
 
@@ -791,12 +791,11 @@ x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// 
 <hr>
 
 <h2 id="casting" class="anchor-target">Casting</h2>
-<p>Use the type name as a call. Float-to-int truncates — no rounding.</p>
-<pre><span class="ty">float</span> f <span class="op">=</span> <span class="num">3.9</span>
-<span class="ty">int</span> n   <span class="op">=</span> <span class="ty">int</span>(f)          <span class="cm">// 3</span>
-<span class="ty">string</span> s <span class="op">=</span> <span class="ty">string</span>(<span class="num">42</span>)    <span class="cm">// "42"</span>
-<span class="ty">float</span> g  <span class="op">=</span> <span class="ty">float</span>(<span class="num">10</span>)     <span class="cm">// 10.0</span>
-<span class="ty">bool</span> b   <span class="op">=</span> <span class="ty">bool</span>(<span class="num">1</span>)       <span class="cm">// true</span></pre>
+<p>Use <code>change(expr)-&gt;Type</code>. Float-to-int truncates — no rounding.</p>
+<pre><span class="ty">int</span> n    <span class="op">=</span> change(<span class="num">3.9</span>)-&gt;<span class="ty">int</span>      <span class="cm">// 3 — truncates</span>
+<span class="ty">string</span> s <span class="op">=</span> change(<span class="num">42</span>)-&gt;<span class="ty">string</span>    <span class="cm">// "42"</span>
+<span class="ty">float</span> g  <span class="op">=</span> change(<span class="num">10</span>)-&gt;<span class="ty">float</span>     <span class="cm">// 10.0</span>
+<span class="ty">bool</span> b   <span class="op">=</span> change(<span class="num">1</span>)-&gt;<span class="ty">bool</span>       <span class="cm">// true</span></pre>
 
 <hr>
 
@@ -835,7 +834,7 @@ x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// 
 <hr>
 
 <h2 id="foreach" class="anchor-target">For Each</h2>
-<pre><span class="ty">list</span>[<span class="ty">string</span>[<span class="num">3</span>]] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>]
+<pre><span class="kw">list</span> <span class="ty">string</span>[<span class="num">3</span>] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>]
 
 <span class="kw">for each</span> name <span class="kw">in</span> names
   <span class="kw">print</span> name
@@ -897,8 +896,8 @@ x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// 
 
 <hr>
 
-<h2 id="objects" class="anchor-target">Objects</h2>
-<pre><span class="kw">object</span> Player
+<h2 id="types" class="anchor-target">Types</h2>
+<pre><span class="kw">type</span> Player
   <span class="ty">string</span> name
   <span class="ty">int</span> age
   <span class="ty">float</span> score <span class="op">=</span> <span class="num">0.0</span>
@@ -906,18 +905,18 @@ x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// 
   <span class="kw">function</span> greet() <span class="kw">returns</span> <span class="ty">void</span>
     <span class="kw">print</span> <span class="str">"Hi, I am "</span> <span class="op">+</span> <span class="kw">self</span>.name
   <span class="kw">end function</span>
-<span class="kw">end object</span>
+<span class="kw">end type</span>
 
-<span class="kw">object</span> ProPlayer <span class="kw">inherits</span> Player <span class="kw">interfaces</span> Ranked
+<span class="kw">type</span> ProPlayer <span class="kw">inherits</span> Player
   <span class="ty">int</span> rank
-<span class="kw">end object</span>
+<span class="kw">end type</span>
 
-Player p <span class="op">=</span> <span class="kw">new</span> Player(<span class="str">"Alex"</span>, <span class="num">25</span>, <span class="num">98.5</span>)
+Player p <span class="op">=</span> <span class="kw">new</span> Player[<span class="str">"Alex"</span>, <span class="num">25</span>, <span class="num">98.5</span>]
 <span class="kw">print</span> p.name</pre>
 
 <div class="cfc">
   <strong>Coming from C</strong>
-  <code>object</code> is a <code>struct</code>. Plain field declarations compile to an identical memory layout. Methods, inheritance, and interfaces are additive — ignore them and an object is exactly a struct.
+  <code>type</code> is a <code>struct</code>. Plain field declarations compile to an identical memory layout. Methods and inheritance are additive — ignore them and a type is exactly a struct.
 </div>
 
 <hr>
@@ -949,14 +948,17 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player(<span clas
 
 <h2 id="print" class="anchor-target">Print</h2>
 <pre><span class="kw">print</span> <span class="str">"hello world"</span>
-<span class="kw">print</span> <span class="str">"Score: "</span> <span class="op">+</span> <span class="ty">string</span>(score)
+<span class="kw">print</span> <span class="str">"Score: "</span> <span class="op">+</span> change(score)-&gt;<span class="ty">string</span>
 <span class="kw">print</span> add(<span class="num">3</span>, <span class="num">7</span>)</pre>
 
 <hr>
 
 <h2 id="try-catch" class="anchor-target">Try / Catch</h2>
-<p>Multiple exception types in one catch use <code>or</code>.</p>
-<pre><span class="kw">try</span>
+<p>Throw with <code>error</code>. Multiple exception types in one catch use <code>or</code>.</p>
+<pre><span class="kw">error</span> ExcType <span class="str">&quot;message&quot;</span>    <span class="cm">// throw with message</span>
+<span class="kw">error</span> ExcType              <span class="cm">// throw without message</span>
+
+<span class="kw">try</span>
   <span class="cm">// risky code</span>
 <span class="kw">catch</span>(IOException err)
   <span class="kw">print</span> <span class="str">"IO error"</span>
@@ -975,7 +977,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player(<span clas
 <h3>Syntax structure</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>{ }</code> blocks</td><td><code>end keyword</code></td><td>Every block closes with <code>end if</code>, <code>end function</code>, <code>end object</code>, etc.</td></tr>
+  <tr><td><code>{ }</code> blocks</td><td><code>end keyword</code></td><td>Every block closes with <code>end if</code>, <code>end function</code>, <code>end type</code>, etc.</td></tr>
   <tr><td>Semicolons <code>;</code></td><td>Newlines</td><td>No semicolons. One statement per line.</td></tr>
   <tr><td><code>// comment</code></td><td><code>// comment</code></td><td>Identical.</td></tr>
   <tr><td><code>(int)x</code></td><td><code>int(x)</code></td><td>Explicit cast. Works for <code>float</code>, <code>string</code>, <code>bool</code> too.</td></tr>
@@ -984,7 +986,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player(<span clas
 <h3>Keywords</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>struct { ... }</code></td><td><code>object ... end object</code></td><td>Same concept. Pragma objects can also have methods, inheritance, and interfaces — but plain field declarations compile identically to a C struct.</td></tr>
+  <tr><td><code>struct { ... }</code></td><td><code>type ... end type</code></td><td>Same concept. Pragma types can also have methods and inheritance — but plain field declarations compile identically to a C struct.</td></tr>
   <tr><td><code>enum { A=1 }</code></td><td><code>fixed ... end fixed</code></td><td>Access members as <code>Name.member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed and scoped — no preprocessor macro</td></tr>
   <tr><td><code>NULL</code></td><td><code>empty</code></td><td>Null literal</td></tr>
@@ -1145,13 +1147,13 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 <hr>
 
 <h2 id="base-bitfields" class="anchor-target">Bit Fields</h2>
-<p>Declare a field with a specific number of bits using angle brackets after the name. Fields pack into adjacent bits in declaration order. Group them in an object to control struct layout.</p>
+<p>Declare a field with a specific number of bits using <code>type.bits=N fieldname</code> syntax. Fields pack into adjacent bits in declaration order.</p>
 
-<pre><span class="kw">object</span> PackedHeader
-  <span class="ty">uint</span> is_valid <span class="ang">&lt;</span><span class="num">1</span><span class="ang">&gt;</span>    <span class="cm">// 1 bit</span>
-  <span class="ty">uint</span> count    <span class="ang">&lt;</span><span class="num">7</span><span class="ang">&gt;</span>    <span class="cm">// 7 bits — total so far: 1 byte</span>
-  <span class="ty">uint32</span> value         <span class="cm">// 4 bytes, no bit constraint</span>
-<span class="kw">end object</span></pre>
+<pre><span class="kw">type</span> PackedHeader
+  <span class="ty">uint</span>.bits=<span class="num">1</span> is_valid    <span class="cm">// 1 bit</span>
+  <span class="ty">uint</span>.bits=<span class="num">7</span> count       <span class="cm">// 7 bits — total so far: 1 byte</span>
+  <span class="ty">uint32</span> value            <span class="cm">// 4 bytes, no bit constraint</span>
+<span class="kw">end type</span></pre>
 
 <div class="note">
   <strong>Note</strong>
@@ -1160,14 +1162,14 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 
 <hr>
 
-<h2 id="base-pack" class="anchor-target">pack() — Object Packing</h2>
-<p>By default the compiler may insert padding between fields to align them in memory. <code>pack()</code> removes all padding — every field follows immediately after the previous one with zero gaps. Required for network packet headers and file format objects where byte position must be exact.</p>
+<h2 id="base-pack" class="anchor-target">pack() — Type Packing</h2>
+<p>By default the compiler may insert padding between fields to align them in memory. <code>pack()</code> removes all padding — every field follows immediately after the previous one with zero gaps. Required for network packet headers and file format types where byte position must be exact.</p>
 
 <pre>pack(PackedHeader)</pre>
 
 <div class="warn">
   <strong>Warning</strong>
-  Packed objects can cause misaligned memory access on some processor architectures, triggering a hardware fault or a silent performance penalty. Only use when exact byte layout is required.
+  Packed types can cause misaligned memory access on some processor architectures, triggering a hardware fault or a silent performance penalty. Only use when exact byte layout is required.
 </div>
 
 <div class="cfc">
@@ -1206,7 +1208,7 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 <h3>Types and Declarations</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>struct { ... }</code></td><td><code>object ... end object</code></td><td>Add methods, inheritance, and interfaces — otherwise identical to a struct</td></tr>
+  <tr><td><code>struct { ... }</code></td><td><code>type ... end type</code></td><td>Add methods and inheritance — otherwise identical to a struct</td></tr>
   <tr><td><code>enum { A=1, B=2 }</code></td><td><code>fixed ... end fixed</code></td><td>Access as <code>Name.member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed, scoped constant — no preprocessor</td></tr>
   <tr><td><code>void *ptr</code></td><td><code>nothing pointer ptr</code></td><td>Generic pointer — cast before reading</td></tr>
@@ -1259,8 +1261,8 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 </table>
 
 <div class="note">
-  <strong>object vs struct</strong>
-  In C, a <code>struct</code> is a named group of typed fields — nothing more. A Pragma <code>object</code> is the same thing, with the option to add methods, inheritance, interfaces, default field values, and constructors. If you ignore those features and just declare fields, it compiles to an identical struct. There is no separate <code>struct</code> keyword in Pragma because the only difference is capability, not concept.
+  <strong>type vs struct</strong>
+  In C, a <code>struct</code> is a named group of typed fields — nothing more. A Pragma <code>type</code> is the same thing, with the option to add methods, inheritance, default field values, and constructors. If you ignore those features and just declare fields, it compiles to an identical struct. There is no separate <code>struct</code> keyword in Pragma because the only difference is capability, not concept.
 </div>
 
 </div><!-- /content-base -->
