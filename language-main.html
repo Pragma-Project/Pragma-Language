@@ -344,64 +344,26 @@ hr { border: none; margin: 20px 0; }
 .cfc-intro { font-size: 0.88rem; margin-bottom: 32px; }
 
 /* ══════════════════════════════════════════════
-   NAV BUTTONS (Why? + Glossary)
+   HOME BUTTON (fixed, over content area)
 ══════════════════════════════════════════════ */
-.nav-btns {
-  display: flex;
-  margin: 0 20px 14px;
-  gap: 6px;
-}
-.why-btn, .glossary-btn {
-  flex: 1;
-  padding: 4px 0;
+#home-btn {
+  position: fixed;
+  top: 16px;
+  left: 258px;
+  z-index: 200;
   font-size: 11px;
   font-family: 'Share Tech Mono', 'Courier New', monospace;
-  cursor: pointer;
-  border-radius: 3px;
-  letter-spacing: 0.12em;
-  text-align: center;
-  transition: all 0.15s;
-  text-transform: uppercase;
+  letter-spacing: 0.1em;
   text-decoration: none;
-  display: inline-block;
-  border-width: 1px;
-  border-style: solid;
+  border: 1px solid;
+  padding: 4px 12px;
+  border-radius: 3px;
+  transition: all 0.15s;
 }
-body.theme-default .why-btn {
-  background: transparent;
-  color: #f5c518;
-  border-color: #f5c518;
-}
-body.theme-default .why-btn:hover {
-  background: rgba(245,197,24,0.12);
-}
-body.theme-default .glossary-btn {
-  background: transparent;
-  color: #888;
-  border-color: #2a2050;
-}
-body.theme-default .glossary-btn:hover {
-  color: #cba6f7;
-  border-color: #5c2d91;
-  background: #1e1e2e;
-}
-body.theme-base .why-btn {
-  background: transparent;
-  color: #f5c518;
-  border-color: #f5c518;
-}
-body.theme-base .why-btn:hover {
-  background: rgba(245,197,24,0.1);
-}
-body.theme-base .glossary-btn {
-  background: transparent;
-  color: #444;
-  border-color: #222;
-}
-body.theme-base .glossary-btn:hover {
-  color: #aaa;
-  border-color: #555;
-}
+body.theme-default #home-btn { color: #a6adc8; border-color: #313244; background: #1e1e2e; }
+body.theme-default #home-btn:hover { color: #cdd6f4; border-color: #cba6f7; }
+body.theme-base #home-btn { color: #888; border-color: #333; background: #000; }
+body.theme-base #home-btn:hover { color: #ccc; border-color: #666; }
 
 /* ══════════════════════════════════════════════
    README PAGE (full-screen overlay)
@@ -555,6 +517,8 @@ body.theme-base .glossary-btn:hover {
   <span id="mode-label-text" class="mode-label">Standard</span>
 </button>
 
+<a id="home-btn" href="index.html">← Home</a>
+
 <!-- ══════════════════════════════════════════
      SIDEBAR — STANDARD
 ══════════════════════════════════════════ -->
@@ -564,11 +528,6 @@ body.theme-base .glossary-btn:hover {
     <button class="tab-btn tab-active" data-mode="standard" onclick="setMode('standard')">Standard</button>
     <button class="tab-btn" data-mode="base" onclick="setMode('base')">Base</button>
   </div>
-  <div class="nav-btns">
-    <button class="why-btn" onclick="showReadme()">Why?</button>
-    <a href="glossary.html" class="glossary-btn">Glossary</a>
-  </div>
-
   <div class="nav-section">Basics</div>
   <a href="index.html">Overview</a>
   <a href="#structure">Program Structure</a>
@@ -616,11 +575,6 @@ body.theme-base .glossary-btn:hover {
     <button class="tab-btn" data-mode="standard" onclick="setMode('standard')">Standard</button>
     <button class="tab-btn tab-active" data-mode="base" onclick="setMode('base')">Base</button>
   </div>
-  <div class="nav-btns">
-    <button class="why-btn" onclick="showReadme()">Why?</button>
-    <a href="glossary.html" class="glossary-btn">Glossary</a>
-  </div>
-
   <div class="nav-section">Memory</div>
   <a href="#base-pointers">Pointers</a>
   <a href="#base-address">address &amp; deref</a>
@@ -661,11 +615,6 @@ body.theme-base .glossary-btn:hover {
 <pre><span class="kw">function</span> main() <span class="kw">returns</span> <span class="ty">int</span>
   <span class="cm">// entry point</span>
 <span class="kw">end function</span></pre>
-
-<div class="note">
-  <strong>Note</strong>
-  <code>main</code> or <code>MAIN</code> are both accepted as the entry point name.
-</div>
 
 <hr>
 
