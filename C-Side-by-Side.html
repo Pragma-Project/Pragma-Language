@@ -311,6 +311,7 @@ out:
   swp_entry_t entry <span class="op">=</span> <span class="num">0</span>
   <span class="ty">none</span> <span class="ang">&lt;</span>prealloc<span class="ang">&gt;</span> <span class="op">=</span> <span class="kw">none</span>
 
+again:
   progress <span class="op">=</span> <span class="num">0</span>
   <span class="fn">init_rss_vec</span>(rss)
   src_pte <span class="op">=</span> <span class="fn">pte_offset_map_lock</span>(src_mm, src_pmd, addr, <span class="kw">address</span>(<span class="ang">&lt;</span>src_ptl<span class="ang">&gt;</span>))
