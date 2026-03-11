@@ -677,7 +677,7 @@ body.theme-base .glossary-btn:hover {
   <div id="c-hover-img" style="display:none; position:absolute; left:0; top:100%; z-index:200; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); width:600px;">
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">C — linux/container_of.h</span><span style="color:#cba6f7;">Pragma</span></div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-      <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:11px;margin:0;overflow:hidden;white-space:pre;"><span class="pp">#define</span> <span class="fn">container_of</span>(ptr, type, member) ({ \
+      <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:10px;margin:0;overflow:hidden;white-space:pre;"><span class="pp">#define</span> <span class="fn">container_of</span>(ptr, type, member) ({ \
     <span class="ty">void</span> *__mptr = (<span class="ty">void</span> *)(ptr); \
     <span class="fn">static_assert</span>( \
         <span class="fn">__same_type</span>(*(ptr), \
@@ -686,7 +686,7 @@ body.theme-base .glossary-btn:hover {
         <span class="str">"pointer type mismatch"</span>); \
     ((type *)(__mptr - \
         <span class="fn">offsetof</span>(type, member))); })</pre></div>
-      <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:11px;margin:0;overflow:hidden;white-space:pre;"><span class="pp">#</span><span class="kw">function</span> <span class="fn">container_of</span>(<span class="ty">none</span> <span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>,
+      <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:10px;margin:0;overflow:hidden;white-space:pre;"><span class="pp">#</span><span class="kw">function</span> <span class="fn">container_of</span>(<span class="ty">none</span> <span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>,
     <span class="ty">uint64</span> off) <span class="kw">returns</span> <span class="ty">none</span>
   <span class="ty">none</span> <span class="ang">&lt;</span>__mptr<span class="ang">&gt;</span> <span class="op">=</span> <span class="fn">change</span>(<span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>)-&gt;<span class="ty">none</span>
   <span class="kw">return</span> <span class="fn">change</span>(__mptr <span class="op">-</span> off)-&gt;<span class="ty">none</span>
