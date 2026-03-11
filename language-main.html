@@ -258,6 +258,11 @@ nav {
   transition: opacity 0.15s;
 }
 .nav-title a.nav-title-link:hover { opacity: 0.75; }
+.nav-home-word {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-weight: normal;
+  letter-spacing: 0.1em;
+}
 
 .mode-tabs {
   display: flex;
@@ -510,7 +515,7 @@ hr { border: none; margin: 20px 0; }
      SIDEBAR — STANDARD
 ══════════════════════════════════════════ -->
 <nav id="nav-standard">
-  <div class="nav-title"><a href="index.html" class="nav-title-link">← Pragma</a></div>
+  <div class="nav-title"><a href="index.html" class="nav-title-link">← Pragma<span class="nav-home-word"> Home</span></a></div>
   <div class="mode-tabs">
     <button class="tab-btn tab-active" data-mode="standard" onclick="setMode('standard')">Standard</button>
     <button class="tab-btn" data-mode="base" onclick="setMode('base')">Base</button>
