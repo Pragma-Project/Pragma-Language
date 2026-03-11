@@ -878,6 +878,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><td><code>struct { ... }</code></td><td><code>type ... end type</code></td><td>Same concept. Pragma types can also have methods and inheritance — but plain field declarations compile identically to a C struct.</td></tr>
   <tr><td><code>enum { A=1 }</code></td><td><code>fixed ... end fixed</code></td><td>Access members as <code>Name.member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed and scoped — no preprocessor macro</td></tr>
+  <tr><td><code>#define fn(...) ({ ... })</code></td><td><code>#function fn(...) ... #end function</code></td><td>Append <code>#</code> to <code>function</code> / <code>end function</code> to write a preprocessor-level macro function</td></tr>
   <tr><td><code>NULL</code></td><td><code>empty</code></td><td>Null literal</td></tr>
   <tr><td><code>printf(...)</code></td><td><code>print x</code></td><td>Use <code>change(x)-&gt;string</code> to convert a value before printing or concatenating</td></tr>
   <tr><td><code>break</code></td><td><code>escape</code></td><td>Exit a loop</td></tr>
@@ -1160,6 +1161,7 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   <tr><td><code>struct { ... }</code></td><td><code>type ... end type</code></td><td>Add methods and inheritance — otherwise identical to a struct</td></tr>
   <tr><td><code>enum { A=1, B=2 }</code></td><td><code>fixed ... end fixed</code></td><td>Access as <code>Name.member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed, scoped constant — no preprocessor</td></tr>
+  <tr><td><code>#define fn(...) ({ ... })</code></td><td><code>#function fn(...) ... #end function</code></td><td>Append <code>#</code> to <code>function</code> / <code>end function</code> to write a preprocessor-level macro function</td></tr>
   <tr><td><code>void *ptr</code></td><td><code>none &lt;ptr&gt;</code></td><td>Generic pointer — cast before reading</td></tr>
   <tr><td><code>NULL</code></td><td><code>empty</code></td><td>Null literal</td></tr>
   <tr><td><code>void</code> (return)</td><td><code>none</code></td><td>Function returns nothing</td></tr>
