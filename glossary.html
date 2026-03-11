@@ -74,10 +74,17 @@ a:hover { border-bottom-color: #000; }
   <tr><td>pragma file.run --tokens</td><td>print token stream (debug)</td></tr>
 </table>
 
-<h2>Transpiler — C to Pragma</h2>
+<h2>Transpiler — to Pragma</h2>
 <table>
   <tr><td>xpile input.c</td><td>transpile C source to Pragma (prints to stdout)</td></tr>
-  <tr><td>xpile input.c -o out.run</td><td>transpile C source, write to file</td></tr>
+  <tr><td>xpile input.py</td><td>transpile Python source to Pragma</td></tr>
+  <tr><td>xpile input.js</td><td>transpile JavaScript source to Pragma</td></tr>
+  <tr><td>xpile input.java</td><td>transpile Java source to Pragma</td></tr>
+  <tr><td>xpile input.c -o out.run</td><td>write output to file (works with any source language)</td></tr>
+  <tr><td>xpile --c input.c</td><td>explicit C flag (inferred from .c by default)</td></tr>
+  <tr><td>xpile --py input.py</td><td>explicit Python flag</td></tr>
+  <tr><td>xpile --js input.js</td><td>explicit JavaScript flag</td></tr>
+  <tr><td>xpile --java input.java</td><td>explicit Java flag</td></tr>
 </table>
 
 <h2>Types</h2>
