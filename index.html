@@ -686,7 +686,7 @@ body.theme-base .glossary-btn:hover {
         <span class="str">"pointer type mismatch"</span>);            \
     ((type *)(__mptr -                      \
         <span class="fn">offsetof</span>(type, member))); })</pre></div>
-      <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:11px;margin:0;overflow-x:auto;white-space:pre;max-width:100%;"><span class="kw">function</span> <span class="fn">container_of</span>(<span class="ty">none</span> <span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>,
+      <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:11px;margin:0;overflow-x:auto;white-space:pre;max-width:100%;"><span class="pp">#</span><span class="kw">function</span> <span class="fn">container_of</span>(<span class="ty">none</span> <span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>,
     <span class="ty">uint64</span> off) <span class="kw">returns</span> <span class="ty">none</span>
   <span class="ty">none</span> <span class="ang">&lt;</span>__mptr<span class="ang">&gt;</span> <span class="op">=</span> <span class="fn">change</span>(<span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>)-&gt;<span class="ty">none</span>
   <span class="kw">return</span> <span class="fn">change</span>(__mptr <span class="op">-</span> off)-&gt;<span class="ty">none</span>
