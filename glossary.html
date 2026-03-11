@@ -14,7 +14,7 @@ body {
   color: #000;
   font-size: 13px;
   line-height: 1.6;
-  padding: 60px 80px 100px;
+  padding: 72px 80px 100px;
   max-width: 960px;
   margin: 0 auto;
 }
@@ -41,12 +41,28 @@ td:last-child { color: #555; }
 em { font-style: italic; }
 a { color: #000; text-decoration: none; border-bottom: 1px solid #ccc; }
 a:hover { border-bottom-color: #000; }
-.back { font-size: 11px; color: #1a1a1a; margin-bottom: 48px; display: block; letter-spacing: 0.08em; }
+.back {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  z-index: 100;
+  font-size: 11px;
+  color: #000;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 4px 12px;
+  border-radius: 3px;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+.back:hover { border-color: #000; }
 </style>
 </head>
 <body>
 
-<a href="index.html" class="back">← back</a>
+<a href="index.html" class="back">← Pragma / Glossary</a>
 <h1>Pragma Glossary</h1>
 
 <h2>Compiler</h2>
