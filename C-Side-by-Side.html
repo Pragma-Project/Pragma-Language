@@ -162,7 +162,36 @@ hr {
 
 <!-- ═══════════════════════════════════ EXAMPLE 1 ═══════════════════════════════════ -->
 <div class="example">
-  <div class="example-label">Example 1 — Signal Handler Types</div>
+  <div class="example-label">Example 1 — container_of (linux/container_of.h)</div>
+  <div class="cols">
+    <div>
+      <div class="col-header lang-c">C</div>
+      <pre class="c-code"><span class="pp">#define</span> <span class="fn">container_of</span>(ptr, type, member) ({ \
+    <span class="ty">void</span> *__mptr = (<span class="ty">void</span> *)(ptr); \
+    <span class="fn">static_assert</span>( \
+        <span class="fn">__same_type</span>(*(ptr), \
+            ((type *)0)-&gt;member) \
+        || <span class="fn">__same_type</span>(*(ptr), <span class="ty">void</span>), \
+        <span class="str">"pointer type mismatch"</span>); \
+    ((type *)(__mptr - \
+        <span class="fn">offsetof</span>(type, member))); })</pre>
+    </div>
+    <div>
+      <div class="col-header lang-pragma">Pragma</div>
+      <pre class="p-code"><span class="pp">#</span><span class="kw">function</span> <span class="fn">container_of</span>(<span class="ty">none</span> <span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>, <span class="ty">uint64</span> off)
+  <span class="ty">none</span> <span class="ang">&lt;</span>__mptr<span class="ang">&gt;</span> <span class="op">=</span> <span class="fn">change</span>(<span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>)-&gt;<span class="ty">none</span>
+  <span class="ty">uint64</span> addr <span class="op">=</span> <span class="fn">change</span>(__mptr)-&gt;<span class="ty">uint64</span> <span class="op">-</span> off
+  <span class="kw">return</span> <span class="fn">change</span>(addr)-&gt;<span class="ty">none</span>
+<span class="pp">#</span><span class="kw">end function</span></pre>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════ EXAMPLE 2 ═══════════════════════════════════ -->
+<div class="example">
+  <div class="example-label">Example 2 — Signal Handler Types</div>
   <div class="cols">
     <div>
       <div class="col-header lang-c">C</div>
@@ -190,7 +219,7 @@ hr {
 
 <!-- ═══════════════════════════════════ EXAMPLE 2 ═══════════════════════════════════ -->
 <div class="example">
-  <div class="example-label">Example 2 — Packed Descriptor Struct</div>
+  <div class="example-label">Example 3 — Packed Descriptor Struct</div>
   <div class="cols">
     <div>
       <div class="col-header lang-c">C</div>
@@ -214,7 +243,7 @@ pack(desc_struct)</pre>
 
 <!-- ═══════════════════════════════════ EXAMPLE 3 ═══════════════════════════════════ -->
 <div class="example">
-  <div class="example-label">Example 3 — GDT Pointer + Load</div>
+  <div class="example-label">Example 4 — GDT Pointer + Load</div>
   <div class="cols">
     <div>
       <div class="col-header lang-c">C</div>
@@ -248,7 +277,7 @@ pack(desc_ptr)
 
 <!-- ═══════════════════════════════════ EXAMPLE 4 ═══════════════════════════════════ -->
 <div class="example">
-  <div class="example-label">Example 4 — copy_pte_range (Linux kernel, original)</div>
+  <div class="example-label">Example 5 — copy_pte_range (Linux kernel, original)</div>
   <div class="cols">
     <div>
       <div class="col-header lang-c">C</div>
@@ -426,7 +455,7 @@ out:
 
 <!-- ═══════════════════════════════════ EXAMPLE 5 ═══════════════════════════════════ -->
 <div class="example">
-  <div class="example-label">Example 5 — copy_pte_range (Condensed via Inlining)</div>
+  <div class="example-label">Example 6 — copy_pte_range (Condensed via Inlining)</div>
   <div class="cols">
     <div>
       <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
