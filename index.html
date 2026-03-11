@@ -294,7 +294,7 @@ main {
 
 h1 { font-size: 2.2rem; font-weight: normal; margin-bottom: 8px; padding-bottom: 14px; }
 .subtitle { font-size: 1rem; margin-bottom: 48px; font-style: italic; }
-h2 { font-size: 1.5rem; font-weight: normal; margin-top: 64px; margin-bottom: 4px; padding-bottom: 6px; scroll-margin-top: 32px; }
+h2 { font-size: 1.5rem; font-weight: normal; margin-top: 32px; margin-bottom: 4px; padding-bottom: 6px; scroll-margin-top: 32px; }
 h3 { font-size: 1.05rem; font-weight: bold; margin-top: 32px; margin-bottom: 8px; scroll-margin-top: 32px; }
 p { margin-bottom: 14px; }
 
@@ -335,7 +335,7 @@ table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 
 th { text-align: left; padding: 8px 12px; font-family: 'Share Tech Mono', 'Courier New', monospace; font-weight: normal; font-size: 13px; }
 td { padding: 7px 12px; vertical-align: top; }
 td:first-child { font-family: 'Share Tech Mono', 'Courier New', monospace; white-space: nowrap; }
-hr { border: none; margin: 48px 0; }
+hr { border: none; margin: 20px 0; }
 .anchor-target { scroll-margin-top: 30px; }
 .cfc-intro { font-size: 0.88rem; margin-bottom: 32px; }
 
@@ -586,7 +586,7 @@ body.theme-base .glossary-btn:hover {
   <a href="#for">For</a>
   <a href="#foreach">For Each</a>
   <a href="#match">Match</a>
-  <a href="#iterate">Switch</a>
+  <a href="#iterate">Iterate</a>
   <a href="#loop-control">Loop Control</a>
 
   <div class="nav-section">Code</div>
@@ -672,19 +672,20 @@ body.theme-base .glossary-btn:hover {
 <p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be readable to anyone who has written code in any modern language.</p>
 <p>Every Pragma program has at least a <code>main</code> function. Functions, types, and constants are declared at file scope above it. This both acknowledges the older C language syntax and adds some clarity for beginners.</p>
 
+<div id="c-hover-region" style="display:inline-block; border:1px dashed #cba6f7; border-radius:4px; padding:4px 14px; margin:8px 0 4px; cursor:pointer; position:relative; font-family:'Share Tech Mono','Courier New',monospace; font-size:0.85rem; color:#cba6f7;" onmouseenter="document.getElementById('c-hover-img').style.display='block'" onmouseleave="document.getElementById('c-hover-img').style.display='none'">
+  ..but C works fine
+  <div id="c-hover-img" style="display:none; position:absolute; left:0; top:100%; z-index:200; margin-top:6px; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+    <img src="container_of.png" style="max-width:600px; display:block; border-radius:4px;" alt="C vs Pragma comparison">
+    <div style="margin-top:10px; text-align:right;"><a href="see-more.html" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em;">See More →</a></div>
+  </div>
+</div>
+
 <hr>
 
 <h2 id="structure" class="anchor-target">Program Structure</h2>
 <p>No wrapper blocks. File scope holds all declarations. <code>main</code> is the entry point.</p>
 
-<pre><span class="cm">// file scope</span>
-<span class="kw">constant</span> <span class="ty">int</span> MAX_SIZE <span class="op">=</span> <span class="num">100</span>
-
-<span class="kw">function</span> helper() <span class="kw">returns</span> <span class="ty">none</span>
-  <span class="cm">// ...</span>
-<span class="kw">end function</span>
-
-<span class="kw">function</span> main() <span class="kw">returns</span> <span class="ty">int</span>
+<pre><span class="kw">function</span> main() <span class="kw">returns</span> <span class="ty">int</span>
   <span class="cm">// entry point</span>
 <span class="kw">end function</span></pre>
 
@@ -704,27 +705,6 @@ body.theme-base .glossary-btn:hover {
 <h2 id="imports" class="anchor-target">Imports</h2>
 <pre><span class="kw">import</span> Math
 <span class="kw">import</span> Collections</pre>
-
-<hr>
-
-<h2 id="types" class="anchor-target">Types &amp; Sizes</h2>
-<p>Standard types for everyday programming. Sized integer types and unsigned variants live in Base Pragma.</p>
-
-<table>
-  <tr><th>Keyword</th><th>Size</th><th>Range / Notes</th></tr>
-  <tr><td>int / integer</td><td>32-bit signed</td><td>−2,147,483,648 to 2,147,483,647</td></tr>
-  <tr><td>float</td><td>32-bit IEEE 754</td><td>~6–7 significant digits</td></tr>
-  <tr><td>double</td><td>64-bit IEEE 754</td><td>~15–16 significant digits</td></tr>
-  <tr><td>string</td><td>variable</td><td>UTF-8 first-class type. Underlying char array hidden — see String section below.</td></tr>
-  <tr><td>bool</td><td>1 byte</td><td><code>true</code> or <code>false</code></td></tr>
-  <tr><td>complex</td><td>2 × 64-bit</td><td>Complex number. Constructor: <code>complex(real, imag)</code>.</td></tr>
-  <tr><td>none</td><td>—</td><td>No value / void pointer. Replaces <code>void</code> everywhere.</td></tr>
-</table>
-
-<div class="cfc">
-  <strong>Coming from C</strong>
-  <code>string</code> is a first-class type — no <code>char*</code>, no null terminator, no manual memory. <code>change(x)-&gt;string</code> converts any value to a string. <code>int</code> compiles to a 32-bit signed integer, same as <code>int32_t</code> in C.
-</div>
 
 <hr>
 
@@ -762,20 +742,6 @@ x<span class="op">++</span>        x<span class="op">--</span></pre>
 
 <hr>
 
-<h2 id="literals" class="anchor-target">Literals</h2>
-<table>
-  <tr><th>Literal</th><th>Type</th><th>Notes</th></tr>
-  <tr><td>42</td><td>int</td><td></td></tr>
-  <tr><td>3.14</td><td>float</td><td>Decimal point required.</td></tr>
-  <tr><td>"hello"</td><td>string</td><td>Supports <code>\"</code> and <code>\\</code> escapes.</td></tr>
-  <tr><td>true / false</td><td>bool</td><td></td></tr>
-  <tr><td>0xFF</td><td>int</td><td>Hexadecimal integer.</td></tr>
-  <tr><td>empty</td><td>—</td><td>Null reference. Holds nothing.</td></tr>
-  <tr><td>complex(3, 4)</td><td>complex</td><td>Real then imaginary.</td></tr>
-</table>
-
-<hr>
-
 <h2 id="collections" class="anchor-target">Collections</h2>
 
 <h3>Array</h3>
@@ -802,44 +768,6 @@ wc[<span class="str">&quot;key&quot;</span>]           <span class="cm">// read 
 wc[<span class="str">&quot;key&quot;</span>] <span class="op">=</span> val     <span class="cm">// write (calls wc_set)</span>
 wc_has(<span class="str">&quot;key&quot;</span>)       <span class="cm">// 1 if key exists, 0 otherwise</span>
 wc_remove(<span class="str">&quot;key&quot;</span>)   <span class="cm">// delete a key</span></pre>
-
-<hr>
-
-<h2 id="operators" class="anchor-target">Operators</h2>
-
-<table>
-  <tr><th>Category</th><th>Pragma</th><th>C equivalent</th></tr>
-  <tr><td>Logical AND</td><td><code>and</code></td><td><code>&amp;&amp;</code></td></tr>
-  <tr><td>Logical OR</td><td><code>or</code></td><td><code>||</code></td></tr>
-  <tr><td>Logical NOT (prefix)</td><td><code>not x</code></td><td><code>!x</code></td></tr>
-  <tr><td>Equal</td><td><code>==</code>, <code>equals</code></td><td>same</td></tr>
-  <tr><td>Not equal</td><td><code>!=</code>, <code>not</code></td><td>same</td></tr>
-  <tr><td>Comparison</td><td><code>&lt;  &gt;  &lt;=  &gt;=</code></td><td>same</td></tr>
-  <tr><td>Arithmetic</td><td><code>+  -  *  /  %</code></td><td>same</td></tr>
-  <tr><td>Compound assign</td><td><code>+=  -=  *=  /=  %=</code></td><td>same</td></tr>
-  <tr><td>Increment / decrement</td><td><code>x++  x--</code></td><td>same (postfix only)</td></tr>
-</table>
-
-<pre><span class="ty">int</span> x <span class="op">=</span> <span class="num">42</span>
-x <span class="op">+=</span> <span class="num">5</span>    x <span class="op">-=</span> <span class="num">2</span>    x <span class="op">*=</span> <span class="num">3</span>    x <span class="op">/=</span> <span class="num">4</span>    x <span class="op">%=</span> <span class="num">7</span>
-x<span class="op">++</span>        x<span class="op">--</span>
-x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// remainder — 0 if even, 1 if odd</span></pre>
-
-<pre><span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span> <span class="kw">and</span> y <span class="op">&gt;</span> <span class="num">0</span>
-<span class="kw">if</span> done <span class="kw">or</span> cancelled
-<span class="kw">if</span> <span class="kw">not</span> active
-<span class="kw">if</span> x <span class="op">==</span> <span class="num">5</span>
-<span class="kw">if</span> name <span class="op">!=</span> <span class="str">"admin"</span></pre>
-
-<div class="note">
-  <strong>Note for beginners</strong>
-  <code>equals</code> and <code>not</code> are accepted alternatives to <code>==</code> and <code>!=</code>. So <code>x equals y</code> and <code>x not y</code> do the same thing. Use whichever reads more naturally to you.
-</div>
-
-<div class="note">
-  <strong>Note — no implicit type promotion</strong>
-  Mixing <code>int</code> and <code>float</code> in an expression requires an explicit cast. See casting below.
-</div>
 
 <hr>
 
@@ -1064,6 +992,79 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <div class="cfc">
   <strong>Coming from C — Strings</strong>
   <code>string</code> is a first-class type. There is no <code>char*</code> or null-terminated array — the runtime handles it. Use <code>string(x)</code> to convert any value to a string.
+</div>
+
+<hr>
+
+<h2 id="types" class="anchor-target">Types &amp; Sizes</h2>
+<p>Standard types for everyday programming. Sized integer types and unsigned variants live in Base Pragma.</p>
+
+<table>
+  <tr><th>Keyword</th><th>Size</th><th>Range / Notes</th></tr>
+  <tr><td>int / integer</td><td>32-bit signed</td><td>−2,147,483,648 to 2,147,483,647</td></tr>
+  <tr><td>float</td><td>32-bit IEEE 754</td><td>~6–7 significant digits</td></tr>
+  <tr><td>double</td><td>64-bit IEEE 754</td><td>~15–16 significant digits</td></tr>
+  <tr><td>string</td><td>variable</td><td>UTF-8 first-class type. Underlying char array hidden — see String section below.</td></tr>
+  <tr><td>bool</td><td>1 byte</td><td><code>true</code> or <code>false</code></td></tr>
+  <tr><td>complex</td><td>2 × 64-bit</td><td>Complex number. Constructor: <code>complex(real, imag)</code>.</td></tr>
+  <tr><td>none</td><td>—</td><td>No value / void pointer. Replaces <code>void</code> everywhere.</td></tr>
+</table>
+
+<div class="cfc">
+  <strong>Coming from C</strong>
+  <code>string</code> is a first-class type — no <code>char*</code>, no null terminator, no manual memory. <code>change(x)-&gt;string</code> converts any value to a string. <code>int</code> compiles to a 32-bit signed integer, same as <code>int32_t</code> in C.
+</div>
+
+<hr>
+
+<h2 id="literals" class="anchor-target">Literals</h2>
+<table>
+  <tr><th>Literal</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>42</td><td>int</td><td></td></tr>
+  <tr><td>3.14</td><td>float</td><td>Decimal point required.</td></tr>
+  <tr><td>"hello"</td><td>string</td><td>Supports <code>\"</code> and <code>\\</code> escapes.</td></tr>
+  <tr><td>true / false</td><td>bool</td><td></td></tr>
+  <tr><td>0xFF</td><td>int</td><td>Hexadecimal integer.</td></tr>
+  <tr><td>empty</td><td>—</td><td>Null reference. Holds nothing.</td></tr>
+  <tr><td>complex(3, 4)</td><td>complex</td><td>Real then imaginary.</td></tr>
+</table>
+
+<hr>
+
+<h2 id="operators" class="anchor-target">Operators</h2>
+
+<table>
+  <tr><th>Category</th><th>Pragma</th><th>C equivalent</th></tr>
+  <tr><td>Logical AND</td><td><code>and</code></td><td><code>&amp;&amp;</code></td></tr>
+  <tr><td>Logical OR</td><td><code>or</code></td><td><code>||</code></td></tr>
+  <tr><td>Logical NOT (prefix)</td><td><code>not x</code></td><td><code>!x</code></td></tr>
+  <tr><td>Equal</td><td><code>==</code>, <code>equals</code></td><td>same</td></tr>
+  <tr><td>Not equal</td><td><code>!=</code>, <code>not</code></td><td>same</td></tr>
+  <tr><td>Comparison</td><td><code>&lt;  &gt;  &lt;=  &gt;=</code></td><td>same</td></tr>
+  <tr><td>Arithmetic</td><td><code>+  -  *  /  %</code></td><td>same</td></tr>
+  <tr><td>Compound assign</td><td><code>+=  -=  *=  /=  %=</code></td><td>same</td></tr>
+  <tr><td>Increment / decrement</td><td><code>x++  x--</code></td><td>same (postfix only)</td></tr>
+</table>
+
+<pre><span class="ty">int</span> x <span class="op">=</span> <span class="num">42</span>
+x <span class="op">+=</span> <span class="num">5</span>    x <span class="op">-=</span> <span class="num">2</span>    x <span class="op">*=</span> <span class="num">3</span>    x <span class="op">/=</span> <span class="num">4</span>    x <span class="op">%=</span> <span class="num">7</span>
+x<span class="op">++</span>        x<span class="op">--</span>
+x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// remainder — 0 if even, 1 if odd</span></pre>
+
+<pre><span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span> <span class="kw">and</span> y <span class="op">&gt;</span> <span class="num">0</span>
+<span class="kw">if</span> done <span class="kw">or</span> cancelled
+<span class="kw">if</span> <span class="kw">not</span> active
+<span class="kw">if</span> x <span class="op">==</span> <span class="num">5</span>
+<span class="kw">if</span> name <span class="op">!=</span> <span class="str">"admin"</span></pre>
+
+<div class="note">
+  <strong>Note for beginners</strong>
+  <code>equals</code> and <code>not</code> are accepted alternatives to <code>==</code> and <code>!=</code>. So <code>x equals y</code> and <code>x not y</code> do the same thing. Use whichever reads more naturally to you.
+</div>
+
+<div class="note">
+  <strong>Note — no implicit type promotion</strong>
+  Mixing <code>int</code> and <code>float</code> in an expression requires an explicit cast. See casting below.
 </div>
 
 <p class="subtitle" style="margin-top:48px;">Standard Pragma. Source files use the <code>.run</code> extension. For lower level programming with memory management, pointers, and bitwise operations, click <strong>Base</strong> on the left.</p>
