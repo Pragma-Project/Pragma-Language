@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Real Linux Kernel Code — Pragma</title>
+<title>C Side-by-Side — Pragma</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Jost:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -384,8 +384,8 @@ out:
   <span class="ty">none</span> <span class="ang">&lt;</span>prealloc<span class="ang">&gt;</span> <span class="op">=</span> empty
   <span class="ty">int</span> nr
 
-  <span class="cm">// again:</span>
-  loop
+  <span class="cm">// again (outer loop):</span>
+  <span class="kw">while</span> <span class="kw">true</span>
     progress <span class="op">=</span> <span class="num">0</span>
     <span class="fn">init_rss_vec</span>(rss)
 
@@ -410,7 +410,7 @@ out:
     orig_dst_pte <span class="op">=</span> dst_pte
     <span class="fn">arch_enter_lazy_mmu_mode</span>()
 
-    loop
+    <span class="kw">while</span> <span class="kw">true</span>
       nr <span class="op">=</span> <span class="num">1</span>
       <span class="kw">if</span> progress <span class="op">&gt;=</span> <span class="num">32</span>
         progress <span class="op">=</span> <span class="num">0</span>
@@ -462,18 +462,21 @@ out:
       dst_pte<span class="op">++</span>
       src_pte<span class="op">++</span>
       addr <span class="op">+=</span> (nr <span class="kw">left</span> PAGE_SHIFT)
-    <span class="kw">while</span> addr <span class="kw">not</span> end
+      <span class="kw">if</span> addr <span class="op">==</span> end
+        escape
+      <span class="kw">end if</span>
+    <span class="kw">end while</span>
 
     <span class="cm">// out: arch_leave_lazy_mmu_mode,</span>
     <span class="cm">// unlock, update_mmu_tlb_range...</span>
-  end loop
+  <span class="kw">end while</span>
 
   <span class="kw">return</span> ret
 <span class="kw">end function</span></pre>
     </div>
   </div>
   <div class="note">
-    <code>goto out</code> becomes <code>escape</code> from the outer loop. Pragma has no <code>goto</code> — labeled escape from nested loops is expressed by restructuring to a single outer loop with escape points. The semantics are identical: skip to cleanup code and return.
+    <code>goto out</code> becomes <code>escape</code> from the outer <code>while true</code>. Pragma has no <code>goto</code> — the outer loop runs until an <code>escape</code> exits it. The inner do-while becomes a <code>while true</code> with an explicit <code>if addr == end / escape / end if</code> at the bottom.
   </div>
 </div>
 
