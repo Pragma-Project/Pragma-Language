@@ -255,8 +255,7 @@ pack(desc_ptr)
         <div class="col-header lang-c">C (Condensed via Inlining)</div>
         <div id="lines-c4" style="font-size:0.65rem; color:#a6e3a1; letter-spacing:0.15em; font-family:'Jost',sans-serif; font-weight:bold; text-align:right;">Lines: 35</div>
       </div>
-      <pre class="c-code"><span class="cm">/* copy_pte_range - copy pte entries */</span>
-<span class="kw">static</span> <span class="ty">int</span> <span class="fn">copy_pte_range</span>(<span class="kw">struct</span> vm_area_struct *dst_vma, <span class="kw">struct</span> vm_area_struct *src_vma, pmd_t *dst_pmd, pmd_t *src_pmd, <span class="ty">unsigned long</span> addr, <span class="ty">unsigned long</span> end)
+      <pre class="c-code"><span class="kw">static</span> <span class="ty">int</span> <span class="fn">copy_pte_range</span>(<span class="kw">struct</span> vm_area_struct *dst_vma, <span class="kw">struct</span> vm_area_struct *src_vma, pmd_t *dst_pmd, pmd_t *src_pmd, <span class="ty">unsigned long</span> addr, <span class="ty">unsigned long</span> end)
 {
   <span class="kw">struct</span> mm_struct *dst_mm = dst_vma-&gt;vm_mm;
   <span class="kw">struct</span> mm_struct *src_mm = src_vma-&gt;vm_mm;
