@@ -264,6 +264,7 @@ hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
   <div class="nav-section">Execution</div>
   <a href="#concurrency">concurrency</a>
   <a href="#error_model">error_model</a>
+  <a href="#exceptions">exceptions</a>
   <a href="#debug">debug</a>
 </nav>
 
@@ -273,7 +274,7 @@ hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
   <div class="page-label">Dynamic Runtime — DR</div>
   <h1>Runtime Policy</h1>
   <p class="page-intro">
-    Pragma exposes 12 runtime settings that cover the decisions most languages make once at the language level and never revisit. Each setting is declared at the top of a source file and enforced by the compiler for that file. There are no global defaults — what you write is what you get.
+    Pragma exposes 13 runtime settings that cover the decisions most languages make once at the language level and never revisit. Each setting is declared at the top of a source file and enforced by the compiler for that file. There are no global defaults — what you write is what you get.
   </p>
 </div>
 
@@ -291,6 +292,7 @@ hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
 <span class="ex-key">allocator</span>:   <span class="ex-val">system</span>      <span class="ex-cm">// or: custom · embedded</span><br>
 <span class="ex-key">bounds_check</span>:<span class="ex-val">enabled</span>     <span class="ex-cm">// or: disabled</span><br>
 <span class="ex-key">stack_size</span>:  <span class="ex-val">default</span>     <span class="ex-cm">// or: N (in KB, e.g. 512)</span><br>
+<span class="ex-key">exceptions</span>:  <span class="ex-val">unchecked</span>   <span class="ex-cm">// or: checked</span><br>
 <span class="ex-key">debug</span>:       <span class="ex-val">symbols</span>     <span class="ex-cm">// or: stripped</span>
 </div>
 
@@ -451,8 +453,8 @@ hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
     <span class="setting-values">threads &nbsp;|&nbsp; async &nbsp;|&nbsp; cooperative</span>
   </div>
   <div class="setting-body">
-    <p class="setting-desc"><strong>threads</strong> — OS threads. Preemptive scheduling. Standard library primitives map to pthreads/Win32 threads. Familiar to C, Java, or C# developers.</p>
-    <p class="setting-desc"><strong>async</strong> — Asynchronous tasks with an event loop. Functions that block are marked with <code>await</code>. Similar to C#'s <code>async</code>/<code>await</code> or JavaScript's Promise model.</p>
+    <p class="setting-desc"><strong>threads</strong> — OS threads. Preemptive scheduling. Standard library primitives map to pthreads/Win32 threads. On the Python target, maps to <code>threading</code> for I/O-bound work or <code>multiprocessing</code> for CPU-bound work — the transpiler selects the correct backend based on usage.</p>
+    <p class="setting-desc"><strong>async</strong> — Asynchronous tasks with an event loop. Functions that block are marked with <code>@await</code>. Maps to JS Promises on the JavaScript target, <code>asyncio</code> on the Python target, and virtual threads on the JVM target.</p>
     <p class="setting-desc"><strong>cooperative</strong> — Green threads with explicit yield points. Scheduling is application-controlled with no OS involvement. Useful for embedded systems and game loops.</p>
     <div class="setting-default">default: <span>threads</span></div>
   </div>
@@ -471,6 +473,21 @@ hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
     <p class="setting-desc"><strong>result</strong> — Functions that can fail return a result type. Errors are values; callers must handle them explicitly. Similar to Rust's <code>Result&lt;T, E&gt;</code> or Go's multiple return values.</p>
     <p class="setting-desc"><strong>abort</strong> — Errors call <code>abort()</code> immediately. For environments where error recovery is not possible or needed.</p>
     <div class="setting-default">default: <span>exceptions</span></div>
+  </div>
+</div>
+
+<h2 id="exceptions">exceptions</h2>
+<p>Controls how exception declarations are handled when transpiling to targets with checked exception systems. Only relevant when <code>error_model</code> is <code>exceptions</code>.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">exceptions</span>
+    <span class="setting-values">unchecked &nbsp;|&nbsp; checked</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>unchecked</strong> — Exceptions are not declared in function signatures. On the JVM target, the transpiler wraps all exceptions in <code>RuntimeException</code> so callers are never forced to handle them. This is the standard behaviour for Pragma code and all other targets.</p>
+    <p class="setting-desc"><strong>checked</strong> — The transpiler generates explicit <code>throws</code> declarations on the JVM target, propagating exception types up the call stack as Java requires. Use this when integrating with Java libraries that expect checked exceptions to be declared. Has no effect on non-JVM targets.</p>
+    <div class="setting-default">default: <span>unchecked</span></div>
   </div>
 </div>
 

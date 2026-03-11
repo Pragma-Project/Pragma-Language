@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Side-by-Side — Pragma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.page-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 48px 100px;
+}
+
+.back-link {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  z-index: 100;
+  display: inline-block;
+  color: #cba6f7;
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  border: 1px solid #5c2d91;
+  padding: 4px 12px;
+  border-radius: 3px;
+  background: #1e1e2e;
+  transition: border-color 0.15s;
+}
+.back-link:hover { border-color: #cba6f7; }
+
+h1 {
+  font-family: 'VT323', monospace;
+  font-size: 2.4rem;
+  font-weight: normal;
+  color: #cba6f7;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #a6adc8;
+  font-size: 0.9rem;
+  margin-bottom: 52px;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.example {
+  margin-bottom: 56px;
+}
+
+.example-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #585b70;
+  font-family: 'Jost', sans-serif;
+  font-weight: bold;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #313244;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.cols > div {
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .cols { grid-template-columns: 1fr; }
+}
+
+.col-header {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #585b70;
+  margin-bottom: 8px;
+  font-family: 'Jost', sans-serif;
+  font-weight: bold;
+}
+
+.col-header.lang-js { color: #f9e2af; }
+.col-header.lang-pragma { color: #cba6f7; }
+
+pre {
+  overflow-x: hidden;
+  min-width: 0;
+  background: #181825;
+  border-left: 3px solid #313244;
+  border-radius: 0 4px 4px 0;
+  padding: 16px 20px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+pre.js-code { border-left-color: #f9e2af; }
+pre.p-code  { border-left-color: #cba6f7; }
+
+.kw  { color: #cba6f7; }
+.ty  { color: #89dceb; }
+.cm  { color: #585b70; font-style: italic; }
+.num { color: #fab387; }
+.str { color: #a6e3a1; }
+.op  { color: #89dceb; }
+.ang { color: #f38ba8; }
+.fn  { color: #89b4fa; }
+
+hr {
+  border: none;
+  border-top: 1px solid #313244;
+  margin: 52px 0;
+}
+
+.explain {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: #a6adc8;
+  line-height: 1.75;
+  margin-top: 24px;
+}
+
+.explain strong { color: #cdd6f4; font-weight: 400; }
+.explain code { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: #f9e2af; }
+
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<a href="index.html" class="back-link">← Pragma</a>
+
+<h1>JavaScript Side-by-Side</h1>
+<p class="subtitle">JavaScript source translated into Pragma, with notes on where the languages diverge.</p>
+
+<!-- ═══════════════════════════════════ EXAMPLE 1 ═══════════════════════════════════ -->
+<div class="example">
+  <div class="example-label">Example 1 — Timer</div>
+  <div class="cols">
+    <div>
+      <div class="col-header lang-js">JavaScript</div>
+      <pre class="js-code"><span class="kw">function</span> <span class="fn">Timer</span>() {
+    <span class="kw">this</span>.count = <span class="num">0</span>;
+    <span class="kw">var</span> self = <span class="kw">this</span>;
+    <span class="fn">setInterval</span>(<span class="kw">function</span>() {
+        self.count<span class="op">++</span>;
+        <span class="kw">if</span> (self.count <span class="op">&gt;</span> <span class="num">10</span>) {
+            self.<span class="fn">stop</span>();
+        }
+    }, <span class="num">1000</span>);
+    <span class="kw">this</span>.stop = <span class="kw">function</span>() {
+        <span class="kw">var</span> self = <span class="kw">this</span>;
+        <span class="fn">clearInterval</span>(<span class="kw">function</span>() {
+            self.count = <span class="num">0</span>;
+        });
+    };
+}</pre>
+    </div>
+    <div>
+      <div class="col-header lang-pragma">Pragma</div>
+      <pre class="p-code"><span class="kw">type</span> <span class="ty">Timer</span>
+  <span class="ty">int</span> count
+<span class="kw">end type</span>
+
+<span class="kw">function</span> <span class="fn">tick</span>(<span class="ty">Timer</span> <span class="ang">&lt;</span>t<span class="ang">&gt;</span>)
+  t.count<span class="op">++</span>
+  <span class="kw">if</span> t.count <span class="op">&gt;</span> <span class="num">10</span>
+    <span class="fn">stop</span>(t)
+  <span class="kw">end if</span>
+<span class="kw">end function</span>
+
+<span class="kw">function</span> <span class="fn">stop</span>(<span class="ty">Timer</span> <span class="ang">&lt;</span>t<span class="ang">&gt;</span>)
+  t.count <span class="op">=</span> <span class="num">0</span>
+<span class="kw">end function</span></pre>
+    </div>
+  </div>
+  <div class="explain">
+    <p>JavaScript's <code>this</code> does not refer to a fixed object — it rebinds depending on how a function is called. Inside a <code>setInterval</code> callback, <code>this</code> no longer refers to the Timer instance. The standard fix is <code>var self = this</code>, capturing the reference before entering the callback. This works, but it is defensive code written to work around the language, not to express intent.</p>
+    <p style="margin-top:12px;">In Pragma, there is no <code>this</code>. State belongs to the <strong>type</strong>, and functions that operate on that state receive it as an <strong>explicit pointer parameter</strong> — <code>Timer &lt;t&gt;</code>. There is no ambiguity about what <code>t</code> refers to, no closure capturing, and no rebinding. The structure is the same; the noise is gone.</p>
+    <p style="margin-top:12px;"><code>tick</code> and <code>stop</code> are plain functions that take a Timer pointer. The caller decides when to call them. The JavaScript version bundles the timer logic, the interval setup, and the stop implementation all into one constructor function — Pragma separates them cleanly.</p>
+  </div>
+</div>
+
+<hr>
+
+</div><!-- /page-wrap -->
+</body>
+</html>

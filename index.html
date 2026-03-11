@@ -241,12 +241,12 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
 }
 #readme-close {
   position: fixed; top: 20px; left: 28px;
-  background: transparent; border: none;
+  background: #e8e3db; border: 1px solid #ccc;
   font-size: 13px; font-family: 'Share Tech Mono', monospace;
-  letter-spacing: 0.08em; cursor: pointer; color: #999;
-  z-index: 210; padding: 6px 10px; border-radius: 3px; transition: color 0.15s;
+  letter-spacing: 0.08em; cursor: pointer; color: #666;
+  z-index: 210; padding: 6px 10px; border-radius: 3px; transition: all 0.15s;
 }
-#readme-close:hover { color: #333; }
+#readme-close:hover { color: #111; background: #d8d2c8; border-color: #999; }
 .readme-inner { max-width: 680px; margin: 0 auto; padding: 100px 48px 140px; }
 .readme-skip { font-family: 'Georgia', serif; font-size: 0.82rem; font-style: italic; color: #bbb; margin-bottom: 18px; }
 .readme-hero { font-family: 'Playfair Display', Georgia, serif; font-size: 2.6rem; font-weight: 400; line-height: 1.25; color: #1a1a1a; margin-bottom: 80px; letter-spacing: -0.01em; }
@@ -284,6 +284,10 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
       <div class="brand-row">
         <img src="logo.png" alt="Pragma" class="logo-img">
         <h1 class="landing-title">Pragma</h1>
+        <div style="display:flex; flex-direction:column; gap:6px; flex:1; align-items:center;">
+          <button class="why-btn" onclick="showReadme()">Why?</button>
+          <a href="glossary.html" class="glossary-btn">Glossary</a>
+        </div>
       </div>
 
       <div class="landing-desc">
@@ -305,7 +309,7 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
           <span class="bounce-arrow">↑</span>
         </div>
         <div id="js-wrap" style="display:flex; flex-direction:column; align-items:center; gap:3px;" onmouseenter="showPopup('js-wrap','js-hover-img')" onmouseleave="hidePopup('js-hover-img')">
-          <div class="lang-pill">..ok, Javascript</div>
+          <div class="lang-pill">..ok, JavaScript?</div>
           <span class="bounce-arrow">↑</span>
         </div>
       </div>
@@ -322,8 +326,8 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
 
       <div style="border:1px solid #e0e0e0; border-top:3px solid #1a1a1a; border-radius:0 0 6px 6px; padding:clamp(10px,1.8vh,20px) clamp(12px,2vw,24px);"><div class="dr-inner">
         <div>
-          <div style="font-family:'Playfair Display',Georgia,serif; font-size:clamp(0.8rem,1.2vw,1.05rem); font-style:italic; font-weight:700; color:#1a1a1a; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><em>Dynamic Runtime</em> <span style="font-style:normal; font-size:clamp(0.65rem,0.9vw,0.8rem); font-family:'Share Tech Mono',monospace; font-weight:normal; color:#555;">(DR)</span><a href="runtime-policy.html" style="font-style:normal; font-weight:normal; font-family:'Share Tech Mono',monospace; font-size:clamp(0.6rem,0.85vw,0.7rem); color:#555; text-decoration:none; border:1px solid #ccc; padding:2px 8px; border-radius:3px; letter-spacing:0.08em; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.color='#1a1a1a';this.style.borderColor='#1a1a1a'" onmouseout="this.style.color='#555';this.style.borderColor='#ccc'">Learn More →</a></div>
-          <div style="font-family:'Georgia',serif; font-size:clamp(0.7rem,1.1vw,0.9rem); color:#1a1a1a; line-height:1.5;">Memory model, Garbage Collection, Refcount — the compiler enforces up to 12 directives that <em>you</em> declare.</div>
+          <div style="font-family:'Playfair Display',Georgia,serif; font-size:clamp(0.8rem,1.2vw,1.05rem); font-style:italic; font-weight:700; color:#1a1a1a; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><em>Dynamic Runtime</em> <span style="font-style:normal; font-size:clamp(0.65rem,0.9vw,0.8rem); font-family:'Share Tech Mono',monospace; font-weight:normal; color:#555;">(DR)</span><a href="runtime-policy.html" style="font-style:normal; font-weight:normal; font-family:'Share Tech Mono',monospace; font-size:clamp(0.68rem,0.95vw,0.8rem); color:#89dceb; text-decoration:none; background:#1a1a1a; border:1px solid #2a4a5a; padding:4px 12px; border-radius:3px; letter-spacing:0.1em; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.borderColor='#89dceb';this.style.color='#cdd6f4'" onmouseout="this.style.borderColor='#2a4a5a';this.style.color='#89dceb'">Learn More →</a></div>
+          <div style="font-family:'Georgia',serif; font-size:clamp(0.7rem,1.1vw,0.9rem); color:#1a1a1a; line-height:1.5;">Memory model, Garbage Collection, Refcount — the compiler enforces up to 13 directives that <em>you</em> declare.</div>
         </div>
         <div style="background:#1a1a1a; border-radius:4px; padding:clamp(8px,1.2vh,12px) clamp(10px,1.2vw,14px); font-family:'Share Tech Mono',monospace; font-size:clamp(8px,0.9vw,11px); line-height:1.9; color:#cdd6f4;">
           <span style="color:#cba6f7">memory</span>: <span style="color:#a6e3a1">gc</span>           <span style="color:#c8a030">// or manual · refcount · arena</span><br>
@@ -334,8 +338,6 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
 
       <!-- Buttons below DR box -->
       <div class="landing-footer">
-        <button class="why-btn" onclick="showReadme()">Why?</button>
-        <a href="glossary.html" class="glossary-btn">Glossary</a>
         <a href="language-main.html" class="lang-ref-btn">Language Reference →</a>
       </div>
 
@@ -382,7 +384,7 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
   <span class="kw">return</span> to
 <span class="kw">end function</span></pre></div>
   </div>
-  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">Mutable defaults evaluate once — <span style="color:#89dceb; font-family:'Share Tech Mono',monospace;">to=[]</span> is shared across all calls.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
+  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">Mutable defaults evaluate once — <span style="color:#89dceb; font-family:'Share Tech Mono',monospace;">to=[]</span> is shared across all calls.</span><a href="Python-Side-by-Side.html" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
 </div>
 
 <div id="java-hover-img" style="display:none; position:fixed; z-index:9999; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); max-width:min(580px,calc(100vw - 20px)); box-sizing:border-box;">
@@ -423,7 +425,7 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
     retries, authToken)
 <span class="kw">end function</span></pre></div>
   </div>
-  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">Java writes every field 3×: declaration, parameter, assignment.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
+  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">Java writes every field 3×: declaration, parameter, assignment.</span><a href="Java-Side-by-Side.html" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
 </div>
 
 <div id="js-hover-img" style="display:none; position:fixed; z-index:9999; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); max-width:min(540px,calc(100vw - 20px)); box-sizing:border-box;">
@@ -462,7 +464,7 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
   t.count <span class="op">=</span> <span class="num">0</span>
 <span class="kw">end function</span></pre></div>
   </div>
-  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">JS <span style="font-size:0.7rem; color:#89dceb; font-family:'Share Tech Mono',monospace;">this</span> rebinds in callbacks.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
+  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">JS <span style="font-size:0.7rem; color:#89dceb; font-family:'Share Tech Mono',monospace;">this</span> rebinds in callbacks.</span><a href="JS-Side-by-Side.html" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
 </div>
 
 <!-- README overlay -->

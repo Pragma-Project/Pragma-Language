@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Annotations — Pragma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #f7f7f7;
+  color: #111;
+  font-family: 'Jost', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  padding: 48px 32px 80px;
+}
+
+.page-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.site-header {
+  margin-bottom: 48px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #111;
+}
+
+.header-top {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.brand {
+  font-family: 'Cinzel', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #111;
+  letter-spacing: 0.08em;
+}
+
+.tier-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem;
+  color: #333;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.header-desc {
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.section {
+  margin-bottom: 44px;
+}
+
+.section-title {
+  font-family: 'Jost', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #000;
+  letter-spacing: 0.02em;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #bbb;
+}
+
+.ann-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 720px) {
+  .ann-grid { grid-template-columns: 1fr; }
+  body { padding: 28px 16px 60px; }
+}
+
+.ann-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: 2px solid #555;
+  padding: 14px 16px 16px;
+}
+
+.ann-card.wide { grid-column: span 2; }
+
+@media (max-width: 720px) {
+  .ann-card.wide { grid-column: span 1; }
+}
+
+.ann-name {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.95rem;
+  color: #111;
+  margin-bottom: 5px;
+}
+
+.ann-desc {
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #222;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+pre {
+  background: #f3f3f3;
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.75;
+  white-space: pre;
+  overflow-x: auto;
+  color: #222;
+}
+
+.kw  { color: #00008b; font-weight: bold; }
+.ann { color: #00008b; font-weight: bold; }
+.ty  { color: #005f5f; }
+.fn  { color: #222; }
+.str { color: #7a0000; }
+.num { color: #222; }
+.cm  { color: #555; font-style: italic; }
+.op  { color: #222; }
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 40px 0;
+}
+
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<header class="site-header">
+  <div class="header-top">
+    <span class="brand">Enterprise</span>
+  </div>
+  <div class="header-desc">Proposed @ annotations for large-scale, multi-target, and enterprise application development.</div>
+</header>
+
+
+<div class="section">
+  <div class="section-title">Type Declarations</div>
+  <div class="ann-grid">
+
+    <div class="ann-card">
+      <div class="ann-name">@data</div>
+      <div class="ann-desc">Generates structural equality, hashing, and a copy() method. Fields are compared by value, not by reference.</div>
+      <pre><span class="ann">@data</span>
+<span class="kw">type</span> <span class="ty">Point</span>
+  <span class="kw">int</span> x, y
+<span class="kw">end type</span>
+
+<span class="kw">let</span> a <span class="op">=</span> <span class="fn">Point</span>(<span class="num">1</span>, <span class="num">2</span>)
+<span class="kw">let</span> b <span class="op">=</span> a.<span class="fn">copy</span>(y <span class="op">=</span> <span class="num">5</span>)   <span class="cm">// Point(1, 5)</span>
+a <span class="op">=</span> b                    <span class="cm">// structural equality</span></pre>
+    </div>
+
+    <div class="ann-card">
+      <div class="ann-name">@sealed</div>
+      <div class="ann-desc">Closes the type hierarchy. Only types declared in the same module may extend this type — the compiler knows every possible subtype.</div>
+      <pre><span class="ann">@sealed</span>
+<span class="kw">type</span> <span class="ty">Shape</span>
+  <span class="kw">string</span> kind
+<span class="kw">end type</span>
+
+<span class="kw">type</span> <span class="ty">Circle</span> <span class="kw">extends</span> <span class="ty">Shape</span>
+  <span class="kw">int</span> radius
+<span class="kw">end type</span>
+
+<span class="kw">type</span> <span class="ty">Rect</span> <span class="kw">extends</span> <span class="ty">Shape</span>
+  <span class="kw">int</span> w, h
+<span class="kw">end type</span></pre>
+    </div>
+
+    <div class="ann-card">
+      <div class="ann-name">@singleton</div>
+      <div class="ann-desc">Exactly one instance ever exists. The runtime creates it on first access and reuses it everywhere. No constructor is callable externally.</div>
+      <pre><span class="ann">@singleton</span>
+<span class="kw">type</span> <span class="ty">AppConfig</span>
+  <span class="kw">string</span> env
+  <span class="kw">int</span>    maxConnections
+<span class="kw">end type</span>
+
+<span class="cm">// accessed anywhere — same instance</span>
+<span class="ty">AppConfig</span>.env <span class="op">=</span> <span class="str">"production"</span></pre>
+    </div>
+
+    <div class="ann-card">
+      <div class="ann-name">@alias</div>
+      <div class="ann-desc">Declares a named alias for an existing type. Interchangeable with the original — adds meaning without wrapping.</div>
+      <pre><span class="ann">@alias</span> <span class="ty">UserId</span>       <span class="op">=</span> <span class="kw">int</span>
+<span class="ann">@alias</span> <span class="ty">EmailAddress</span> <span class="op">=</span> <span class="kw">string</span>
+
+<span class="kw">function</span> <span class="fn">find_user</span>(<span class="ty">UserId</span> id)
+  <span class="cm">// id is an int — no wrapping overhead</span>
+<span class="kw">end function</span></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="section-title">Functions</div>
+  <div class="ann-grid">
+
+    <div class="ann-card">
+      <div class="ann-name">@inline</div>
+      <div class="ann-desc">The function body is substituted at every call site at compile time. No call overhead. Required when passing lambdas to avoid allocation.</div>
+      <pre><span class="ann">@inline</span>
+<span class="kw">function</span> <span class="fn">clamp</span>(<span class="kw">int</span> v, <span class="kw">int</span> lo, <span class="kw">int</span> hi)
+  <span class="kw">return</span> v <span class="op">&lt;</span> lo <span class="op">?</span> lo : v <span class="op">&gt;</span> hi <span class="op">?</span> hi : v
+<span class="kw">end function</span>
+
+<span class="cm">// no call generated — expands in place</span>
+<span class="kw">let</span> x <span class="op">=</span> <span class="fn">clamp</span>(score, <span class="num">0</span>, <span class="num">100</span>)</pre>
+    </div>
+
+    <div class="ann-card">
+      <div class="ann-name">@extends</div>
+      <div class="ann-desc">Makes a free function callable as if it were a method on the named type. Does not modify the type — purely syntactic resolution.</div>
+      <pre><span class="ann">@extends</span>(<span class="ty">string</span>)
+<span class="kw">function</span> <span class="fn">truncate</span>(<span class="kw">string</span> s, <span class="kw">int</span> max)
+  <span class="kw">if</span> s.length <span class="op">&lt;=</span> max
+    <span class="kw">return</span> s
+  <span class="kw">end if</span>
+  <span class="kw">return</span> s.<span class="fn">slice</span>(<span class="num">0</span>, max) <span class="op">+</span> <span class="str">"…"</span>
+<span class="kw">end function</span>
+
+<span class="kw">let</span> t <span class="op">=</span> title.<span class="fn">truncate</span>(<span class="num">40</span>)</pre>
+    </div>
+
+    <div class="ann-card">
+      <div class="ann-name">@operator</div>
+      <div class="ann-desc">Maps a named function to an arithmetic or comparison operator for a given type. The function must take the type as its first argument.</div>
+      <pre><span class="ann">@operator</span>(<span class="op">+</span>)
+<span class="kw">function</span> <span class="fn">add</span>(<span class="ty">Vector2</span> a, <span class="ty">Vector2</span> b)
+  <span class="kw">return</span> <span class="fn">Vector2</span>(a.x <span class="op">+</span> b.x, a.y <span class="op">+</span> b.y)
+<span class="kw">end function</span>
+
+<span class="cm">// calls add() at compile time</span>
+<span class="kw">let</span> v <span class="op">=</span> origin <span class="op">+</span> offset</pre>
+    </div>
+
+    <div class="ann-card">
+      <div class="ann-name">@receiver</div>
+      <div class="ann-desc">The function runs in the context of the named type — its fields are directly in scope without qualification. Foundation for DSL builders.</div>
+      <pre><span class="ann">@receiver</span>(<span class="ty">QueryBuilder</span>)
+<span class="kw">function</span> <span class="fn">build_query</span>()
+  <span class="fn">from</span>(<span class="str">"users"</span>)         <span class="cm">// QueryBuilder.from</span>
+  <span class="fn">where</span>(active <span class="op">=</span> <span class="kw">true</span>) <span class="cm">// QueryBuilder.where</span>
+  <span class="fn">limit</span>(<span class="num">100</span>)            <span class="cm">// QueryBuilder.limit</span>
+<span class="kw">end function</span></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="section-title">Safety &amp; Contracts</div>
+  <div class="ann-grid">
+
+    <div class="ann-card">
+      <div class="ann-name">@nullable</div>
+      <div class="ann-desc">Marks a field or parameter as explicitly nullable. Without this annotation, the compiler assumes non-null and enforces it.</div>
+      <pre><span class="kw">type</span> <span class="ty">Session</span>
+  <span class="kw">string</span>            token
+  <span class="ann">@nullable</span> <span class="kw">string</span>  user
+  <span class="ann">@nullable</span> <span class="kw">int</span>     expiresAt
+<span class="kw">end type</span>
+
+<span class="kw">function</span> <span class="fn">greet</span>(<span class="ann">@nullable</span> <span class="kw">string</span> name)
+  <span class="kw">if</span> name <span class="op">=</span> <span class="kw">empty</span>
+    <span class="kw">return</span> <span class="str">"Hello, guest"</span>
+  <span class="kw">end if</span>
+  <span class="kw">return</span> <span class="str">"Hello, "</span> <span class="op">+</span> name
+<span class="kw">end function</span></pre>
+    </div>
+
+    <div class="ann-card">
+      <div class="ann-name">@throws</div>
+      <div class="ann-desc">Declares that a function may raise an exception of the given type. Unlike Java, this is documentation only — callers are not forced to handle it.</div>
+      <pre><span class="ann">@throws</span>(<span class="ty">IOError</span>)
+<span class="kw">function</span> <span class="fn">read_file</span>(<span class="kw">string</span> path)
+  <span class="cm">// ...</span>
+<span class="kw">end function</span>
+
+<span class="ann">@throws</span>(<span class="ty">AuthError</span>, <span class="ty">NetworkError</span>)
+<span class="kw">function</span> <span class="fn">login</span>(<span class="kw">string</span> user, <span class="kw">string</span> pass)
+  <span class="cm">// ...</span>
+<span class="kw">end function</span></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="section-title">Architecture</div>
+  <div class="ann-grid">
+
+    <div class="ann-card wide">
+      <div class="ann-name">@delegate</div>
+      <div class="ann-desc">Implements a type's interface by forwarding all calls to a named field. Composition without boilerplate — the compiler generates every forwarding call.</div>
+      <pre><span class="kw">type</span> <span class="ty">Logger</span>
+  <span class="kw">function</span> <span class="fn">log</span>(<span class="kw">string</span> msg)
+<span class="kw">end type</span>
+
+<span class="kw">type</span> <span class="ty">TimestampedLogger</span>
+  <span class="ann">@delegate</span> <span class="ty">Logger</span> inner    <span class="cm">// log() forwarded to inner.log() automatically</span>
+  <span class="kw">string</span>           format
+<span class="kw">end type</span></pre>
+    </div>
+
+    <div class="ann-card wide">
+      <div class="ann-name">@async / @await</div>
+      <div class="ann-desc">Marks a function as a coroutine. The function may be suspended and resumed without blocking the calling thread. Callers use @await to receive the result.</div>
+      <pre><span class="ann">@async</span>
+<span class="kw">function</span> <span class="fn">load_dashboard</span>()
+  <span class="kw">let</span> user    <span class="op">=</span> <span class="ann">@await</span> <span class="fn">fetch</span>(<span class="str">"/api/user"</span>)
+  <span class="kw">let</span> reports <span class="op">=</span> <span class="ann">@await</span> <span class="fn">fetch</span>(<span class="str">"/api/reports"</span>)
+  <span class="kw">return</span> <span class="fn">Dashboard</span>(user, reports)
+<span class="kw">end function</span></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="section-title">Deployment</div>
+  <div class="ann-grid">
+
+    <div class="ann-card wide">
+      <div class="ann-name">@platform</div>
+      <div class="ann-desc">Restricts or specialises a declaration to one or more compile targets. One codebase, per-target overrides where needed.</div>
+      <pre><span class="cm">// shared declaration — compiles everywhere</span>
+<span class="kw">function</span> <span class="fn">format_date</span>(<span class="kw">int</span> timestamp) <span class="kw">string</span>
+
+<span class="ann">@platform</span>(jvm)
+<span class="kw">function</span> <span class="fn">format_date</span>(<span class="kw">int</span> timestamp)
+  <span class="kw">return</span> <span class="fn">java_format</span>(timestamp, <span class="str">"yyyy-MM-dd"</span>)
+<span class="kw">end function</span>
+
+<span class="ann">@platform</span>(js)
+<span class="kw">function</span> <span class="fn">format_date</span>(<span class="kw">int</span> timestamp)
+  <span class="kw">return</span> <span class="fn">js_date</span>(timestamp).<span class="fn">toISOString</span>()
+<span class="kw">end function</span>
+
+<span class="ann">@platform</span>(c)
+<span class="kw">function</span> <span class="fn">format_date</span>(<span class="kw">int</span> timestamp)
+  <span class="kw">return</span> <span class="fn">strftime</span>(<span class="str">"%Y-%m-%d"</span>, timestamp)
+<span class="kw">end function</span></pre>
+    </div>
+
+  </div>
+</div>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Linux Kernel Code — Pragma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+.page-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 48px 100px;
+}
+
+.back-link {
+  display: inline-block;
+  color: #cba6f7;
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 36px;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+.back-link:hover { opacity: 1; }
+
+h1 {
+  font-family: 'VT323', monospace;
+  font-size: 2.4rem;
+  font-weight: normal;
+  color: #cba6f7;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #a6adc8;
+  font-size: 0.9rem;
+  margin-bottom: 52px;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.example {
+  margin-bottom: 56px;
+}
+
+.example-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #585b70;
+  font-family: 'Jost', sans-serif;
+  font-weight: bold;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #313244;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 800px) {
+  .cols { grid-template-columns: 1fr; }
+}
+
+.col-header {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #585b70;
+  margin-bottom: 8px;
+  font-family: 'Jost', sans-serif;
+  font-weight: bold;
+}
+
+.col-header.lang-c { color: #89dceb; }
+.col-header.lang-pragma { color: #cba6f7; }
+
+pre {
+  background: #181825;
+  border-left: 3px solid #313244;
+  border-radius: 0 4px 4px 0;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre;
+}
+
+pre.c-code   { border-left-color: #89dceb; }
+pre.p-code   { border-left-color: #cba6f7; }
+
+/* Syntax highlight classes */
+.kw  { color: #cba6f7; }   /* keywords */
+.ty  { color: #89dceb; }   /* types */
+.cm  { color: #585b70; font-style: italic; }  /* comments */
+.num { color: #fab387; }   /* numbers */
+.str { color: #a6e3a1; }   /* strings */
+.op  { color: #89dceb; }   /* operators */
+.ang { color: #f38ba8; }   /* angle brackets */
+.pp  { color: #f9e2af; }   /* preprocessor */
+.fn  { color: #89b4fa; }   /* function names */
+
+hr {
+  border: none;
+  border-top: 1px solid #313244;
+  margin: 52px 0;
+}
+
+.note {
+  background: #181825;
+  border-left: 4px solid #6c7ef7;
+  padding: 10px 16px;
+  margin: 16px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 13px;
+  color: #a6adc8;
+}
+
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<a href="syntax-reference.html" class="back-link">← Back</a>
+
+<h1>Real Linux Kernel Code</h1>
+<p class="subtitle">Side-by-side: real Linux kernel code and its Pragma equivalent.</p>
+
+<!-- ═══════════════════════════════════ EXAMPLE 1 ═══════════════════════════════════ -->
+<div class="example">
+  <div class="example-label">Example 1 — Signal Handler Types</div>
+  <div class="cols">
+    <div>
+      <div class="col-header lang-c">C</div>
+      <pre class="c-code"><span class="pp">typedef</span> <span class="ty">void</span> <span class="fn">__signalfn_t</span>(<span class="ty">int</span>);
+<span class="pp">typedef</span> __signalfn_t __user *__sighandler_t;
+
+<span class="pp">typedef</span> <span class="ty">void</span> <span class="fn">__restorefn_t</span>(<span class="ty">void</span>);
+<span class="pp">typedef</span> __restorefn_t __user *__sigrestore_t;
+
+<span class="pp">#define</span> SIG_DFL ((__sighandler_t)<span class="num">0</span>)
+<span class="pp">#define</span> SIG_IGN ((__sighandler_t)<span class="num">1</span>)</pre>
+    </div>
+    <div>
+      <div class="col-header lang-pragma">Pragma</div>
+      <pre class="p-code"><span class="cm">// No typedef needed — function pointer is just an address</span>
+<span class="ty">none</span> <span class="ang">&lt;</span>handler<span class="ang">&gt;</span> <span class="op">=</span> <span class="fn">sigHandler</span>()    <span class="cm">// signal handler function pointer</span>
+<span class="ty">none</span> <span class="ang">&lt;</span>restorer<span class="ang">&gt;</span> <span class="op">=</span> <span class="fn">sigRestorer</span>()  <span class="cm">// restore function pointer</span>
+
+<span class="kw">constant</span> <span class="ty">none</span> <span class="ang">&lt;</span>SIG_DFL<span class="ang">&gt;</span> <span class="op">=</span> empty          <span class="cm">// default: null pointer</span>
+<span class="kw">constant</span> <span class="ty">none</span> <span class="ang">&lt;</span>SIG_IGN<span class="ang">&gt;</span> <span class="op">=</span> <span class="kw">change</span>(<span class="num">1</span>)<span class="op">-&gt;</span><span class="ty">none</span> <span class="cm">// ignore: sentinel value</span></pre>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════ EXAMPLE 2 ═══════════════════════════════════ -->
+<div class="example">
+  <div class="example-label">Example 2 — Packed Descriptor Struct</div>
+  <div class="cols">
+    <div>
+      <div class="col-header lang-c">C</div>
+      <pre class="c-code"><span class="kw">struct</span> desc_struct {
+    u16 limit0;
+    u16 base0;
+    u16 base1:  <span class="num">8</span>, type: <span class="num">4</span>, s: <span class="num">1</span>, dpl: <span class="num">2</span>, p: <span class="num">1</span>;
+    u16 limit1: <span class="num">4</span>, avl: <span class="num">1</span>, l: <span class="num">1</span>, d: <span class="num">1</span>, g: <span class="num">1</span>, base2: <span class="num">8</span>;
+} __attribute__((packed));</pre>
+    </div>
+    <div>
+      <div class="col-header lang-pragma">Pragma</div>
+      <pre class="p-code"><span class="kw">type</span> desc_struct
+  <span class="ty">uint16</span> limit0
+  <span class="ty">uint16</span> base0
+  <span class="ty">uint16</span>.bits=<span class="num">8</span> base1
+  <span class="ty">uint16</span>.bits=<span class="num">4</span> type
+  <span class="ty">uint16</span>.bits=<span class="num">1</span> s
+  <span class="ty">uint16</span>.bits=<span class="num">2</span> dpl
+  <span class="ty">uint16</span>.bits=<span class="num">1</span> p
+  <span class="ty">uint16</span>.bits=<span class="num">4</span> limit1
+  <span class="ty">uint16</span>.bits=<span class="num">1</span> avl
+  <span class="ty">uint16</span>.bits=<span class="num">1</span> l
+  <span class="ty">uint16</span>.bits=<span class="num">1</span> d
+  <span class="ty">uint16</span>.bits=<span class="num">1</span> g
+  <span class="ty">uint16</span>.bits=<span class="num">8</span> base2
+<span class="kw">end type</span>
+pack(desc_struct)</pre>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════ EXAMPLE 3 ═══════════════════════════════════ -->
+<div class="example">
+  <div class="example-label">Example 3 — GDT Pointer + Load</div>
+  <div class="cols">
+    <div>
+      <div class="col-header lang-c">C</div>
+      <pre class="c-code"><span class="kw">struct</span> desc_ptr {
+    <span class="ty">unsigned short</span> size;
+    <span class="ty">unsigned long</span> address;
+} __attribute__((packed));
+
+<span class="kw">static inline</span> <span class="ty">void</span> <span class="fn">native_load_gdt</span>(
+    <span class="kw">const</span> <span class="kw">struct</span> desc_ptr *dtr)
+{
+    asm volatile(<span class="str">"lgdt %0"</span>::<span class="str">"m"</span> (*dtr));
+}</pre>
+    </div>
+    <div>
+      <div class="col-header lang-pragma">Pragma</div>
+      <pre class="p-code"><span class="kw">type</span> desc_ptr
+  <span class="ty">uint16</span> size
+  <span class="ty">uint64</span> address
+<span class="kw">end type</span>
+pack(desc_ptr)
+
+<span class="kw">function</span> <span class="fn">load_gdt</span>(desc_ptr <span class="ang">&lt;</span>dtr<span class="ang">&gt;</span>) <span class="kw">returns</span> <span class="ty">none</span>
+  asm(<span class="str">"lgdt %0"</span> :: <span class="str">"m"</span> (<span class="kw">deref</span>(<span class="ang">&lt;</span>dtr<span class="ang">&gt;</span>)))
+<span class="kw">end function</span></pre>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════ EXAMPLE 4 ═══════════════════════════════════ -->
+<div class="example">
+  <div class="example-label">Example 4 — copy_pte_range (Linux kernel memory management)</div>
+  <div class="cols">
+    <div>
+      <div class="col-header lang-c">C</div>
+      <pre class="c-code"><span class="cm">/*
+ * copy_pte_range - copy page table entries
+ * from src to dst virtual area
+ */</span>
+<span class="kw">static</span> <span class="ty">int</span> <span class="fn">copy_pte_range</span>(
+    <span class="kw">struct</span> vm_area_struct *dst_vma,
+    <span class="kw">struct</span> vm_area_struct *src_vma,
+    pmd_t *dst_pmd,
+    pmd_t *src_pmd,
+    <span class="ty">unsigned long</span> addr,
+    <span class="ty">unsigned long</span> end)
+{
+    <span class="kw">struct</span> mm_struct *dst_mm = dst_vma-&gt;vm_mm;
+    <span class="kw">struct</span> mm_struct *src_mm = src_vma-&gt;vm_mm;
+    pte_t *orig_src_pte, *orig_dst_pte;
+    pte_t *src_pte, *dst_pte;
+    pte_t ptent;
+    spinlock_t *src_ptl, *dst_ptl;
+    <span class="ty">int</span> progress, max_nr;
+    <span class="ty">int</span> ret = <span class="num">0</span>;
+    <span class="ty">long</span> rss[NR_MM_COUNTERS];
+    swp_entry_t entry = (swp_entry_t){<span class="num">0</span>};
+    <span class="kw">struct</span> folio *prealloc = NULL;
+    <span class="ty">int</span> nr;
+
+again:
+    progress = <span class="num">0</span>;
+    init_rss_vec(rss);
+
+    src_pte = pte_offset_map_lock(
+        src_mm, src_pmd, addr, &amp;src_ptl);
+    <span class="kw">if</span> (!src_pte) {
+        pmd_populate(dst_mm, dst_pmd,
+            pmd_pgtable(*dst_pmd));
+        ret = <span class="num">0</span>;
+        <span class="kw">goto</span> out;
+    }
+    dst_pte = pte_offset_map_nolock(
+        dst_mm, dst_pmd, addr, &amp;dst_ptl);
+    <span class="kw">if</span> (!dst_pte) {
+        pte_unmap_unlock(src_pte, src_ptl);
+        ret = -ENOMEM;
+        <span class="kw">goto</span> out;
+    }
+    orig_src_pte = src_pte;
+    orig_dst_pte = dst_pte;
+    arch_enter_lazy_mmu_mode();
+
+    <span class="kw">do</span> {
+        nr = <span class="num">1</span>;
+        <span class="kw">if</span> (progress &gt;= <span class="num">32</span>) {
+            progress = <span class="num">0</span>;
+            <span class="kw">if</span> (need_resched() ||
+                spin_needbreak(src_ptl) ||
+                spin_needbreak(dst_ptl))
+                <span class="kw">break</span>;
+        }
+        ptent = ptep_get(src_pte);
+        <span class="kw">if</span> (pte_none(ptent)) {
+            progress++;
+            <span class="kw">continue</span>;
+        }
+        <span class="kw">if</span> (!pte_present(ptent)) {
+            ret = copy_nonpresent_pte(
+                dst_mm, src_mm,
+                dst_pte, src_pte,
+                dst_vma, src_vma,
+                addr, rss);
+            <span class="kw">if</span> (ret == -EIO) {
+                entry = pte_to_swp_entry(
+                    ptep_get(src_pte));
+                <span class="kw">break</span>;
+            } <span class="kw">else if</span> (ret == -EBUSY) {
+                <span class="kw">break</span>;
+            } <span class="kw">else if</span> (ret) {
+                ret = <span class="num">0</span>;
+            }
+            progress += <span class="num">8</span>;
+            <span class="kw">continue</span>;
+        }
+        ret = copy_present_pte(
+            dst_vma, src_vma,
+            dst_pte, src_pte, ptent,
+            addr, rss, &amp;prealloc);
+        <span class="kw">if</span> (ret == -EAGAIN)
+            <span class="kw">break</span>;
+        <span class="kw">if</span> (prealloc) {
+            folio_put(prealloc);
+            prealloc = NULL;
+        }
+        progress += <span class="num">8</span>;
+        dst_pte++;
+        src_pte++;
+        addr += (nr &lt;&lt; PAGE_SHIFT);
+    } <span class="kw">while</span> (addr != end);
+
+    <span class="cm">/* ... arch_leave_lazy_mmu_mode,
+       unlock, update_mmu_tlb_range ... */</span>
+out:
+    <span class="kw">return</span> ret;
+}</pre>
+    </div>
+    <div>
+      <div class="col-header lang-pragma">Pragma</div>
+      <pre class="p-code"><span class="cm">// copy_pte_range — copy page table entries</span>
+<span class="cm">// from src to dst virtual area</span>
+<span class="kw">function</span> <span class="fn">copy_pte_range</span>(
+  vm_area_struct <span class="ang">&lt;</span>dst_vma<span class="ang">&gt;</span>,
+  vm_area_struct <span class="ang">&lt;</span>src_vma<span class="ang">&gt;</span>,
+  pmd_t <span class="ang">&lt;</span>dst_pmd<span class="ang">&gt;</span>,
+  pmd_t <span class="ang">&lt;</span>src_pmd<span class="ang">&gt;</span>,
+  <span class="ty">uint64</span> addr,
+  <span class="ty">uint64</span> end
+) <span class="kw">returns</span> <span class="ty">int</span>
+
+  <span class="ty">none</span> <span class="ang">&lt;</span>dst_mm<span class="ang">&gt;</span> <span class="op">=</span> dst_vma.vm_mm
+  <span class="ty">none</span> <span class="ang">&lt;</span>src_mm<span class="ang">&gt;</span> <span class="op">=</span> src_vma.vm_mm
+  <span class="ty">none</span> <span class="ang">&lt;</span>orig_src_pte<span class="ang">&gt;</span>
+  <span class="ty">none</span> <span class="ang">&lt;</span>orig_dst_pte<span class="ang">&gt;</span>
+  <span class="ty">none</span> <span class="ang">&lt;</span>src_pte<span class="ang">&gt;</span>
+  <span class="ty">none</span> <span class="ang">&lt;</span>dst_pte<span class="ang">&gt;</span>
+  pte_t ptent
+  <span class="ty">none</span> <span class="ang">&lt;</span>src_ptl<span class="ang">&gt;</span>
+  <span class="ty">none</span> <span class="ang">&lt;</span>dst_ptl<span class="ang">&gt;</span>
+  <span class="ty">int</span> progress
+  <span class="ty">int</span> max_nr
+  <span class="ty">int</span> ret <span class="op">=</span> <span class="num">0</span>
+  <span class="ty">array</span> <span class="ty">int</span>[NR_MM_COUNTERS] rss
+  softleaf_t entry <span class="op">=</span> <span class="fn">softleaf_mk_none</span>()
+  <span class="ty">none</span> <span class="ang">&lt;</span>prealloc<span class="ang">&gt;</span> <span class="op">=</span> empty
+  <span class="ty">int</span> nr
+
+  <span class="cm">// again:</span>
+  loop
+    progress <span class="op">=</span> <span class="num">0</span>
+    <span class="fn">init_rss_vec</span>(rss)
+
+    src_pte <span class="op">=</span> <span class="fn">pte_offset_map_lock</span>(
+      src_mm, src_pmd, addr, <span class="kw">address</span>(<span class="ang">&lt;</span>src_ptl<span class="ang">&gt;</span>))
+    <span class="kw">if</span> src_pte <span class="op">==</span> empty
+      <span class="fn">pmd_populate</span>(dst_mm, dst_pmd,
+        <span class="fn">pmd_pgtable</span>(<span class="kw">deref</span>(<span class="ang">&lt;</span>dst_pmd<span class="ang">&gt;</span>)))
+      ret <span class="op">=</span> <span class="num">0</span>
+      escape  <span class="cm">// goto out</span>
+    <span class="kw">end if</span>
+
+    dst_pte <span class="op">=</span> <span class="fn">pte_offset_map_nolock</span>(
+      dst_mm, dst_pmd, addr, <span class="kw">address</span>(<span class="ang">&lt;</span>dst_ptl<span class="ang">&gt;</span>))
+    <span class="kw">if</span> dst_pte <span class="op">==</span> empty
+      <span class="fn">pte_unmap_unlock</span>(src_pte, src_ptl)
+      ret <span class="op">=</span> -ENOMEM
+      escape  <span class="cm">// goto out</span>
+    <span class="kw">end if</span>
+
+    orig_src_pte <span class="op">=</span> src_pte
+    orig_dst_pte <span class="op">=</span> dst_pte
+    <span class="fn">arch_enter_lazy_mmu_mode</span>()
+
+    loop
+      nr <span class="op">=</span> <span class="num">1</span>
+      <span class="kw">if</span> progress <span class="op">&gt;=</span> <span class="num">32</span>
+        progress <span class="op">=</span> <span class="num">0</span>
+        <span class="kw">if</span> <span class="fn">need_resched</span>() <span class="kw">or</span>
+           <span class="fn">spin_needbreak</span>(src_ptl) <span class="kw">or</span>
+           <span class="fn">spin_needbreak</span>(dst_ptl)
+          escape
+        <span class="kw">end if</span>
+      <span class="kw">end if</span>
+
+      ptent <span class="op">=</span> <span class="fn">ptep_get</span>(src_pte)
+      <span class="kw">if</span> <span class="fn">pte_none</span>(ptent)
+        progress<span class="op">++</span>
+        continue
+      <span class="kw">end if</span>
+
+      <span class="kw">if</span> <span class="kw">not</span> <span class="fn">pte_present</span>(ptent)
+        ret <span class="op">=</span> <span class="fn">copy_nonpresent_pte</span>(
+          dst_mm, src_mm,
+          dst_pte, src_pte,
+          dst_vma, src_vma,
+          addr, rss)
+        <span class="kw">if</span> ret <span class="op">==</span> -EIO
+          entry <span class="op">=</span> <span class="fn">pte_to_swp_entry</span>(
+            <span class="fn">ptep_get</span>(src_pte))
+          escape
+        <span class="kw">else if</span> ret <span class="op">==</span> -EBUSY
+          escape
+        <span class="kw">else if</span> ret <span class="kw">not</span> <span class="num">0</span>
+          ret <span class="op">=</span> <span class="num">0</span>
+        <span class="kw">end if</span>
+        progress <span class="op">+=</span> <span class="num">8</span>
+        continue
+      <span class="kw">end if</span>
+
+      ret <span class="op">=</span> <span class="fn">copy_present_pte</span>(
+        dst_vma, src_vma,
+        dst_pte, src_pte, ptent,
+        addr, rss, <span class="kw">address</span>(<span class="ang">&lt;</span>prealloc<span class="ang">&gt;</span>))
+      <span class="kw">if</span> ret <span class="op">==</span> -EAGAIN
+        escape
+      <span class="kw">end if</span>
+      <span class="kw">if</span> prealloc <span class="kw">not</span> empty
+        <span class="fn">folio_put</span>(prealloc)
+        prealloc <span class="op">=</span> empty
+      <span class="kw">end if</span>
+      progress <span class="op">+=</span> <span class="num">8</span>
+
+      dst_pte<span class="op">++</span>
+      src_pte<span class="op">++</span>
+      addr <span class="op">+=</span> (nr <span class="kw">left</span> PAGE_SHIFT)
+    <span class="kw">while</span> addr <span class="kw">not</span> end
+
+    <span class="cm">// out: arch_leave_lazy_mmu_mode,</span>
+    <span class="cm">// unlock, update_mmu_tlb_range...</span>
+  end loop
+
+  <span class="kw">return</span> ret
+<span class="kw">end function</span></pre>
+    </div>
+  </div>
+  <div class="note">
+    <code>goto out</code> becomes <code>escape</code> from the outer loop. Pragma has no <code>goto</code> — labeled escape from nested loops is expressed by restructuring to a single outer loop with escape points. The semantics are identical: skip to cleanup code and return.
+  </div>
+</div>
+
+</div><!-- /page-wrap -->
+</body>
+</html>

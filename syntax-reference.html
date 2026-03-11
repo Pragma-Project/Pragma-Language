@@ -72,7 +72,7 @@ body.theme-default #mode-toggle-top:hover {
 }
 body.theme-default .tab-btn {
   background: transparent;
-  color: #a6adc8;
+  color: #585b70;
   border: 1px solid #313244;
 }
 body.theme-default .tab-btn:hover {
@@ -92,13 +92,13 @@ body.theme-default nav {
 body.theme-default .nav-title { color: #cba6f7; border-bottom: 1px solid #313244; font-family: 'Jost', sans-serif; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 300; }
 body.theme-default nav a { color: #a6adc8; border-left: 3px solid transparent; }
 body.theme-default nav a:hover { background: #313244; color: #cdd6f4; border-left-color: #cba6f7; }
-body.theme-default .nav-section { color: #7c7f93; }
+body.theme-default .nav-section { color: #585b70; }
 
 body.theme-default main h1 { color: #1a1a1a; border-bottom: 2px solid #e0d8f0; }
 body.theme-default main h2 { color: #2d1b69; border-bottom: 1px solid #e0d8f0; }
 body.theme-default main h3 { color: #333; }
 body.theme-default p { color: #2a2a2a; }
-body.theme-default .subtitle { color: #2a2a2a; }
+body.theme-default .subtitle { color: #666; }
 
 body.theme-default pre {
   background: #1e1e2e;
@@ -124,11 +124,8 @@ body.theme-default .kw  { color: #cba6f7; }
 body.theme-default .ty  { color: #89dceb; }
 body.theme-default .str { color: #a6e3a1; }
 body.theme-default .num { color: #fab387; }
-body.theme-default .cm  { color: #ffffff; font-style: italic; }
+body.theme-default .cm  { color: #585b70; font-style: italic; }
 body.theme-default .ang { color: #f38ba8; }   /* angle brackets — the signal */
-body.theme-default .fn  { color: #89b4fa; }
-body.theme-default .pp  { color: #f9e2af; }
-body.theme-default .ann { color: #f9e2af; font-weight: 600; }
 
 /* ══════════════════════════════════════════════
    BASE THEME (VT-100 / terminal)
@@ -153,7 +150,7 @@ body.theme-base #mode-toggle-top:hover {
 }
 body.theme-base .tab-btn {
   background: transparent;
-  color: #aaa;
+  color: #555;
   border: 1px solid #2a2a2a;
   font-family: 'Share Tech Mono', monospace;
 }
@@ -178,38 +175,9 @@ body.theme-base .nav-title {
   font-size: 17px;
   letter-spacing: 0.18em;
 }
-body.theme-base nav a { color: #c8c8c8; border-left: 3px solid transparent; font-family: 'Share Tech Mono', monospace; }
-@keyframes bounce-up { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-5px); } }
-.bounce-arrow { display:inline-block; animation:bounce-up 1.1s ease-in-out infinite; font-size:1rem; line-height:1; }
-body.theme-default .bounce-arrow { color: #cba6f7; }
-body.theme-base .bounce-arrow { color: #5c2d91; }
+body.theme-base nav a { color: #888; border-left: 3px solid transparent; font-family: 'Share Tech Mono', monospace; }
 body.theme-base nav a:hover { background: #111; color: #fff; border-left-color: #aaa; }
-@keyframes caret-blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
-body.theme-base .nav-section {
-  color: #c8c8c8;
-  font-size: 12px;
-  display: block;
-  width: max-content;
-  margin-left: 20px;
-  padding: 6px 6px 4px 0;
-  border-bottom: 1px solid #888;
-}
-body.theme-base .nav-section::before {
-  content: '❯';
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: rgba(200, 200, 200, 0.35);
-  color: #c8c8c8;
-  font-size: 9px;
-  margin-right: 6px;
-  vertical-align: middle;
-  line-height: 16px;
-  text-align: center;
-}
+body.theme-base .nav-section { color: #444; }
 
 body.theme-base main h1 {
   color: #fff;
@@ -227,7 +195,7 @@ body.theme-base main h2 {
 }
 body.theme-base main h3 { color: #ccc; }
 body.theme-base p { color: #c8c8c8; }
-body.theme-base .subtitle { color: #c8c8c8; }
+body.theme-base .subtitle { color: #777; }
 
 body.theme-base pre {
   background: #080808;
@@ -253,11 +221,8 @@ body.theme-base .kw  { color: #e0e0e0; }
 body.theme-base .ty  { color: #c0c0c0; }
 body.theme-base .str { color: #aaaaaa; }
 body.theme-base .num { color: #dddddd; }
-body.theme-base .cm  { color: #ffffff; }
+body.theme-base .cm  { color: #555; }
 body.theme-base .ang { color: #ffffff; font-weight: bold; }   /* <> — the signal */
-body.theme-base .fn  { color: #e0e0e0; }
-body.theme-base .pp  { color: #f9e2af; }
-body.theme-base .ann { color: #f9e2af; font-weight: 600; }
 
 /* ══════════════════════════════════════════════
    SHARED LAYOUT
@@ -279,21 +244,6 @@ nav {
   text-transform: uppercase;
   padding: 0 20px 14px;
   margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.nav-title a.nav-title-link {
-  text-decoration: none;
-  color: inherit;
-  font-family: 'Share Tech Mono', 'Courier New', monospace;
-  font-weight: normal;
-  transition: opacity 0.15s;
-}
-.nav-title a.nav-title-link:hover { opacity: 0.75; }
-.nav-pragma-word, .nav-home-word {
-  font-family: 'Share Tech Mono', 'Courier New', monospace;
-  font-weight: normal;
 }
 
 .mode-tabs {
@@ -389,6 +339,42 @@ hr { border: none; margin: 20px 0; }
 .anchor-target { scroll-margin-top: 30px; }
 .cfc-intro { font-size: 0.88rem; margin-bottom: 32px; }
 
+/* ══════════════════════════════════════════════
+   README BUTTON (in sidebar)
+══════════════════════════════════════════════ */
+.readme-btn {
+  display: block;
+  margin: 0 20px 14px;
+  width: calc(100% - 40px);
+  padding: 4px 0;
+  font-size: 11px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  cursor: pointer;
+  border-radius: 3px;
+  letter-spacing: 0.12em;
+  text-align: center;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+body.theme-default .readme-btn {
+  background: transparent;
+  color: #888;
+  border: 1px solid #2a2050;
+}
+body.theme-default .readme-btn:hover {
+  color: #cba6f7;
+  border-color: #5c2d91;
+  background: #1e1e2e;
+}
+body.theme-base .readme-btn {
+  background: transparent;
+  color: #444;
+  border: 1px solid #222;
+}
+body.theme-base .readme-btn:hover {
+  color: #aaa;
+  border-color: #555;
+}
 
 /* ══════════════════════════════════════════════
    README PAGE (full-screen overlay)
@@ -532,129 +518,38 @@ hr { border: none; margin: 20px 0; }
   line-height: 1.75;
 }
 
-/* ══ MODS THEME ══ */
-body.theme-mods {
-  font-family: 'Jost', sans-serif;
-  font-size: 15px;
-  line-height: 1.7;
-  color: #111;
-  background: #f7f7f7;
-}
-body.theme-mods h1 {
-  font-family: 'Jost', sans-serif;
-  font-weight: 700;
-  color: #000;
-  border-bottom: 2px solid #111;
-  padding-bottom: 14px;
-}
-body.theme-mods .subtitle { color: #111; font-style: normal; }
-body.theme-mods nav { background: #fff; border-right: 1px solid #ddd; }
-body.theme-mods .nav-title { color: #111; border-bottom: 1px solid #ddd; }
-body.theme-mods .nav-section { color: #555; }
-body.theme-mods nav a { color: #333; }
-body.theme-mods nav a:hover { background: #f0f0f0; color: #000; border-left-color: #555; }
-body.theme-mods .tab-btn { color: #333; border-color: #ccc; background: #f5f5f5; }
-body.theme-mods .tab-btn:hover { background: #e8e8e8; color: #000; }
-body.theme-mods .tab-btn.tab-active { background: #111; color: #fff; border-color: #111; }
-body.theme-mods #mode-toggle-top { background: #fff; color: #111; border: 1px solid #ccc; }
-
-/* ══ MODS CARD LAYOUT ══ */
-.mods-section { margin-bottom: 44px; }
-#content-mods .mods-section:first-of-type { margin-top: 0; }
-.mods-section-title {
-  font-family: 'Jost', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #000;
-  letter-spacing: 0.02em;
-  margin-bottom: 12px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #bbb;
-}
-body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #bbb; }
-
-.mods-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.mods-grid.wide-only .mods-card { grid-column: span 2; }
-.mods-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-top: 2px solid #555;
-  padding: 14px 16px 16px;
-}
-.mods-card.wide { grid-column: span 2; }
-.mods-card-name {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.95rem;
-  color: #111;
-  margin-bottom: 5px;
-}
-.mods-card-desc {
-  font-family: 'Jost', sans-serif;
-  font-weight: 400;
-  font-size: 0.85rem;
-  color: #222;
-  margin-bottom: 10px;
-  line-height: 1.6;
-}
-.mods-card pre {
-  background: #1a1a2e;
-  border: 1px solid #333;
-  border-radius: 0;
-  padding: 8px 12px;
-  font-size: 12px;
-  margin: 0;
-  line-height: 1.75;
-  color: #ffffff;
-}
-.mods-card pre .kw  { color: #4fc3f7; font-weight: bold; }
-.mods-card pre .ann { color: #4fc3f7; font-weight: bold; }
-.mods-card pre .ty  { color: #ffffff; font-weight: bold; }
-.mods-card pre .fn  { color: #ffffff; }
-.mods-card pre .str { color: #ff6b6b; }
-.mods-card pre .cm  { color: #888; font-style: italic; }
-.mods-card pre .num { color: #ff6b6b; }
-.mods-card pre .op  { color: #ffffff; }
-.mods-card pre .ang { color: #ff6b6b; }
-
 </style>
 </head>
 <body class="theme-default">
 
 <button id="mode-toggle-top" onclick="toggleMode()">
   <span class="flip-label">FLIP</span>
-  <span id="mode-label-text" class="mode-label">Base</span>
+  <span id="mode-label-text" class="mode-label">Standard</span>
 </button>
-
 
 <!-- ══════════════════════════════════════════
      SIDEBAR — STANDARD
 ══════════════════════════════════════════ -->
 <nav id="nav-standard">
-  <div class="nav-title"><a href="index.html" class="nav-title-link">← Pragma Home</a></div>
+  <div class="nav-title">Pragma</div>
   <div class="mode-tabs">
     <button class="tab-btn tab-active" data-mode="standard" onclick="setMode('standard')">Standard</button>
     <button class="tab-btn" data-mode="base" onclick="setMode('base')">Base</button>
-    <button class="tab-btn" data-mode="mods" onclick="setMode('mods')">Mods</button>
   </div>
+  <button class="readme-btn" onclick="showReadme()">ReadMe</button>
+
   <div class="nav-section">Basics</div>
-  <a href="index.html">Overview</a>
+  <a href="#overview">Overview</a>
   <a href="#structure">Program Structure</a>
   <a href="#comments">Comments</a>
   <a href="#imports">Imports</a>
 
   <div class="nav-section">Data</div>
-  <a href="#coming-from-c">Types &amp; Sizes</a>
   <a href="#variables">Variables</a>
   <a href="#constants">Constants</a>
-  <a href="#literals">Literals</a>
   <a href="#collections">Collections</a>
 
   <div class="nav-section">Logic</div>
-  <a href="#operators">Operators</a>
   <a href="#casting">Casting</a>
   <a href="#if">If / Else</a>
   <a href="#while">While</a>
@@ -666,35 +561,39 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
 
   <div class="nav-section">Code</div>
   <a href="#functions">Functions</a>
-  <a href="#coming-from-c">Types</a>
+  <a href="#objects">Objects</a>
+  <a href="#interfaces">Interfaces</a>
   <a href="#fixeds">Fixed</a>
 
   <div class="nav-section">I/O &amp; Errors</div>
   <a href="#print">Print</a>
-  <a href="#try-catch">Try / Catch</a>
+  <a href="#try-catch">Try / Catch / Error</a>
 
   <div class="nav-section">Reference</div>
   <a href="#coming-from-c">Coming from C</a>
-  <a href="safety.html">Safety &amp; MemProof ↗</a>
+  <a href="#types">Types &amp; Sizes</a>
+  <a href="#literals">Literals</a>
+  <a href="#operators">Operators</a>
 </nav>
 
 <!-- ══════════════════════════════════════════
      SIDEBAR — BASE
 ══════════════════════════════════════════ -->
 <nav id="nav-base" style="display:none">
-  <div class="nav-title"><a href="index.html" class="nav-title-link">← Pragma Home</a></div>
+  <div class="nav-title">Base Pragma</div>
   <div class="mode-tabs">
     <button class="tab-btn" data-mode="standard" onclick="setMode('standard')">Standard</button>
     <button class="tab-btn tab-active" data-mode="base" onclick="setMode('base')">Base</button>
-    <button class="tab-btn" data-mode="mods" onclick="setMode('mods')">Mods</button>
   </div>
+  <button class="readme-btn" onclick="showReadme()">ReadMe</button>
+
   <div class="nav-section">Memory</div>
   <a href="#base-pointers">Pointers</a>
   <a href="#base-address">address &amp; deref</a>
   <a href="#base-mem">mem access</a>
   <a href="#base-arithmetic">Pointer arithmetic</a>
   <a href="#base-size">size</a>
-  <a href="#base-nothing">none</a>
+  <a href="#base-nothing">none pointer</a>
 
   <div class="nav-section">Bitwise</div>
   <a href="#base-bitwise">All bitwise ops</a>
@@ -703,45 +602,14 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
   <div class="nav-section">Layout</div>
   <a href="#base-pack">pack()</a>
   <a href="#base-uint">uint types</a>
+  <a href="#base-variant">variant (union)</a>
+
+  <div class="nav-section">Code</div>
+  <a href="#base-funcptr">Function Pointers</a>
 
   <div class="nav-section">Reference</div>
   <a href="#why-base-pragma">Why Base Pragma?</a>
   <a href="#base-coming-from-c">Coming from C</a>
-  <a href="safety.html">Safety &amp; MemProof ↗</a>
-</nav>
-
-<!-- ══════════════════════════════════════════
-     SIDEBAR — MODS
-══════════════════════════════════════════ -->
-<nav id="nav-mods" style="display:none">
-  <div class="nav-title"><a href="index.html" class="nav-title-link">← Pragma Home</a></div>
-  <div class="mode-tabs">
-    <button class="tab-btn" data-mode="standard" onclick="setMode('standard')">Standard</button>
-    <button class="tab-btn" data-mode="base" onclick="setMode('base')">Base</button>
-    <button class="tab-btn tab-active" data-mode="mods" onclick="setMode('mods')">Mods</button>
-  </div>
-
-  <div class="nav-section">Concurrency</div>
-  <a href="#ann-async">@async / @await</a>
-
-  <div class="nav-section">Targets</div>
-  <a href="#ann-platform">@platform</a>
-
-  <div class="nav-section">Safety</div>
-  <a href="#ann-nullable">@nullable</a>
-
-  <div class="nav-section">Types</div>
-  <a href="#ann-data">@data</a>
-  <a href="#ann-sealed">@sealed</a>
-  <a href="#ann-singleton">@singleton</a>
-  <a href="#ann-alias">@alias</a>
-
-  <div class="nav-section">Functions</div>
-  <a href="#ann-inline">@inline</a>
-  <a href="#ann-extends">@extends</a>
-  <a href="#ann-operator">@operator</a>
-  <a href="#ann-receiver">@receiver</a>
-  <a href="#ann-delegate">@delegate</a>
 </nav>
 
 <!-- ══════════════════════════════════════════
@@ -751,17 +619,51 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
 <div id="content-standard">
 
 <h1>Pragma Language Reference</h1>
+<p class="subtitle">Standard Pragma. Source files use the <code>.run</code> extension. For lower level programming with memory management, pointers, and bitwise operations, click <strong>Base</strong> on the left.</p>
 
-<div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
-<h2 id="structure" class="anchor-target" style="margin:0;">Program Structure</h2>
-<a href="#coming-from-c" style="flex-shrink:0; display:inline-block; background:#1e1e2e; border:1px solid #5c2d91; color:#cba6f7; text-decoration:none; padding:5px 16px; border-radius:4px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; transition:background 0.15s;" onmouseover="this.style.background='#2a1a5e'" onmouseout="this.style.background='#1e1e2e'">C Differences ↓</a>
+<p class="cfc-intro"><em>Throughout this page, sections marked <strong>Coming from C</strong> compare Pragma to C syntax. If you are a beginner or don't have a C background, skip those sections — they are not necessary.</em></p>
+
+<h2 id="overview" class="anchor-target">Overview</h2>
+<p>Pragma is a statically-typed systems language that transpiles to C. It is designed to be readable to anyone who has written code in any modern language.</p>
+<p>Every program has at least a <code>main</code> function. Functions, objects, and constants are declared at file scope above it. This both acknowledges the older C language syntax and adds some clarity for beginners.</p>
+
+<div id="c-hover-region" style="display:inline-block; border:1px dashed #cba6f7; border-radius:4px; padding:4px 14px; margin:8px 0 4px; cursor:pointer; position:relative; font-family:'Share Tech Mono','Courier New',monospace; font-size:0.85rem; color:#cba6f7;" onmouseenter="document.getElementById('c-hover-img').style.display='block'" onmouseleave="document.getElementById('c-hover-img').style.display='none'">
+  ..but C works fine
+  <div id="c-hover-img" style="display:none; position:absolute; left:0; top:100%; z-index:200; margin-top:6px; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); width:min(780px,calc(100vw - 20px)); box-sizing:border-box; color:#cdd6f4;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">C — linux/container_of.h</span><span style="color:#cba6f7;">Pragma</span></div>
+    <div style="display:flex; gap:8px;">
+      <div style="flex:1;min-width:0;overflow:hidden;"><pre style="font-size:10px;margin:0;white-space:pre;overflow:visible;max-width:100%;background:transparent;border:none;padding:0;font-family:'Share Tech Mono','Courier New',monospace;"><span style="color:#f9e2af;">#define</span> <span style="color:#89b4fa;">container_of</span>(ptr, type, member) ({ \
+    <span style="color:#89dceb;">void</span> *__mptr = (<span style="color:#89dceb;">void</span> *)(ptr); \
+    <span style="color:#89b4fa;">static_assert</span>( \
+        <span style="color:#89b4fa;">__same_type</span>(*(ptr), \
+            ((type *)0)-&gt;member) \
+        || <span style="color:#89b4fa;">__same_type</span>(*(ptr), <span style="color:#89dceb;">void</span>), \
+        <span style="color:#a6e3a1;">"pointer type mismatch"</span>); \
+    ((type *)(__mptr - \
+        <span style="color:#89b4fa;">offsetof</span>(type, member))); })</pre></div>
+      <div style="flex:1;min-width:0;overflow:hidden;"><pre style="font-size:10px;margin:0;white-space:pre;overflow:visible;max-width:100%;background:transparent;border:none;padding:0;font-family:'Share Tech Mono','Courier New',monospace;"><span style="color:#f9e2af;">#</span><span style="color:#cba6f7;">function</span> <span style="color:#89b4fa;">container_of</span>(<span style="color:#89dceb;">none</span> <span style="color:#f38ba8;">&lt;</span>ptr<span style="color:#f38ba8;">&gt;</span>, <span style="color:#89dceb;">uint64</span> off)
+  <span style="color:#89dceb;">none</span> <span style="color:#f38ba8;">&lt;</span>__mptr<span style="color:#f38ba8;">&gt;</span> = <span style="color:#89b4fa;">change</span>(<span style="color:#f38ba8;">&lt;</span>ptr<span style="color:#f38ba8;">&gt;</span>)-&gt;<span style="color:#89dceb;">none</span>
+  <span style="color:#89dceb;">uint64</span> addr = <span style="color:#89b4fa;">change</span>(__mptr)-&gt;<span style="color:#89dceb;">uint64</span> - off
+  <span style="color:#cba6f7;">return</span> <span style="color:#89b4fa;">change</span>(addr)-&gt;<span style="color:#89dceb;">none</span>
+<span style="color:#f9e2af;">#</span><span style="color:#cba6f7;">end function</span></pre></div>
+    </div>
+    <div style="margin-top:10px; text-align:right;"><a href="C-Side-by-Side.html" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em;">See More →</a></div>
+  </div>
 </div>
-<p>Every Pragma program has at least a <code>main</code> function. Functions, types, and constants are declared at file scope above it. This both acknowledges the older C language syntax and adds some clarity for beginners.</p>
+
+<hr>
+
+<h2 id="structure" class="anchor-target">Program Structure</h2>
 <p>No wrapper blocks. File scope holds all declarations. <code>main</code> is the entry point.</p>
 
 <pre><span class="kw">function</span> main() <span class="kw">returns</span> <span class="ty">int</span>
   <span class="cm">// entry point</span>
 <span class="kw">end function</span></pre>
+
+<div class="note">
+  <strong>Note</strong>
+  <code>main</code> or <code>MAIN</code> are both accepted as the entry point name.
+</div>
 
 <hr>
 
@@ -777,17 +679,6 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
 
 <hr>
 
-<h2 id="strings" class="anchor-target">String</h2>
-<p>A first-class type. The underlying char array size is hidden — visible on hover in the IDE (LSP). When compiling to C, the compiler performs flow analysis to determine the maximum size the string can reach across the program. For runtime inputs, allocation is bounded to a safe maximum.</p>
-<pre><span class="ty">string</span> name     <span class="op">=</span> <span class="str">"hello"</span>
-<span class="ty">string</span> greeting <span class="op">=</span> <span class="str">"Hi "</span> <span class="op">+</span> name</pre>
-<div class="note">
-  <strong>Note</strong>
-  Memory safety cannot be guaranteed for runtime string inputs (user input, file reads). The compiler will warn when <code>safety: checked</code> is set.
-</div>
-
-<hr>
-
 <h2 id="variables" class="anchor-target">Variables</h2>
 <pre><span class="ty">int</span> x <span class="op">=</span> <span class="num">10</span>
 <span class="ty">float</span> pi <span class="op">=</span> <span class="num">3.14159</span>
@@ -796,7 +687,7 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
 <span class="ty">complex</span> z <span class="op">=</span> complex(<span class="num">3</span>, <span class="num">4</span>)   <span class="cm">// 3 + 4i</span>
 <span class="ty">int</span> n                       <span class="cm">// defaults to 0</span></pre>
 
-<p style="color:#c0392b; font-size:0.9rem;">Note: types must be declared for variables unless <code>types: dynamic</code> is set in the Dynamic Runtime configuration.</p>
+<p style="color:#c0392b; font-size:0.9rem;">Note: types must be declared for variables.</p>
 
 <p>Assignment:</p>
 <pre>x <span class="op">=</span> <span class="num">42</span>
@@ -813,39 +704,45 @@ x<span class="op">++</span>        x<span class="op">--</span></pre>
 
 <h2 id="collections" class="anchor-target">Collections</h2>
 
-<h3>Array</h3>
-<p>Fixed-size. Size declared after the type keyword. Zero-indexed.</p>
-<pre><span class="kw">array</span> <span class="ty">int</span>[<span class="num">5</span>] a <span class="op">=</span> [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>]
-a[<span class="num">2</span>]              <span class="cm">// 3</span>
-
-<span class="kw">array</span> <span class="ty">int</span> a       <span class="cm">// no declared size — decays to pointer</span>
+<h3>array</h3>
+<p>Fixed-size. Type then size in brackets, then name. Zero-indexed.</p>
+<pre><span class="ty">array</span> <span class="ty">int</span>[<span class="num">4</span>] scores <span class="op">=</span> [<span class="num">95</span>, <span class="num">87</span>, <span class="num">72</span>, <span class="num">100</span>]
+scores[<span class="num">0</span>]          <span class="cm">// 95</span>
 
 <span class="cm">// Multi-dimensional: rows then columns</span>
-<span class="kw">array</span> <span class="ty">int</span>[<span class="num">5</span>][<span class="num">3</span>] grid
-grid[<span class="num">0</span>][<span class="num">2</span>] <span class="op">=</span> <span class="num">42</span></pre>
+<span class="ty">array</span> <span class="ty">string</span>[<span class="num">2</span>][<span class="num">4</span>] grid
+grid[<span class="num">0</span>][<span class="num">2</span>] <span class="op">=</span> <span class="str">"hello"</span>
 
-<h3>List</h3>
-<p>Dynamic, resizable. Capacity hint in brackets.</p>
-<pre><span class="kw">list</span> <span class="ty">string</span>[<span class="num">3</span>] names
-<span class="kw">list</span> <span class="ty">string</span>[<span class="num">3</span>][<span class="num">2</span>] grid   <span class="cm">// 2D list</span></pre>
+<span class="cm">// No size: valid only when initializer is present (size inferred)</span>
+<span class="ty">array</span> <span class="ty">int</span>[] flags <span class="op">=</span> [<span class="num">1</span>, <span class="num">0</span>, <span class="num">1</span>]</pre>
 
-<h3>Map</h3>
-<p>Key-value store with optional capacity hint.</p>
-<pre><span class="kw">map</span> [<span class="ty">string</span>,<span class="ty">int</span>][<span class="num">50</span>] wc   <span class="cm">// string→int, capacity 50</span>
+<h3>list</h3>
+<p>Dynamic, resizable. Type then optional capacity hint in brackets, then name.</p>
+<pre><span class="ty">list</span> <span class="ty">string</span>[<span class="num">3</span>] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>]
+names.add(<span class="str">"Dave"</span>)
+names[<span class="num">1</span>]            <span class="cm">// "Bob"</span>
 
-wc[<span class="str">&quot;key&quot;</span>]           <span class="cm">// read  (calls wc_get)</span>
-wc[<span class="str">&quot;key&quot;</span>] <span class="op">=</span> val     <span class="cm">// write (calls wc_set)</span>
-wc_has(<span class="str">&quot;key&quot;</span>)       <span class="cm">// 1 if key exists, 0 otherwise</span>
-wc_remove(<span class="str">&quot;key&quot;</span>)   <span class="cm">// delete a key</span></pre>
+<span class="ty">list</span> <span class="ty">int</span>[] nums      <span class="cm">// empty list, no capacity hint</span></pre>
+
+<h3>map</h3>
+<p>Fixed capacity declared at definition. Key and value types in brackets, then capacity, then name.</p>
+<pre><span class="ty">map</span> [<span class="ty">string</span>, <span class="ty">int</span>][<span class="num">50</span>] wordCount
+<span class="ty">map</span> [<span class="ty">string</span>, <span class="ty">float</span>][<span class="num">10</span>] scores</pre>
+<p>Access and mutation use index syntax — the compiler generates helper functions:</p>
+<pre>wordCount[<span class="str">"hello"</span>] <span class="op">=</span> <span class="num">1</span>           <span class="cm">// set</span>
+<span class="ty">int</span> n <span class="op">=</span> wordCount[<span class="str">"hello"</span>]       <span class="cm">// get</span>
+wordCount_has(<span class="str">"hello"</span>)           <span class="cm">// 1 if key exists</span>
+wordCount_remove(<span class="str">"hello"</span>)        <span class="cm">// delete key</span></pre>
 
 <hr>
 
 <h2 id="casting" class="anchor-target">Casting</h2>
-<p>Use <code>change(expr)-&gt;Type</code>. Float-to-int truncates — no rounding.</p>
-<pre><span class="ty">int</span> n    <span class="op">=</span> change(<span class="num">3.9</span>)-&gt;<span class="ty">int</span>      <span class="cm">// 3 — truncates</span>
-<span class="ty">string</span> s <span class="op">=</span> change(<span class="num">42</span>)-&gt;<span class="ty">string</span>    <span class="cm">// "42"</span>
-<span class="ty">float</span> g  <span class="op">=</span> change(<span class="num">10</span>)-&gt;<span class="ty">float</span>     <span class="cm">// 10.0</span>
-<span class="ty">bool</span> b   <span class="op">=</span> change(<span class="num">1</span>)-&gt;<span class="ty">bool</span>       <span class="cm">// true</span></pre>
+<p>Use <code>change(value)-&gt;type</code>. Float-to-int truncates — no rounding.</p>
+<pre><span class="ty">float</span> f <span class="op">=</span> <span class="num">3.9</span>
+<span class="ty">int</span> n    <span class="op">=</span> <span class="kw">change</span>(f)<span class="op">-&gt;</span><span class="ty">int</span>       <span class="cm">// 3</span>
+<span class="ty">string</span> s <span class="op">=</span> <span class="kw">change</span>(<span class="num">42</span>)<span class="op">-&gt;</span><span class="ty">string</span>   <span class="cm">// "42"</span>
+<span class="ty">float</span> g  <span class="op">=</span> <span class="kw">change</span>(<span class="num">10</span>)<span class="op">-&gt;</span><span class="ty">float</span>    <span class="cm">// 10.0</span>
+<span class="ty">bool</span> b   <span class="op">=</span> <span class="kw">change</span>(<span class="num">1</span>)<span class="op">-&gt;</span><span class="ty">bool</span>     <span class="cm">// true</span></pre>
 
 <hr>
 
@@ -884,7 +781,7 @@ wc_remove(<span class="str">&quot;key&quot;</span>)   <span class="cm">// delete
 <hr>
 
 <h2 id="foreach" class="anchor-target">For Each</h2>
-<pre><span class="kw">list</span> <span class="ty">string</span>[<span class="num">3</span>] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>]
+<pre><span class="ty">list</span> <span class="ty">string</span>[<span class="num">3</span>] names <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>]
 
 <span class="kw">for each</span> name <span class="kw">in</span> names
   <span class="kw">print</span> name
@@ -906,19 +803,18 @@ wc_remove(<span class="str">&quot;key&quot;</span>)   <span class="cm">// delete
 <hr>
 
 <h2 id="iterate" class="anchor-target">Iterate — fall-through</h2>
-<p>Execution continues into the next case unless <code>escape</code> stops it.</p>
+<p>Fall-through dispatch, identical to C <code>switch</code> behaviour. Cases fall through unless <code>escape</code> stops them.</p>
 <pre><span class="kw">iterate</span> code
   <span class="num">1</span>: <span class="kw">print</span> <span class="str">"one"</span>
-  <span class="num">2</span>: <span class="kw">print</span> <span class="str">"two"</span>
-     <span class="kw">escape</span>
-  <span class="num">3</span>: <span class="kw">print</span> <span class="str">"three"</span>
-     <span class="kw">escape</span>
+  <span class="num">2</span>:
+    <span class="kw">print</span> <span class="str">"two"</span>
+    <span class="kw">escape</span>
+  <span class="num">3</span>:
+    <span class="kw">print</span> <span class="str">"three"</span>
+    <span class="kw">escape</span>
+  <span class="kw">default</span>: <span class="kw">print</span> <span class="str">"other"</span>
 <span class="kw">end iterate</span></pre>
-
-<div class="cfc">
-  <strong>Coming from C</strong>
-  <code>iterate</code> is C's <code>switch</code>. Fall-through by default — identical behaviour. <code>escape</code> is <code>break</code>.
-</div>
+<p>Fall-through: omit <code>escape</code> between consecutive cases and execution continues into the next one — identical to C behaviour.</p>
 
 <hr>
 
@@ -936,7 +832,7 @@ wc_remove(<span class="str">&quot;key&quot;</span>)   <span class="cm">// delete
   <span class="kw">return</span> a <span class="op">+</span> b
 <span class="kw">end function</span>
 
-<span class="kw">function</span> greet(<span class="ty">string</span> name)
+<span class="kw">function</span> greet(<span class="ty">string</span> name) <span class="kw">returns</span> <span class="ty">void</span>
   <span class="kw">print</span> <span class="str">"Hello, "</span> <span class="op">+</span> name
 <span class="kw">end function</span>
 
@@ -947,28 +843,40 @@ wc_remove(<span class="str">&quot;key&quot;</span>)   <span class="cm">// delete
   <span class="kw">return</span> n <span class="op">*</span> factorial(n <span class="op">-</span> <span class="num">1</span>)
 <span class="kw">end function</span></pre>
 
-<p style="color:#c0392b; font-size:0.9rem;">Note: if a return type is anything other than nothing, it must be declared.</p>
+<p style="color:#c0392b; font-size:0.9rem;">Note: return types must be declared just like with variables. Python leaves this open, Pragma makes it clear.</p>
 
 <hr>
 
-<h2 id="types" class="anchor-target">Types</h2>
+<h2 id="objects" class="anchor-target">Objects</h2>
 <pre><span class="kw">type</span> Player
   <span class="ty">string</span> name
   <span class="ty">int</span> age
   <span class="ty">float</span> score <span class="op">=</span> <span class="num">0.0</span>
+
+  <span class="kw">function</span> greet() <span class="kw">returns</span> <span class="ty">void</span>
+    <span class="kw">print</span> <span class="str">"Hi, I am "</span> <span class="op">+</span> <span class="kw">self</span>.name
+  <span class="kw">end function</span>
 <span class="kw">end type</span>
 
-<span class="kw">type</span> ProPlayer <span class="kw">inherits</span> Player
+<span class="kw">type</span> ProPlayer <span class="kw">inherits</span> Player <span class="kw">interfaces</span> Ranked
   <span class="ty">int</span> rank
 <span class="kw">end type</span>
 
-Player p <span class="op">=</span> <span class="kw">new</span> Player[<span class="str">"Alex"</span>, <span class="num">25</span>, <span class="num">98.5</span>]
+Player p <span class="op">=</span> <span class="kw">new</span> Player(<span class="str">"Alex"</span>, <span class="num">25</span>, <span class="num">98.5</span>)
 <span class="kw">print</span> p.name</pre>
 
 <div class="cfc">
   <strong>Coming from C</strong>
-  <code>type</code> is a <code>struct</code>. Plain field declarations compile to an identical memory layout. Methods and inheritance are additive — ignore them and a type is exactly a struct.
+  <code>type</code> is a <code>struct</code>. Plain field declarations compile to an identical memory layout. Methods, inheritance, and interfaces are additive — ignore them and a type is exactly a struct.
 </div>
+
+<hr>
+
+<h2 id="interfaces" class="anchor-target">Interfaces</h2>
+<pre><span class="kw">interface</span> Ranked
+  <span class="kw">function</span> getRank() <span class="kw">returns</span> <span class="ty">int</span>
+  <span class="kw">function</span> promote() <span class="kw">returns</span> <span class="ty">void</span>
+<span class="kw">end interface</span></pre>
 
 <hr>
 
@@ -991,25 +899,33 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 
 <h2 id="print" class="anchor-target">Print</h2>
 <pre><span class="kw">print</span> <span class="str">"hello world"</span>
-<span class="kw">print</span> <span class="str">"Score: "</span> <span class="op">+</span> change(score)-&gt;<span class="ty">string</span>
+<span class="kw">print</span> <span class="str">"Score: "</span> <span class="op">+</span> <span class="ty">string</span>(score)
 <span class="kw">print</span> add(<span class="num">3</span>, <span class="num">7</span>)</pre>
 
 <hr>
 
-<h2 id="try-catch" class="anchor-target">Try / Catch</h2>
-<p>Throw with <code>error</code>. Multiple exception types in one catch use <code>or</code>.</p>
-<pre><span class="kw">error</span> ExcType <span class="str">&quot;message&quot;</span>    <span class="cm">// throw with message</span>
-<span class="kw">error</span> ExcType              <span class="cm">// throw without message</span>
+<h2 id="try-catch" class="anchor-target">Try / Catch / Error</h2>
+<p>Throw an exception with <code>error</code>. Catch with one or more <code>catch</code> clauses. Multiple exception types in one catch use <code>or</code>.</p>
+<pre><span class="kw">function</span> divide(<span class="ty">int</span> a, <span class="ty">int</span> b) <span class="kw">returns</span> <span class="ty">int</span>
+  <span class="kw">if</span> b == <span class="num">0</span>
+    <span class="kw">error</span> DivisionByZero <span class="str">"cannot divide by zero"</span>
+  <span class="kw">end if</span>
+  <span class="kw">return</span> a / b
+<span class="kw">end function</span>
 
 <span class="kw">try</span>
-  <span class="cm">// risky code</span>
-<span class="kw">catch</span>(IOException err)
-  <span class="kw">print</span> <span class="str">"IO error"</span>
+  <span class="ty">int</span> result <span class="op">=</span> divide(<span class="num">10</span>, <span class="num">0</span>)
+<span class="kw">catch</span>(DivisionByZero err)
+  <span class="kw">print</span> <span class="str">"caught divide by zero"</span>
 <span class="kw">end catch</span>
 <span class="kw">catch</span>(RuntimeError <span class="kw">or</span> ValueError err)
-  <span class="kw">print</span> <span class="str">"runtime error"</span>
+  <span class="kw">print</span> <span class="str">"other error"</span>
 <span class="kw">end catch</span>
 <span class="kw">end try</span></pre>
+<div class="note">
+  <strong>Note</strong>
+  Exception type names are any identifier — they are defined by use, not declared in advance. An unhandled exception prints to stderr and exits. Implemented via <code>setjmp</code>/<code>longjmp</code> — no heap allocation, no C++ runtime.
+</div>
 
 
 <hr>
@@ -1029,10 +945,10 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <h3>Keywords</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>struct { ... }</code></td><td><code>type ... end type</code></td><td>Same concept. Pragma types can also have methods and inheritance — but plain field declarations compile identically to a C struct.</td></tr>
+  <tr><td><code>struct { ... }</code></td><td><code>type ... end type</code></td><td>Same concept. Pragma types can also have methods, inheritance, and interfaces — but plain field declarations compile identically to a C struct.</td></tr>
+  <tr><td><code>union { ... }</code></td><td><code>variant ... end variant</code></td><td>All fields share the same memory. Available in Base Pragma.</td></tr>
   <tr><td><code>enum { A=1 }</code></td><td><code>fixed ... end fixed</code></td><td>Access members as <code>Name.member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed and scoped — no preprocessor macro</td></tr>
-  <tr><td><code>#define fn(...) ({ ... })</code></td><td><code>#function fn(...) ... #end function</code></td><td>Append <code>#</code> to <code>function</code> / <code>end function</code> to write a preprocessor-level macro function</td></tr>
   <tr><td><code>NULL</code></td><td><code>empty</code></td><td>Null literal</td></tr>
   <tr><td><code>printf(...)</code></td><td><code>print x</code></td><td>Use <code>change(x)-&gt;string</code> to convert a value before printing or concatenating</td></tr>
   <tr><td><code>break</code></td><td><code>escape</code></td><td>Exit a loop</td></tr>
@@ -1044,7 +960,8 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
   <tr><td><code>&amp;&amp;</code></td><td><code>and</code></td><td>Logical AND</td></tr>
   <tr><td><code>||</code></td><td><code>or</code></td><td>Logical OR</td></tr>
-  <tr><td><code>!</code></td><td><code>not</code></td><td>Logical NOT</td></tr>
+  <tr><td><code>!</code></td><td><code>!x</code> or <code>not x</code></td><td>Logical NOT — both accepted</td></tr>
+  <tr><td><code>-x</code></td><td><code>-x</code> or <code>negate x</code></td><td>Arithmetic negation — both accepted</td></tr>
   <tr><td><code>==</code></td><td><code>==</code></td><td>Identical. Also accepts <code>equals</code> as an alternative.</td></tr>
   <tr><td><code>!=</code></td><td><code>!=</code></td><td>Identical. Also accepts <code>not</code> as an alternative (<code>x not y</code>).</td></tr>
 </table>
@@ -1052,14 +969,22 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <h3>Iterate / match</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>iterate</code> (falls through)</td><td><code>iterate</code></td><td>Identical fall-through behaviour</td></tr>
+  <tr><td><code>switch</code> (falls through)</td><td><code>iterate N: ... end iterate</code></td><td>Fall-through identical to C.</td></tr>
   <tr><td>—</td><td><code>match</code></td><td>No fall-through. Stops at first match. Use this by default.</td></tr>
+</table>
+
+<h3>Exceptions</h3>
+<table>
+  <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
+  <tr><td><code>longjmp</code></td><td><code>error ExcType "msg"</code></td><td>Throw an exception. Any identifier is a valid exception type.</td></tr>
+  <tr><td><code>setjmp</code></td><td><code>try ... catch(T e) ... end try</code></td><td>Implemented via setjmp/longjmp under the hood.</td></tr>
 </table>
 
 <div class="cfc">
   <strong>Coming from C — Strings</strong>
-  <code>string</code> is a first-class type. There is no <code>char*</code> or null-terminated array — the runtime handles it. Use <code>string(x)</code> to convert any value to a string.
+  <code>string</code> is a first-class type. There is no <code>char*</code> or null-terminated array — the runtime handles it. Use <code>change(x)-&gt;string</code> to convert any value to a string.
 </div>
+
 
 <hr>
 
@@ -1071,10 +996,10 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><td>int / integer</td><td>32-bit signed</td><td>−2,147,483,648 to 2,147,483,647</td></tr>
   <tr><td>float</td><td>32-bit IEEE 754</td><td>~6–7 significant digits</td></tr>
   <tr><td>double</td><td>64-bit IEEE 754</td><td>~15–16 significant digits</td></tr>
-  <tr><td>string</td><td>variable</td><td>UTF-8 first-class type. Underlying char array hidden — see String section below.</td></tr>
+  <tr><td>string</td><td>variable</td><td>UTF-8. First-class type.</td></tr>
   <tr><td>bool</td><td>1 byte</td><td><code>true</code> or <code>false</code></td></tr>
   <tr><td>complex</td><td>2 × 64-bit</td><td>Complex number. Constructor: <code>complex(real, imag)</code>.</td></tr>
-  <tr><td>none</td><td>—</td><td>No value / void pointer. Replaces <code>void</code> everywhere.</td></tr>
+  <tr><td>none</td><td>—</td><td>No-value / untyped pointer (<code>none &lt;p&gt;</code> → <code>void*</code>).</td></tr>
 </table>
 
 <div class="cfc">
@@ -1104,7 +1029,8 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><th>Category</th><th>Pragma</th><th>C equivalent</th></tr>
   <tr><td>Logical AND</td><td><code>and</code></td><td><code>&amp;&amp;</code></td></tr>
   <tr><td>Logical OR</td><td><code>or</code></td><td><code>||</code></td></tr>
-  <tr><td>Logical NOT (prefix)</td><td><code>not x</code></td><td><code>!x</code></td></tr>
+  <tr><td>Logical NOT (prefix)</td><td><code>not x</code> or <code>!x</code></td><td><code>!x</code></td></tr>
+  <tr><td>Negation</td><td><code>-x</code> or <code>negate x</code></td><td><code>-x</code></td></tr>
   <tr><td>Equal</td><td><code>==</code>, <code>equals</code></td><td>same</td></tr>
   <tr><td>Not equal</td><td><code>!=</code>, <code>not</code></td><td>same</td></tr>
   <tr><td>Comparison</td><td><code>&lt;  &gt;  &lt;=  &gt;=</code></td><td>same</td></tr>
@@ -1113,187 +1039,28 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><td>Increment / decrement</td><td><code>x++  x--</code></td><td>same (postfix only)</td></tr>
 </table>
 
-<p class="subtitle" style="margin-top:48px;">Standard Pragma. Source files use the <code>.run</code> extension. For lower level programming with memory management, pointers, and bitwise operations, click <strong>Base</strong> on the left.</p>
+<pre><span class="ty">int</span> x <span class="op">=</span> <span class="num">42</span>
+x <span class="op">+=</span> <span class="num">5</span>    x <span class="op">-=</span> <span class="num">2</span>    x <span class="op">*=</span> <span class="num">3</span>    x <span class="op">/=</span> <span class="num">4</span>    x <span class="op">%=</span> <span class="num">7</span>
+x<span class="op">++</span>        x<span class="op">--</span>
+x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// remainder — 0 if even, 1 if odd</span></pre>
+
+<pre><span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span> <span class="kw">and</span> y <span class="op">&gt;</span> <span class="num">0</span>
+<span class="kw">if</span> done <span class="kw">or</span> cancelled
+<span class="kw">if</span> <span class="kw">not</span> active
+<span class="kw">if</span> x <span class="op">==</span> <span class="num">5</span>
+<span class="kw">if</span> name <span class="op">!=</span> <span class="str">"admin"</span></pre>
+
+<div class="note">
+  <strong>Note for beginners</strong>
+  <code>equals</code> and <code>not</code> are accepted alternatives to <code>==</code> and <code>!=</code>. So <code>x equals y</code> and <code>x not y</code> do the same thing. Use whichever reads more naturally to you.
+</div>
+
+<div class="note">
+  <strong>Note — no implicit type promotion</strong>
+  Mixing <code>int</code> and <code>float</code> in an expression requires an explicit cast. See casting below.
+</div>
 
 </div><!-- /content-standard -->
-
-<!-- ══════════════════════════════════════════
-     MAIN — MODS CONTENT
-══════════════════════════════════════════ -->
-<div id="content-mods" style="display:none">
-
-<h1>@Mods</h1>
-<p class="subtitle">Compiler modifiers prefixed with <code>@</code>. Placed on the line before a declaration, they extend its meaning without replacing any keywords.</p>
-
-<div class="mods-section">
-  <div class="mods-section-title">Concurrency</div>
-  <div class="mods-grid">
-    <div class="mods-card wide" id="ann-async">
-      <div class="mods-card-name">@async / @await</div>
-      <div class="mods-card-desc">Marks a function as a coroutine. The function may suspend at any @await point and resume without blocking the calling thread. Requires <code>concurrency: async</code> in the DR block. Maps to JS Promises, Python asyncio, or JVM virtual threads depending on target.</div>
-      <pre><span class="ann">@async</span>
-<span class="kw">function</span> <span class="fn">load_dashboard</span>()
-  <span class="kw">let</span> user    <span class="op">=</span> <span class="ann">@await</span> <span class="fn">fetch</span>(<span class="str">"/api/user"</span>)
-  <span class="kw">let</span> reports <span class="op">=</span> <span class="ann">@await</span> <span class="fn">fetch</span>(<span class="str">"/api/reports"</span>)
-  <span class="kw">return</span> <span class="fn">Dashboard</span>(user, reports)
-<span class="kw">end function</span></pre>
-    </div>
-  </div>
-</div>
-
-<div class="mods-section">
-  <div class="mods-section-title">Targets</div>
-  <div class="mods-grid">
-    <div class="mods-card wide" id="ann-platform">
-      <div class="mods-card-name">@platform</div>
-      <div class="mods-card-desc">Restricts a function to one or more compile targets. When multiple @platform overrides exist for the same function name, the compiler selects the correct one. The undecorated declaration acts as the shared signature.</div>
-      <pre><span class="kw">function</span> <span class="fn">format_date</span>(<span class="kw">int</span> ts) <span class="kw">string</span>   <span class="cm">// shared signature</span>
-
-<span class="ann">@platform</span>(c)
-<span class="kw">function</span> <span class="fn">format_date</span>(<span class="kw">int</span> ts)
-  <span class="kw">return</span> <span class="fn">strftime</span>(<span class="str">"%Y-%m-%d"</span>, ts)
-<span class="kw">end function</span>
-
-<span class="ann">@platform</span>(js)
-<span class="kw">function</span> <span class="fn">format_date</span>(<span class="kw">int</span> ts)
-  <span class="kw">return</span> <span class="fn">js_date</span>(ts).<span class="fn">toISOString</span>()
-<span class="kw">end function</span></pre>
-    </div>
-  </div>
-</div>
-
-<div class="mods-section">
-  <div class="mods-section-title">Safety</div>
-  <div class="mods-grid">
-    <div class="mods-card wide" id="ann-nullable">
-      <div class="mods-card-name">@nullable</div>
-      <div class="mods-card-desc">Marks a field or parameter as explicitly nullable. Without this modifier, the compiler assumes non-null and enforces it. Absence of @nullable is the non-null contract.</div>
-      <pre><span class="kw">type</span> <span class="ty">Session</span>
-  <span class="kw">string</span>            token
-  <span class="ann">@nullable</span> <span class="kw">string</span>  user
-  <span class="ann">@nullable</span> <span class="kw">int</span>     expiresAt
-<span class="kw">end type</span></pre>
-    </div>
-  </div>
-</div>
-
-<div class="mods-section">
-  <div class="mods-section-title">Types</div>
-  <div class="mods-grid">
-
-    <div class="mods-card" id="ann-data">
-      <div class="mods-card-name">@data</div>
-      <div class="mods-card-desc">Generates structural equality, hashing, and a copy() method. Two instances are equal if all fields match by value. Without @data, equality is by reference.</div>
-      <pre><span class="ann">@data</span>
-<span class="kw">type</span> <span class="ty">Point</span>
-  <span class="kw">int</span> x, y
-<span class="kw">end type</span>
-
-<span class="kw">let</span> a <span class="op">=</span> <span class="fn">Point</span>(<span class="num">1</span>, <span class="num">2</span>)
-<span class="kw">let</span> b <span class="op">=</span> a.<span class="fn">copy</span>(y <span class="op">=</span> <span class="num">5</span>)   <span class="cm">// Point(1, 5)</span></pre>
-    </div>
-
-    <div class="mods-card" id="ann-sealed">
-      <div class="mods-card-name">@sealed</div>
-      <div class="mods-card-desc">Prevents a type from being extended outside the module it is declared in. The compiler knows every possible subtype, enabling exhaustive match checks.</div>
-      <pre><span class="ann">@sealed</span>
-<span class="kw">type</span> <span class="ty">Shape</span>
-  <span class="kw">string</span> kind
-<span class="kw">end type</span>
-
-<span class="kw">type</span> <span class="ty">Circle</span> <span class="kw">extends</span> <span class="ty">Shape</span>
-  <span class="kw">int</span> radius
-<span class="kw">end type</span></pre>
-    </div>
-
-    <div class="mods-card" id="ann-singleton">
-      <div class="mods-card-name">@singleton</div>
-      <div class="mods-card-desc">Exactly one instance ever exists. The runtime creates it on first access. No constructor is callable externally.</div>
-      <pre><span class="ann">@singleton</span>
-<span class="kw">type</span> <span class="ty">AppConfig</span>
-  <span class="kw">string</span> env
-  <span class="kw">int</span>    maxConnections
-<span class="kw">end type</span>
-
-<span class="ty">AppConfig</span>.env <span class="op">=</span> <span class="str">"production"</span></pre>
-    </div>
-
-    <div class="mods-card" id="ann-alias">
-      <div class="mods-card-name">@alias</div>
-      <div class="mods-card-desc">Declares a named alias for an existing type. Fully interchangeable with the original — adds meaning without wrapping or allocating.</div>
-      <pre><span class="ann">@alias</span> <span class="ty">UserId</span>       <span class="op">=</span> <span class="kw">int</span>
-<span class="ann">@alias</span> <span class="ty">EmailAddress</span> <span class="op">=</span> <span class="kw">string</span>
-
-<span class="kw">function</span> <span class="fn">find_user</span>(<span class="ty">UserId</span> id)
-  <span class="cm">// id is an int — no overhead</span>
-<span class="kw">end function</span></pre>
-    </div>
-
-  </div>
-</div>
-
-<div class="mods-section">
-  <div class="mods-section-title">Functions</div>
-  <div class="mods-grid">
-
-    <div class="mods-card" id="ann-inline">
-      <div class="mods-card-name">@inline</div>
-      <div class="mods-card-desc">Substitutes the function body at every call site at compile time. No call overhead. Enforced — the compiler will not ignore it.</div>
-      <pre><span class="ann">@inline</span>
-<span class="kw">function</span> <span class="fn">clamp</span>(<span class="kw">int</span> v, <span class="kw">int</span> lo, <span class="kw">int</span> hi)
-  <span class="kw">return</span> v <span class="op">&lt;</span> lo <span class="op">?</span> lo : v <span class="op">&gt;</span> hi <span class="op">?</span> hi : v
-<span class="kw">end function</span></pre>
-    </div>
-
-    <div class="mods-card" id="ann-extends">
-      <div class="mods-card-name">@extends</div>
-      <div class="mods-card-desc">Makes a free function callable as a method on the named type. The type itself is not modified — resolved entirely by the compiler at the call site.</div>
-      <pre><span class="ann">@extends</span>(<span class="ty">string</span>)
-<span class="kw">function</span> <span class="fn">truncate</span>(<span class="kw">string</span> s, <span class="kw">int</span> max)
-  <span class="kw">if</span> s.length <span class="op">&lt;=</span> max
-    <span class="kw">return</span> s
-  <span class="kw">end if</span>
-  <span class="kw">return</span> s.<span class="fn">slice</span>(<span class="num">0</span>, max) <span class="op">+</span> <span class="str">"…"</span>
-<span class="kw">end function</span>
-
-<span class="kw">let</span> t <span class="op">=</span> title.<span class="fn">truncate</span>(<span class="num">40</span>)</pre>
-    </div>
-
-    <div class="mods-card" id="ann-operator">
-      <div class="mods-card-name">@operator</div>
-      <div class="mods-card-desc">Maps a named function to an operator symbol for a type. Supported: <code>+  -  *  /  %  ==  !=  &lt;  &gt;  &lt;=  &gt;=</code>.</div>
-      <pre><span class="ann">@operator</span>(<span class="op">+</span>)
-<span class="kw">function</span> <span class="fn">add</span>(<span class="ty">Vector2</span> a, <span class="ty">Vector2</span> b)
-  <span class="kw">return</span> <span class="fn">Vector2</span>(a.x <span class="op">+</span> b.x, a.y <span class="op">+</span> b.y)
-<span class="kw">end function</span>
-
-<span class="kw">let</span> v <span class="op">=</span> origin <span class="op">+</span> offset</pre>
-    </div>
-
-    <div class="mods-card" id="ann-receiver">
-      <div class="mods-card-name">@receiver</div>
-      <div class="mods-card-desc">The function executes in the context of the named type — its fields are in scope without qualification. Foundation for DSL builders.</div>
-      <pre><span class="ann">@receiver</span>(<span class="ty">QueryBuilder</span>)
-<span class="kw">function</span> <span class="fn">build_query</span>()
-  <span class="fn">from</span>(<span class="str">"users"</span>)
-  <span class="fn">where</span>(active <span class="op">=</span> <span class="kw">true</span>)
-  <span class="fn">limit</span>(<span class="num">100</span>)
-<span class="kw">end function</span></pre>
-    </div>
-
-    <div class="mods-card wide" id="ann-delegate">
-      <div class="mods-card-name">@delegate</div>
-      <div class="mods-card-desc">Forwards all interface calls on a type to a named field of that interface type. The compiler generates every forwarding method — no boilerplate required.</div>
-      <pre><span class="kw">type</span> <span class="ty">TimestampedLogger</span>
-  <span class="ann">@delegate</span> <span class="ty">Logger</span> inner    <span class="cm">// log() forwarded to inner.log() automatically</span>
-  <span class="kw">string</span>           format
-<span class="kw">end type</span></pre>
-    </div>
-
-  </div>
-</div>
-
-</div><!-- /content-mods -->
 
 <!-- ══════════════════════════════════════════
      MAIN — BASE CONTENT
@@ -1301,7 +1068,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <div id="content-base" style="display:none">
 
 <h1>Base Pragma Reference</h1>
-<p class="subtitle">Low-level operations and systems work. These concepts may not exist or be as easily accessible in Python, Java, or other modern languages. The angle brackets <code>&lt; &gt;</code> are the signal that you are working at the memory level.</p>
+<p class="subtitle">Low-level operations and systems work. These concepts may not exist or be as easily accessible in Python, Java, or other modern languages. The angle brackets <code>&lt; &gt;</code> are the signal that you are working at the memory level. Base Pragma files use the <code>.base</code> extension to denote difference.</p>
+
+<p class="cfc-intro"><em>Throughout this page, sections marked <strong>Coming from C</strong> compare Pragma to C syntax. If you are a beginner or don't have a C background, skip those sections — they are not necessary.</em></p>
 
 <p><a href="#why-base-pragma" style="color:#cba6f7; font-family:'Share Tech Mono','Courier New',monospace; font-size:0.9rem; text-decoration:none;">Why Base Pragma?</a></p>
 
@@ -1323,7 +1092,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 
 <div class="cfc">
   <strong>Coming from C</strong>
-  <code>int &lt;p&gt; = address(x)</code> is <code>int *p = &amp;x</code> in C. The angle brackets wrap the pointer name, and <code>address()</code> replaces <code>&amp;</code>.
+  <code>int &lt;p&gt; = address(x)</code> is <code>int *p = &amp;x</code> in C. The type comes first, angle brackets wrap the pointer name, and <code>address()</code> replaces <code>&amp;</code>.
 </div>
 
 <hr>
@@ -1332,8 +1101,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 
 <table>
   <tr><th>Pragma</th><th>C equivalent</th><th>Meaning</th></tr>
-  <tr><td>address(x)</td><td>&amp;x</td><td>Take the address of plain variable x</td></tr>
-  <tr><td>address(&lt;p&gt;)</td><td>&amp;p</td><td>Take the address of pointer p</td></tr>
+  <tr><td>address(x)</td><td>&amp;x</td><td>Take the address of variable x</td></tr>
   <tr><td>deref(&lt;p&gt;)</td><td>*p</td><td>Read the value at the address in p</td></tr>
 </table>
 
@@ -1353,20 +1121,20 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <p>Read or write at any numeric address. Used for memory-mapped hardware registers.</p>
 
 <pre><span class="ty">uint32</span> <span class="ang">&lt;</span>reg<span class="ang">&gt;</span> <span class="op">=</span> <span class="kw">address</span>(someVar)
-<span class="kw">mem</span>(<span class="ang">&lt;</span>reg<span class="ang">&gt;</span>)                          <span class="cm">// read at address reg</span>
-<span class="kw">mem</span>(<span class="ang">&lt;</span><span class="num">0xDEAD0000</span><span class="ang">&gt;</span>)                  <span class="cm">// read at hard-coded address</span>
-<span class="kw">mem</span>(<span class="ang">&lt;</span><span class="num">0xDEAD0000</span><span class="ang">&gt;</span>) <span class="op">=</span> <span class="num">1</span>              <span class="cm">// write to that address</span></pre>
+<span class="kw">mem</span>(reg)                          <span class="cm">// read at address reg</span>
+<span class="kw">mem</span>(<span class="num">0xDEAD0000</span>)                  <span class="cm">// read at hard-coded address</span>
+<span class="kw">mem</span>(<span class="num">0xDEAD0000</span>) <span class="op">=</span> <span class="num">1</span>              <span class="cm">// write to that address</span></pre>
 
 <hr>
 
 <h2 id="base-arithmetic" class="anchor-target">Pointer Arithmetic</h2>
-<p>Use <code>&lt;p&gt; + n</code> to advance a pointer by n elements. Units are the pointer's element type — not raw bytes.</p>
+<p>Offset into a pointer using addition. Offset units are the pointer's element type — not raw bytes.</p>
 
 <pre><span class="ty">int</span> <span class="ang">&lt;</span>p<span class="ang">&gt;</span> <span class="op">=</span> <span class="kw">address</span>(arr)
-<span class="ang">&lt;</span>p<span class="ang">&gt;</span>[<span class="num">0</span>]        <span class="cm">// element 0 — same as deref(&lt;p&gt;)</span>
-<span class="ang">&lt;</span>p<span class="ang">&gt;</span> <span class="op">+</span> <span class="num">5</span>        <span class="cm">// element 5 — like *(p+5) in C</span>
-<span class="ang">&lt;</span>p<span class="ang">&gt;</span> <span class="op">+</span> (i <span class="op">+</span> <span class="num">2</span>)  <span class="cm">// element i+2</span>
-<span class="ang">&lt;</span>p<span class="ang">&gt;</span> <span class="op">+</span> <span class="num">3</span>        <span class="cm">// advance 3 from current position</span></pre>
+<span class="ang">&lt;</span>p<span class="ang">&gt;</span> <span class="op">+</span> <span class="num">0</span>       <span class="cm">// element 0 — same as deref(&lt;p&gt;)</span>
+<span class="ang">&lt;</span>p<span class="ang">&gt;</span> <span class="op">+</span> <span class="num">5</span>       <span class="cm">// element 5 — like *(p+5) in C</span>
+<span class="ang">&lt;</span>p<span class="ang">&gt;</span> <span class="op">+</span> (i <span class="op">+</span> <span class="num">2</span>) <span class="cm">// element i+2</span>
+<span class="ang">&lt;</span>p<span class="ang">&gt;</span> <span class="op">+</span> <span class="num">3</span>       <span class="cm">// advance 3 from current position</span></pre>
 
 <hr>
 
@@ -1379,8 +1147,8 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 
 <hr>
 
-<h2 id="base-nothing" class="anchor-target">none — Generic Pointer</h2>
-<p>A pointer with no specific type. Equivalent to <code>void*</code> in C. Use when a function must accept or return a pointer of any type.</p>
+<h2 id="base-nothing" class="anchor-target">none pointer — Generic Pointer</h2>
+<p>A pointer with no specific type. Points to nothing in particular. Equivalent to <code>void*</code> in C. Use when a function must accept or return a pointer of any type.</p>
 
 <pre><span class="ty">none</span> <span class="ang">&lt;</span>generic<span class="ang">&gt;</span> <span class="op">=</span> <span class="kw">address</span>(anyVar)
 
@@ -1422,11 +1190,11 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 <hr>
 
 <h2 id="base-bitfields" class="anchor-target">Bit Fields</h2>
-<p>Declare a field with a specific number of bits using <code>type.bits=N fieldname</code> syntax. Fields pack into adjacent bits in declaration order.</p>
+<p>Declare a field with a specific number of bits using dot notation after the type. Fields pack into adjacent bits in declaration order. Group them in a type to control struct layout.</p>
 
 <pre><span class="kw">type</span> PackedHeader
-  <span class="ty">uint</span>.bits=<span class="num">1</span> is_valid    <span class="cm">// 1 bit</span>
-  <span class="ty">uint</span>.bits=<span class="num">7</span> count       <span class="cm">// 7 bits — total so far: 1 byte</span>
+  <span class="ty">uint</span>.bits=1 is_valid    <span class="cm">// 1 bit</span>
+  <span class="ty">uint</span>.bits=7 count       <span class="cm">// 7 bits — total so far: 1 byte</span>
   <span class="ty">uint32</span> value            <span class="cm">// 4 bytes, no bit constraint</span>
 <span class="kw">end type</span></pre>
 
@@ -1454,13 +1222,6 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 
 <hr>
 
-<h2 id="base-string" class="anchor-target">String</h2>
-<p>In Base Pragma, strings are explicit char arrays. Size must be declared.</p>
-<pre><span class="kw">array</span> <span class="ty">char</span>[<span class="num">5</span>] a <span class="op">=</span> [<span class="str">"h"</span>,<span class="str">"e"</span>,<span class="str">"l"</span>,<span class="str">"l"</span>,<span class="str">"o"</span>]</pre>
-<p>Maps directly to C's <code>char[]</code>. Size, allocation, and freeing are your responsibility.</p>
-
-<hr>
-
 <h2 id="base-uint" class="anchor-target">Sized Integer Types</h2>
 <p>Explicit-width types for when size matters — hardware registers, network protocols, file formats, bit manipulation.</p>
 
@@ -1479,6 +1240,60 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 
 <hr>
 
+<h2 id="base-variant" class="anchor-target">variant — Union Types</h2>
+<p>A <code>variant</code> holds one of several fields at a time in the same memory. All fields share the same bytes — writing one overwrites the others. Compiles directly to a C <code>union</code>.</p>
+
+<pre><span class="kw">variant</span> Packet
+  <span class="ty">int</span> code
+  <span class="ty">double</span> value
+  chararray_4 bytes          <span class="cm">// char bytes[4] — fixed-size char array</span>
+<span class="kw">end variant</span>
+
+<span class="ty">Packet</span> p
+p.code <span class="op">=</span> <span class="num">42</span>
+p.value <span class="op">=</span> <span class="num">3.14</span>             <span class="cm">// overwrites p.code — same memory</span></pre>
+
+<div class="note">
+  <strong>Note</strong>
+  Reading a field you did not most recently write gives undefined results — that is the nature of a union. Use a separate <code>int</code> tag field in a <code>type</code> to track which field is active.
+</div>
+
+<div class="cfc">
+  <strong>Coming from C</strong>
+  <code>variant Name ... end variant</code> is <code>typedef union Name { ... } Name;</code> in C. Identical semantics and memory layout.
+</div>
+
+<hr>
+
+<h2 id="base-funcptr" class="anchor-target">Function Pointers</h2>
+<p>Declared with angle brackets around the name, same as any other pointer. Initialised by assigning a function name (append empty parentheses to trigger pointer detection).</p>
+
+<pre><span class="kw">function</span> square(<span class="ty">int</span> x) <span class="kw">returns</span> <span class="ty">int</span>
+  <span class="kw">return</span> x <span class="op">*</span> x
+<span class="kw">end function</span>
+
+<span class="ty">int</span> <span class="ang">&lt;</span>fp<span class="ang">&gt;</span> <span class="op">=</span> square()           <span class="cm">// fp points to square</span>
+<span class="kw">print</span> fp(<span class="num">7</span>)                   <span class="cm">// 49</span></pre>
+
+<p>Pass a function pointer as a parameter using <code>none &lt;name&gt;</code> (void pointer). The compiler casts it correctly at the call site.</p>
+
+<pre><span class="kw">function</span> apply(<span class="ty">none</span> <span class="ang">&lt;</span>op<span class="ang">&gt;</span>, <span class="ty">int</span> a, <span class="ty">int</span> b) <span class="kw">returns</span> <span class="ty">int</span>
+  <span class="kw">return</span> op(a, b)
+<span class="kw">end function</span>
+
+<span class="kw">function</span> add(<span class="ty">int</span> a, <span class="ty">int</span> b) <span class="kw">returns</span> <span class="ty">int</span>
+  <span class="kw">return</span> a <span class="op">+</span> b
+<span class="kw">end function</span>
+
+<span class="kw">print</span> apply(add, <span class="num">10</span>, <span class="num">3</span>)       <span class="cm">// 13</span></pre>
+
+<div class="cfc">
+  <strong>Coming from C</strong>
+  <code>int &lt;fp&gt; = square()</code> compiles to <code>int (*fp)() = (int(*)())(void*)square;</code>. The <code>none &lt;op&gt;</code> parameter compiles to <code>void* op</code> and call sites emit the appropriate cast automatically.
+</div>
+
+<hr>
+
 <h2 id="why-base-pragma" class="anchor-target">Why Base Pragma?</h2>
 <p>Not every program needs to manage memory, work with pointers, or think in bits. Most application code never touches any of this. Separating it into its own file type means beginners and those who don't need these details are never forced to encounter them. A <code>.run</code> file stays clean. A <code>.base</code> file signals immediately that something lower-level is happening. That separation makes programming more comfortable for people who aren't ready for it, and clearer for those who are.</p>
 
@@ -1490,24 +1305,25 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 <h3>Types and Declarations</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>struct { ... }</code></td><td><code>type ... end type</code></td><td>Add methods and inheritance — otherwise identical to a struct</td></tr>
+  <tr><td><code>struct { ... }</code></td><td><code>type ... end type</code></td><td>Add methods, inheritance, and interfaces — otherwise identical to a struct</td></tr>
+  <tr><td><code>union { ... }</code></td><td><code>variant ... end variant</code></td><td>All fields share the same memory. Write one, the others reflect it.</td></tr>
   <tr><td><code>enum { A=1, B=2 }</code></td><td><code>fixed ... end fixed</code></td><td>Access as <code>Name.member</code></td></tr>
   <tr><td><code>#define MAX 100</code></td><td><code>constant int MAX = 100</code></td><td>Typed, scoped constant — no preprocessor</td></tr>
-  <tr><td><code>#define fn(...) ({ ... })</code></td><td><code>#function fn(...) ... #end function</code></td><td>Append <code>#</code> to <code>function</code> / <code>end function</code> to write a preprocessor-level macro function</td></tr>
   <tr><td><code>void *ptr</code></td><td><code>none &lt;ptr&gt;</code></td><td>Generic pointer — cast before reading</td></tr>
+  <tr><td><code>int (*fp)()</code></td><td><code>int &lt;fp&gt; = func()</code></td><td>Function pointer. Empty-arg init syntax signals a pointer, not a call.</td></tr>
   <tr><td><code>NULL</code></td><td><code>empty</code></td><td>Null literal</td></tr>
-  <tr><td><code>void</code> (return)</td><td><code>none</code></td><td>Function returns nothing</td></tr>
+  <tr><td><code>void</code> (return)</td><td><code>nothing</code></td><td>Function returns nothing</td></tr>
   <tr><td><code>__attribute__((packed))</code></td><td><code>pack(TypeName)</code></td><td>Remove struct padding</td></tr>
 </table>
 
 <h3>Memory Operations</h3>
 <table>
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
-  <tr><td><code>&amp;x</code></td><td><code>address(x)</code></td><td>Take the address of plain variable x</td></tr>
+  <tr><td><code>&amp;x</code></td><td><code>address(x)</code></td><td>Take the address of x</td></tr>
   <tr><td><code>*ptr</code></td><td><code>deref(&lt;ptr&gt;)</code></td><td>Read or write through pointer</td></tr>
-  <tr><td><code>*(ptr + n)</code></td><td><code>&lt;ptr&gt; + n</code></td><td>Pointer arithmetic — units are element size, not bytes</td></tr>
+  <tr><td><code>*(ptr + n)</code></td><td><code>&lt;ptr&gt; + n</code></td><td>Offset access — units are element size, not bytes</td></tr>
   <tr><td><code>sizeof(T)</code></td><td><code>size(T)</code></td><td>Byte size of type T</td></tr>
-  <tr><td><code>*(uint32*)0xDEAD</code></td><td><code>mem(&lt;0xDEAD&gt;)</code></td><td>Read/write at hard-coded address</td></tr>
+  <tr><td><code>*(uint32*)0xDEAD</code></td><td><code>mem(0xDEAD)</code></td><td>Read/write at hard-coded address</td></tr>
 </table>
 
 <h3>Control Flow</h3>
@@ -1515,7 +1331,7 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
   <tr><td><code>break</code></td><td><code>escape</code></td><td>Exit a loop</td></tr>
   <tr><td><code>continue</code></td><td><code>continue</code></td><td>Identical.</td></tr>
-  <tr><td><code>switch</code> (fall-through)</td><td><code>iterate</code></td><td>Falls through by default — identical to C switch</td></tr>
+  <tr><td><code>switch</code> (fall-through)</td><td><code>switch</code></td><td>Falls through by default — identical to C</td></tr>
   <tr><td><code>switch</code> (no fall-through)</td><td><code>match</code></td><td>Pragma addition — stops at first match</td></tr>
 </table>
 
@@ -1524,14 +1340,14 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   <tr><th>C</th><th>Pragma</th><th>Notes</th></tr>
   <tr><td><code>&amp;&amp;</code></td><td><code>and</code></td><td>Logical AND</td></tr>
   <tr><td><code>||</code></td><td><code>or</code></td><td>Logical OR</td></tr>
-  <tr><td><code>!x</code></td><td><code>!x</code></td><td>Logical NOT. Also accepts: <code>not x</code> (Standard Pragma syntax).</td></tr>
+  <tr><td><code>!x</code></td><td><code>!x</code> or <code>not x</code></td><td>Logical NOT — both accepted</td></tr>
   <tr><td><code>==</code></td><td><code>==</code></td><td>Identical. Also accepts <code>equals</code> as an alternative.</td></tr>
   <tr><td><code>!=</code></td><td><code>!=</code></td><td>Identical. Also accepts <code>not</code> as an alternative (<code>x not y</code>).</td></tr>
   <tr><td><code>x &amp; y</code></td><td><code>x both1 y</code></td><td>Bitwise AND</td></tr>
   <tr><td><code>x | y</code></td><td><code>x either1 y</code></td><td>Bitwise OR</td></tr>
   <tr><td><code>x ^ y</code></td><td><code>x delta y</code></td><td>Bitwise XOR</td></tr>
   <tr><td><code>~x</code></td><td><code>bitflip x</code></td><td>Bitwise NOT — invert all bits</td></tr>
-  <tr><td><code>-x</code></td><td><code>negate x</code></td><td>Arithmetic negation</td></tr>
+  <tr><td><code>-x</code></td><td><code>-x</code> or <code>negate x</code></td><td>Arithmetic negation — both accepted</td></tr>
   <tr><td><code>x &lt;&lt; n</code></td><td><code>x left n</code></td><td>Left shift</td></tr>
   <tr><td><code>x &gt;&gt; n</code></td><td><code>x right n</code></td><td>Right shift</td></tr>
 </table>
@@ -1545,10 +1361,8 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 
 <div class="note">
   <strong>type vs struct</strong>
-  In C, a <code>struct</code> is a named group of typed fields — nothing more. A Pragma <code>type</code> is the same thing, with the option to add methods, inheritance, default field values, and constructors. If you ignore those features and just declare fields, it compiles to an identical struct. There is no separate <code>struct</code> keyword in Pragma because the only difference is capability, not concept.
+  In C, a <code>struct</code> is a named group of typed fields — nothing more. A Pragma <code>type</code> is the same thing, with the option to add methods, inheritance, interfaces, default field values, and constructors. If you ignore those features and just declare fields, it compiles to an identical struct. There is no separate <code>struct</code> keyword in Pragma because the only difference is capability, not concept.
 </div>
-
-<p class="subtitle" style="margin-top:48px;">Base Pragma files use the <code>.base</code> extension.</p>
 
 </div><!-- /content-base -->
 </main>
@@ -1592,11 +1406,6 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
       <p><strong>Swift</strong> has both ARC (reference counting) and unsafe pointers available in the same language.</p>
     </div>
 
-    <div style="background:linear-gradient(135deg,#1e1e2e 0%,#2a1a5e 100%); border-radius:6px; padding:18px 24px; margin:28px 0; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
-      <div style="color:#cba6f7; font-family:'Georgia',serif; font-size:1rem; font-style:italic; flex:1;">Mathematically-proven, Verified and Signed Proof of Memory Safety</div>
-      <a href="safety.html" style="flex-shrink:0; background:rgba(203,166,247,0.18); border:1px solid #cba6f7; color:#cba6f7; text-decoration:none; padding:8px 20px; border-radius:4px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.1em; white-space:nowrap; transition:background 0.15s;" onmouseover="this.style.background='rgba(203,166,247,0.35)'" onmouseout="this.style.background='rgba(203,166,247,0.18)'">See How →</a>
-    </div>
-
     <div class="readme-kicker">But no language puts all of these on a single dial panel. Every one picks a default and lets you escape from it in limited ways. Pragma has no default — you declare <strong>your</strong> policy and the compiler enforces it.</div>
 
     <div class="readme-code"><span class="rc-key">memory</span>: <span class="rc-val">manual</span>          <span class="rc-cm">// or gc, or refcount, or arena</span>
@@ -1621,51 +1430,36 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 
 <script>
 function setMode(mode) {
-  var body     = document.body;
-  var stdC     = document.getElementById('content-standard');
-  var baseC    = document.getElementById('content-base');
-  var modsC    = document.getElementById('content-mods');
-  var navStd   = document.getElementById('nav-standard');
-  var navBase  = document.getElementById('nav-base');
-  var navMods  = document.getElementById('nav-mods');
+  var body    = document.body;
+  var btnTop  = document.getElementById('mode-toggle-top');
+  var stdC    = document.getElementById('content-standard');
+  var baseC   = document.getElementById('content-base');
+  var navStd  = document.getElementById('nav-standard');
+  var navBase = document.getElementById('nav-base');
 
-  stdC.style.display  = 'none';
-  baseC.style.display = 'none';
-  modsC.style.display = 'none';
-  navStd.style.display  = 'none';
-  navBase.style.display = 'none';
-  navMods.style.display = 'none';
-
-  body.classList.remove('theme-default', 'theme-base', 'theme-mods');
-  currentMode = mode;
   if (mode === 'base') {
-    body.classList.add('theme-base');
-    document.getElementById('mode-label-text').textContent = 'Mods';
-    baseC.style.display   = 'block';
-    navBase.style.display = 'block';
-  } else if (mode === 'mods') {
-    body.classList.add('theme-mods');
-    document.getElementById('mode-label-text').textContent = 'Standard';
-    modsC.style.display   = 'block';
-    navMods.style.display = 'block';
-  } else {
-    body.classList.add('theme-default');
+    body.classList.replace('theme-default', 'theme-base');
     document.getElementById('mode-label-text').textContent = 'Base';
-    stdC.style.display  = 'block';
+    stdC.style.display   = 'none';
+    baseC.style.display  = 'block';
+    navStd.style.display = 'none';
+    navBase.style.display = 'block';
+  } else {
+    body.classList.replace('theme-base', 'theme-default');
+    document.getElementById('mode-label-text').textContent = 'Standard';
+    stdC.style.display   = 'block';
+    baseC.style.display  = 'none';
     navStd.style.display = 'block';
+    navBase.style.display = 'none';
   }
 
   document.querySelectorAll('.tab-btn').forEach(function(btn) {
     btn.classList.toggle('tab-active', btn.dataset.mode === mode);
   });
-
-  window.scrollTo(0, 0);
 }
 
-var currentMode = 'standard';
-
 function toggleMode() {
-  setMode(currentMode === 'standard' ? 'base' : currentMode === 'base' ? 'mods' : 'standard');
+  setMode(document.body.classList.contains('theme-base') ? 'standard' : 'base');
 }
 
 function showReadme() {
