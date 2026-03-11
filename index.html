@@ -290,135 +290,19 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
 
       <div class="hover-btns-row">
         <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
-          <div id="c-hover-region" class="lang-pill" onmouseenter="document.getElementById('c-hover-img').style.display='block'" onmouseleave="document.getElementById('c-hover-img').style.display='none'" onclick="window.location='C-Side-by-Side.html'">
-            ..but C works fine
-            <div id="c-hover-img" style="display:none; position:absolute; left:0; top:100%; z-index:200; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); width:min(600px,80vw);">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">C — linux/container_of.h</span><span style="color:#cba6f7;">Pragma</span></div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:10px;margin:0;overflow:hidden;white-space:pre;"><span class="pp">#define</span> <span class="fn">container_of</span>(ptr, type, member) ({ \
-    <span class="ty">void</span> *__mptr = (<span class="ty">void</span> *)(ptr); \
-    <span class="fn">static_assert</span>( \
-        <span class="fn">__same_type</span>(*(ptr), \
-            ((type *)0)-&gt;member) \
-        || <span class="fn">__same_type</span>(*(ptr), <span class="ty">void</span>), \
-        <span class="str">"pointer type mismatch"</span>); \
-    ((type *)(__mptr - \
-        <span class="fn">offsetof</span>(type, member))); })</pre></div>
-                <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:10px;margin:0;overflow:hidden;white-space:pre;"><span class="pp">#</span><span class="kw">function</span> <span class="fn">container_of</span>(<span class="ty">none</span> <span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>, <span class="ty">uint64</span> off) <span class="kw">returns</span> <span class="ty">none</span>
-  <span class="ty">none</span> <span class="ang">&lt;</span>__mptr<span class="ang">&gt;</span> <span class="op">=</span> <span class="fn">change</span>(<span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>)-&gt;<span class="ty">none</span>
-  <span class="ty">uint64</span> addr <span class="op">=</span> <span class="fn">change</span>(__mptr)-&gt;<span class="ty">uint64</span> <span class="op">-</span> off
-  <span class="kw">return</span> <span class="fn">change</span>(addr)-&gt;<span class="ty">none</span>
-<span class="pp">#</span><span class="kw">end function</span></pre></div>
-              </div>
-              <div style="margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">C needed macro boilerplate for type-checking Pragma handles by default.</span><a href="C-Side-by-Side.html" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
-            </div>
-          </div>
+          <div id="c-hover-region" class="lang-pill" onmouseenter="showPopup('c-hover-region','c-hover-img')" onmouseleave="hidePopup('c-hover-img')" onclick="window.location='C-Side-by-Side.html'">..but C works fine</div>
           <span class="bounce-arrow">↑</span>
         </div>
         <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
-          <div id="py-hover-region" class="lang-pill" onmouseenter="document.getElementById('py-hover-img').style.display='block'" onmouseleave="document.getElementById('py-hover-img').style.display='none'">
-            or Python
-            <div id="py-hover-img" style="display:none; position:absolute; left:0; top:100%; z-index:200; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); width:min(500px,80vw);">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">Python — append_to</span><span style="color:#cba6f7;">Pragma</span></div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">def</span> <span class="fn">append_to</span>(element, to<span class="op">=</span><span class="kw">None</span>):
-  <span class="kw">if</span> to <span class="kw">is</span> <span class="kw">None</span>:
-    to = []
-  to.<span class="fn">append</span>(element)
-  <span class="kw">return</span> to</pre></div>
-                <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">function</span> <span class="fn">append_to</span>(<span class="ty">int</span> element, <span class="ty">none</span> <span class="ang">&lt;</span>to<span class="ang">&gt;</span>)
-  to.<span class="fn">append</span>(element)
-  <span class="kw">return</span> to
-<span class="kw">end function</span></pre></div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">Mutable defaults evaluate once — <span style="color:#89dceb; font-family:'Share Tech Mono',monospace;">to=[]</span> is shared across all calls.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
-            </div>
-          </div>
+          <div id="py-hover-region" class="lang-pill" onmouseenter="showPopup('py-hover-region','py-hover-img')" onmouseleave="hidePopup('py-hover-img')">or Python</div>
           <span class="bounce-arrow">↑</span>
         </div>
         <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
-          <div id="java-hover-region" class="lang-pill" onmouseenter="document.getElementById('java-hover-img').style.display='block'" onmouseleave="document.getElementById('java-hover-img').style.display='none'">
-            or Java
-            <div id="java-hover-img" style="display:none; position:absolute; left:0; top:100%; z-index:200; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); width:min(580px,80vw);">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">Java — HttpRequest</span><span style="color:#cba6f7;">Pragma</span></div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">class</span> <span class="ty">HttpRequest</span> {
-  <span class="kw">private</span> <span class="ty">String</span> url;
-  <span class="kw">private</span> <span class="ty">String</span> method;
-  <span class="kw">private</span> <span class="ty">int</span> timeout;
-  <span class="kw">private</span> <span class="ty">boolean</span> followRedirects;
-  <span class="kw">private</span> <span class="ty">int</span> retries;
-  <span class="kw">private</span> <span class="ty">String</span> authToken;
-
-  <span class="fn">HttpRequest</span>(<span class="ty">String</span> url, <span class="ty">String</span> method,
-    <span class="ty">int</span> timeout, <span class="ty">boolean</span> followRedirects,
-    <span class="ty">int</span> retries, <span class="ty">String</span> authToken) {
-    <span class="kw">this</span>.url = url;
-    <span class="kw">this</span>.method = method;
-    <span class="kw">this</span>.timeout = timeout;
-    <span class="kw">this</span>.followRedirects = followRedirects;
-    <span class="kw">this</span>.retries = retries;
-    <span class="kw">this</span>.authToken = authToken;
-  }
-}</pre></div>
-                <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">type</span> <span class="ty">HttpRequest</span>
-  string url, method
-  <span class="ty">int</span> timeout, followRedirects, retries
-  string authToken
-<span class="kw">end type</span>
-
-<span class="kw">function</span> <span class="fn">connect</span>(string host,
-  <span class="ty">int</span> port <span class="op">=</span> <span class="num">8080</span>, timeout <span class="op">=</span> <span class="num">30</span>,
-  <span class="ty">bool</span> ssl <span class="op">=</span> <span class="kw">false</span>)
-<span class="kw">end function</span></pre></div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">Java writes every field 3×: declaration, parameter, assignment.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
-            </div>
-          </div>
+          <div id="java-hover-region" class="lang-pill" onmouseenter="showPopup('java-hover-region','java-hover-img')" onmouseleave="hidePopup('java-hover-img')">or Java</div>
           <span class="bounce-arrow">↑</span>
         </div>
         <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
-          <div id="js-hover-region" class="lang-pill" onmouseenter="document.getElementById('js-hover-img').style.display='block'" onmouseleave="document.getElementById('js-hover-img').style.display='none'">
-            ok Javascript
-            <div id="js-hover-img" style="display:none; position:absolute; right:0; top:100%; z-index:200; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); width:min(540px,80vw);">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">JavaScript — Timer</span><span style="color:#cba6f7;">Pragma</span></div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">function</span> <span class="fn">Timer</span>() {
-  <span class="kw">this</span>.count = <span class="num">0</span>;
-  <span class="kw">var</span> self = <span class="kw">this</span>;
-
-  <span class="fn">setInterval</span>(<span class="kw">function</span>() {
-    self.count<span class="op">++</span>;
-    <span class="kw">if</span> (self.count &gt; <span class="num">10</span>) {
-      self.<span class="fn">stop</span>();
-    }
-  }, <span class="num">1000</span>);
-
-  <span class="kw">this</span>.stop = <span class="kw">function</span>() {
-    <span class="kw">var</span> self = <span class="kw">this</span>;
-    <span class="fn">clearInterval</span>(<span class="kw">function</span>() {
-      self.count = <span class="num">0</span>;
-    });
-  };
-}</pre></div>
-                <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">type</span> <span class="ty">Timer</span>
-  <span class="ty">int</span> count
-<span class="kw">end type</span>
-
-<span class="kw">function</span> <span class="fn">tick</span>(<span class="ty">Timer</span> <span class="ang">&lt;</span>t<span class="ang">&gt;</span>)
-  t.count<span class="op">++</span>
-  <span class="kw">if</span> t.count <span class="op">&gt;</span> <span class="num">10</span>
-    <span class="fn">stop</span>(t)
-  <span class="kw">end if</span>
-<span class="kw">end function</span>
-
-<span class="kw">function</span> <span class="fn">stop</span>(<span class="ty">Timer</span> <span class="ang">&lt;</span>t<span class="ang">&gt;</span>)
-  t.count <span class="op">=</span> <span class="num">0</span>
-<span class="kw">end function</span></pre></div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">JS <span style="font-size:0.7rem; color:#89dceb; font-family:'Share Tech Mono',monospace;">this</span> rebinds in callbacks.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
-            </div>
-          </div>
+          <div id="js-hover-region" class="lang-pill" onmouseenter="showPopup('js-hover-region','js-hover-img')" onmouseleave="hidePopup('js-hover-img')">ok Javascript</div>
           <span class="bounce-arrow">↑</span>
         </div>
       </div>
@@ -457,6 +341,119 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
   </div></div><!-- /main-cols /main-area -->
 
 </div><!-- /page -->
+
+<!-- ══ HOVER POPUPS (position:fixed, JS-positioned, never clipped) ══ -->
+<div id="c-hover-img" style="display:none; position:fixed; z-index:9999; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); max-width:min(600px,calc(100vw - 20px)); box-sizing:border-box;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">C — linux/container_of.h</span><span style="color:#cba6f7;">Pragma</span></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; overflow:hidden;">
+    <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:10px;margin:0;overflow:hidden;white-space:pre;"><span class="pp">#define</span> <span class="fn">container_of</span>(ptr, type, member) ({ \
+    <span class="ty">void</span> *__mptr = (<span class="ty">void</span> *)(ptr); \
+    <span class="fn">static_assert</span>( \
+        <span class="fn">__same_type</span>(*(ptr), \
+            ((type *)0)-&gt;member) \
+        || <span class="fn">__same_type</span>(*(ptr), <span class="ty">void</span>), \
+        <span class="str">"pointer type mismatch"</span>); \
+    ((type *)(__mptr - \
+        <span class="fn">offsetof</span>(type, member))); })</pre></div>
+    <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:10px;margin:0;overflow:hidden;white-space:pre;"><span class="pp">#</span><span class="kw">function</span> <span class="fn">container_of</span>(<span class="ty">none</span> <span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>, <span class="ty">uint64</span> off) <span class="kw">returns</span> <span class="ty">none</span>
+  <span class="ty">none</span> <span class="ang">&lt;</span>__mptr<span class="ang">&gt;</span> <span class="op">=</span> <span class="fn">change</span>(<span class="ang">&lt;</span>ptr<span class="ang">&gt;</span>)-&gt;<span class="ty">none</span>
+  <span class="ty">uint64</span> addr <span class="op">=</span> <span class="fn">change</span>(__mptr)-&gt;<span class="ty">uint64</span> <span class="op">-</span> off
+  <span class="kw">return</span> <span class="fn">change</span>(addr)-&gt;<span class="ty">none</span>
+<span class="pp">#</span><span class="kw">end function</span></pre></div>
+  </div>
+  <div style="margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">C needed macro boilerplate for type-checking Pragma handles by default.</span><a href="C-Side-by-Side.html" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
+</div>
+
+<div id="py-hover-img" style="display:none; position:fixed; z-index:9999; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); max-width:min(500px,calc(100vw - 20px)); box-sizing:border-box;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">Python — append_to</span><span style="color:#cba6f7;">Pragma</span></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; overflow:hidden;">
+    <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">def</span> <span class="fn">append_to</span>(element, to<span class="op">=</span><span class="kw">None</span>):
+  <span class="kw">if</span> to <span class="kw">is</span> <span class="kw">None</span>:
+    to = []
+  to.<span class="fn">append</span>(element)
+  <span class="kw">return</span> to</pre></div>
+    <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">function</span> <span class="fn">append_to</span>(<span class="ty">int</span> element, <span class="ty">none</span> <span class="ang">&lt;</span>to<span class="ang">&gt;</span>)
+  to.<span class="fn">append</span>(element)
+  <span class="kw">return</span> to
+<span class="kw">end function</span></pre></div>
+  </div>
+  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">Mutable defaults evaluate once — <span style="color:#89dceb; font-family:'Share Tech Mono',monospace;">to=[]</span> is shared across all calls.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
+</div>
+
+<div id="java-hover-img" style="display:none; position:fixed; z-index:9999; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); max-width:min(580px,calc(100vw - 20px)); box-sizing:border-box;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">Java — HttpRequest</span><span style="color:#cba6f7;">Pragma</span></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; overflow:hidden;">
+    <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">class</span> <span class="ty">HttpRequest</span> {
+  <span class="kw">private</span> <span class="ty">String</span> url;
+  <span class="kw">private</span> <span class="ty">String</span> method;
+  <span class="kw">private</span> <span class="ty">int</span> timeout;
+  <span class="kw">private</span> <span class="ty">boolean</span> followRedirects;
+  <span class="kw">private</span> <span class="ty">int</span> retries;
+  <span class="kw">private</span> <span class="ty">String</span> authToken;
+
+  <span class="fn">HttpRequest</span>(<span class="ty">String</span> url, <span class="ty">String</span> method,
+    <span class="ty">int</span> timeout, <span class="ty">boolean</span> followRedirects,
+    <span class="ty">int</span> retries, <span class="ty">String</span> authToken) {
+    <span class="kw">this</span>.url = url;
+    <span class="kw">this</span>.method = method;
+    <span class="kw">this</span>.timeout = timeout;
+    <span class="kw">this</span>.followRedirects = followRedirects;
+    <span class="kw">this</span>.retries = retries;
+    <span class="kw">this</span>.authToken = authToken;
+  }
+}</pre></div>
+    <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">type</span> <span class="ty">HttpRequest</span>
+  string url, method
+  <span class="ty">int</span> timeout, followRedirects, retries
+  string authToken
+<span class="kw">end type</span>
+
+<span class="kw">function</span> <span class="fn">connect</span>(string host,
+  <span class="ty">int</span> port <span class="op">=</span> <span class="num">8080</span>, timeout <span class="op">=</span> <span class="num">30</span>,
+  <span class="ty">bool</span> ssl <span class="op">=</span> <span class="kw">false</span>)
+<span class="kw">end function</span></pre></div>
+  </div>
+  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">Java writes every field 3×: declaration, parameter, assignment.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
+</div>
+
+<div id="js-hover-img" style="display:none; position:fixed; z-index:9999; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); max-width:min(540px,calc(100vw - 20px)); box-sizing:border-box;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; font-size:0.65rem; font-family:'Jost',sans-serif; letter-spacing:0.12em; text-transform:uppercase;"><span style="color:#89dceb;">JavaScript — Timer</span><span style="color:#cba6f7;">Pragma</span></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; overflow:hidden;">
+    <div style="min-width:0;overflow:hidden;"><pre class="c-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">function</span> <span class="fn">Timer</span>() {
+  <span class="kw">this</span>.count = <span class="num">0</span>;
+  <span class="kw">var</span> self = <span class="kw">this</span>;
+
+  <span class="fn">setInterval</span>(<span class="kw">function</span>() {
+    self.count<span class="op">++</span>;
+    <span class="kw">if</span> (self.count &gt; <span class="num">10</span>) {
+      self.<span class="fn">stop</span>();
+    }
+  }, <span class="num">1000</span>);
+
+  <span class="kw">this</span>.stop = <span class="kw">function</span>() {
+    <span class="kw">var</span> self = <span class="kw">this</span>;
+    <span class="fn">clearInterval</span>(<span class="kw">function</span>() {
+      self.count = <span class="num">0</span>;
+    });
+  };
+}</pre></div>
+    <div style="min-width:0;overflow:hidden;"><pre class="p-code" style="font-size:9px;margin:0;overflow:hidden;white-space:pre;"><span class="kw">type</span> <span class="ty">Timer</span>
+  <span class="ty">int</span> count
+<span class="kw">end type</span>
+
+<span class="kw">function</span> <span class="fn">tick</span>(<span class="ty">Timer</span> <span class="ang">&lt;</span>t<span class="ang">&gt;</span>)
+  t.count<span class="op">++</span>
+  <span class="kw">if</span> t.count <span class="op">&gt;</span> <span class="num">10</span>
+    <span class="fn">stop</span>(t)
+  <span class="kw">end if</span>
+<span class="kw">end function</span>
+
+<span class="kw">function</span> <span class="fn">stop</span>(<span class="ty">Timer</span> <span class="ang">&lt;</span>t<span class="ang">&gt;</span>)
+  t.count <span class="op">=</span> <span class="num">0</span>
+<span class="kw">end function</span></pre></div>
+  </div>
+  <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">JS <span style="font-size:0.7rem; color:#89dceb; font-family:'Share Tech Mono',monospace;">this</span> rebinds in callbacks.</span><a href="#" style="color:#cba6f7; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
+</div>
 
 <!-- README overlay -->
 <div id="page-readme">
@@ -504,6 +501,24 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
 </div>
 
 <script>
+function showPopup(btnId, popupId) {
+  var btn = document.getElementById(btnId);
+  var popup = document.getElementById(popupId);
+  var rect = btn.getBoundingClientRect();
+  popup.style.display = 'block';
+  var pw = popup.offsetWidth;
+  var ph = popup.offsetHeight;
+  var top = rect.bottom + 6;
+  var left = rect.left;
+  if (left + pw > window.innerWidth - 10) left = window.innerWidth - pw - 10;
+  if (left < 10) left = 10;
+  if (top + ph > window.innerHeight - 10) top = rect.top - ph - 6;
+  popup.style.top = top + 'px';
+  popup.style.left = left + 'px';
+}
+function hidePopup(popupId) {
+  document.getElementById(popupId).style.display = 'none';
+}
 function showReadme() {
   document.getElementById('page-readme').style.display = 'block';
 }
