@@ -28,7 +28,7 @@ Pragma targets mathematically proven memory safety and functional correctness vi
 
 ## Dynamic Runtime
 
-Pragma exposes 12 runtime settings — memory model, allocator, overflow behaviour, stack size, bounds checking, float semantics, and more — declared per source file at compile time. See the [Runtime Policy page](https://pragma-project.github.io/Pragma-Language/runtime-policy.html) for all settings.
+Pragma exposes 13 runtime settings — memory model, allocator, overflow behaviour, stack size, bounds checking, float semantics, and more — declared per source file at compile time. See the [Runtime Policy page](https://pragma-project.github.io/Pragma-Language/runtime-policy.html) for all settings.
 
 ## Org
 
