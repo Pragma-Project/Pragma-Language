@@ -6,7 +6,7 @@
 
 | Page | URL |
 |------|-----|
-| Syntax Reference | https://pragma-project.github.io/Pragma-Language/ |
+| Syntax Reference | https://pragma-project.github.io/Pragma-Language/index.html |
 
 ## What is Pragma?
 
