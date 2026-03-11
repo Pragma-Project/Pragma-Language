@@ -370,57 +370,81 @@ out:
     </div>
     <div>
       <div class="col-header" style="color:#a6e3a1;">Pragma (Condensed via inlining)</div>
-      <pre class="p-code" style="font-size:12px;"><span class="cm">// copy_pte_range — copy page table entries from src to dst</span>
-<span class="kw">function</span> <span class="fn">copy_pte_range</span>(vm_area_struct <span class="ang">&lt;</span>dst_vma<span class="ang">&gt;</span>,
-  vm_area_struct <span class="ang">&lt;</span>src_vma<span class="ang">&gt;</span>, pmd_t <span class="ang">&lt;</span>dst_pmd<span class="ang">&gt;</span>, pmd_t <span class="ang">&lt;</span>src_pmd<span class="ang">&gt;</span>,
+      <pre class="p-code" style="font-size:11px;"><span class="cm">// copy_pte_range — copy pte entries</span>
+<span class="kw">function</span> <span class="fn">copy_pte_range</span>(
+  vm_area_struct <span class="ang">&lt;</span>dst_vma<span class="ang">&gt;</span>,
+  vm_area_struct <span class="ang">&lt;</span>src_vma<span class="ang">&gt;</span>,
+  pmd_t <span class="ang">&lt;</span>dst_pmd<span class="ang">&gt;</span>, pmd_t <span class="ang">&lt;</span>src_pmd<span class="ang">&gt;</span>,
   <span class="ty">uint64</span> addr, <span class="ty">uint64</span> end) <span class="kw">returns</span> <span class="ty">int</span>
-  <span class="ty">none</span> <span class="ang">&lt;</span>dst_mm<span class="ang">&gt;</span> <span class="op">=</span> dst_vma.vm_mm  <span class="ty">none</span> <span class="ang">&lt;</span>src_mm<span class="ang">&gt;</span> <span class="op">=</span> src_vma.vm_mm
-  <span class="ty">none</span> <span class="ang">&lt;</span>orig_src_pte<span class="ang">&gt;</span>  <span class="ty">none</span> <span class="ang">&lt;</span>orig_dst_pte<span class="ang">&gt;</span>  <span class="ty">none</span> <span class="ang">&lt;</span>src_pte<span class="ang">&gt;</span>
-  <span class="ty">none</span> <span class="ang">&lt;</span>dst_pte<span class="ang">&gt;</span>  pte_t ptent  <span class="ty">none</span> <span class="ang">&lt;</span>src_ptl<span class="ang">&gt;</span>  <span class="ty">none</span> <span class="ang">&lt;</span>dst_ptl<span class="ang">&gt;</span>
+  <span class="ty">none</span> <span class="ang">&lt;</span>dst_mm<span class="ang">&gt;</span> <span class="op">=</span> dst_vma.vm_mm
+  <span class="ty">none</span> <span class="ang">&lt;</span>src_mm<span class="ang">&gt;</span> <span class="op">=</span> src_vma.vm_mm
+  <span class="ty">none</span> <span class="ang">&lt;</span>orig_src_pte<span class="ang">&gt;</span>  <span class="ty">none</span> <span class="ang">&lt;</span>orig_dst_pte<span class="ang">&gt;</span>
+  <span class="ty">none</span> <span class="ang">&lt;</span>src_pte<span class="ang">&gt;</span>  <span class="ty">none</span> <span class="ang">&lt;</span>dst_pte<span class="ang">&gt;</span>
+  pte_t ptent  <span class="ty">none</span> <span class="ang">&lt;</span>src_ptl<span class="ang">&gt;</span>
+  <span class="ty">none</span> <span class="ang">&lt;</span>dst_ptl<span class="ang">&gt;</span>
   <span class="ty">int</span> progress  <span class="ty">int</span> ret <span class="op">=</span> <span class="num">0</span>  <span class="ty">int</span> nr
   <span class="ty">array</span> <span class="ty">int</span>[NR_MM_COUNTERS] rss
-  softleaf_t entry <span class="op">=</span> <span class="fn">softleaf_mk_none</span>()  <span class="ty">none</span> <span class="ang">&lt;</span>prealloc<span class="ang">&gt;</span> <span class="op">=</span> empty
+  softleaf_t entry <span class="op">=</span> <span class="fn">softleaf_mk_none</span>()
+  <span class="ty">none</span> <span class="ang">&lt;</span>prealloc<span class="ang">&gt;</span> <span class="op">=</span> empty
   <span class="kw">while</span> <span class="kw">true</span>
     progress <span class="op">=</span> <span class="num">0</span>  <span class="fn">init_rss_vec</span>(rss)
-    src_pte <span class="op">=</span> <span class="fn">pte_offset_map_lock</span>(src_mm, src_pmd,
+    src_pte <span class="op">=</span> <span class="fn">pte_offset_map_lock</span>(
+      src_mm, src_pmd,
       addr, <span class="kw">address</span>(<span class="ang">&lt;</span>src_ptl<span class="ang">&gt;</span>))
     <span class="kw">if</span> src_pte <span class="op">==</span> empty
-      <span class="fn">pmd_populate</span>(dst_mm, dst_pmd, <span class="fn">pmd_pgtable</span>(<span class="kw">deref</span>(<span class="ang">&lt;</span>dst_pmd<span class="ang">&gt;</span>)))
+      <span class="fn">pmd_populate</span>(dst_mm, dst_pmd,
+        <span class="fn">pmd_pgtable</span>(<span class="kw">deref</span>(<span class="ang">&lt;</span>dst_pmd<span class="ang">&gt;</span>)))
       ret <span class="op">=</span> <span class="num">0</span>  escape
     <span class="kw">end if</span>
-    dst_pte <span class="op">=</span> <span class="fn">pte_offset_map_nolock</span>(dst_mm, dst_pmd,
+    dst_pte <span class="op">=</span> <span class="fn">pte_offset_map_nolock</span>(
+      dst_mm, dst_pmd,
       addr, <span class="kw">address</span>(<span class="ang">&lt;</span>dst_ptl<span class="ang">&gt;</span>))
     <span class="kw">if</span> dst_pte <span class="op">==</span> empty
-      <span class="fn">pte_unmap_unlock</span>(src_pte, src_ptl)  ret <span class="op">=</span> -ENOMEM  escape
+      <span class="fn">pte_unmap_unlock</span>(src_pte, src_ptl)
+      ret <span class="op">=</span> -ENOMEM  escape
     <span class="kw">end if</span>
-    orig_src_pte <span class="op">=</span> src_pte  orig_dst_pte <span class="op">=</span> dst_pte
+    orig_src_pte <span class="op">=</span> src_pte
+    orig_dst_pte <span class="op">=</span> dst_pte
     <span class="fn">arch_enter_lazy_mmu_mode</span>()
     <span class="kw">while</span> <span class="kw">true</span>
       nr <span class="op">=</span> <span class="num">1</span>
       <span class="kw">if</span> progress <span class="op">>=</span> <span class="num">32</span>
         progress <span class="op">=</span> <span class="num">0</span>
-        <span class="kw">if</span> <span class="fn">need_resched</span>() <span class="kw">or</span> <span class="fn">spin_needbreak</span>(src_ptl)
+        <span class="kw">if</span> <span class="fn">need_resched</span>()
+           <span class="kw">or</span> <span class="fn">spin_needbreak</span>(src_ptl)
            <span class="kw">or</span> <span class="fn">spin_needbreak</span>(dst_ptl)
           escape
         <span class="kw">end if</span>
       <span class="kw">end if</span>
       ptent <span class="op">=</span> <span class="fn">ptep_get</span>(src_pte)
-      <span class="kw">if</span> <span class="fn">pte_none</span>(ptent)  progress<span class="op">++</span>  continue  <span class="kw">end if</span>
+      <span class="kw">if</span> <span class="fn">pte_none</span>(ptent)
+        progress<span class="op">++</span>  continue
+      <span class="kw">end if</span>
       <span class="kw">if</span> <span class="kw">not</span> <span class="fn">pte_present</span>(ptent)
-        ret <span class="op">=</span> <span class="fn">copy_nonpresent_pte</span>(dst_mm, src_mm, dst_pte, src_pte,
+        ret <span class="op">=</span> <span class="fn">copy_nonpresent_pte</span>(
+          dst_mm, src_mm,
+          dst_pte, src_pte,
           dst_vma, src_vma, addr, rss)
         <span class="kw">if</span> ret <span class="op">==</span> -EIO
-          entry <span class="op">=</span> <span class="fn">pte_to_swp_entry</span>(<span class="fn">ptep_get</span>(src_pte))  escape
+          entry <span class="op">=</span> <span class="fn">pte_to_swp_entry</span>(
+            <span class="fn">ptep_get</span>(src_pte))
+          escape
         <span class="kw">else if</span> ret <span class="op">==</span> -EBUSY  escape
         <span class="kw">else if</span> ret <span class="kw">not</span> <span class="num">0</span>  ret <span class="op">=</span> <span class="num">0</span>
         <span class="kw">end if</span>
         progress <span class="op">+=</span> <span class="num">8</span>  continue
       <span class="kw">end if</span>
-      ret <span class="op">=</span> <span class="fn">copy_present_pte</span>(dst_vma, src_vma, dst_pte, src_pte,
-        ptent, addr, rss, <span class="kw">address</span>(<span class="ang">&lt;</span>prealloc<span class="ang">&gt;</span>))
+      ret <span class="op">=</span> <span class="fn">copy_present_pte</span>(
+        dst_vma, src_vma,
+        dst_pte, src_pte, ptent,
+        addr, rss, <span class="kw">address</span>(<span class="ang">&lt;</span>prealloc<span class="ang">&gt;</span>))
       <span class="kw">if</span> ret <span class="op">==</span> -EAGAIN  escape  <span class="kw">end if</span>
-      <span class="kw">if</span> prealloc <span class="kw">not</span> empty  <span class="fn">folio_put</span>(prealloc)  prealloc <span class="op">=</span> empty  <span class="kw">end if</span>
-      progress <span class="op">+=</span> <span class="num">8</span>  dst_pte<span class="op">++</span>  src_pte<span class="op">++</span>
+      <span class="kw">if</span> prealloc <span class="kw">not</span> empty
+        <span class="fn">folio_put</span>(prealloc)
+        prealloc <span class="op">=</span> empty
+      <span class="kw">end if</span>
+      progress <span class="op">+=</span> <span class="num">8</span>
+      dst_pte<span class="op">++</span>  src_pte<span class="op">++</span>
       addr <span class="op">+=</span> (nr <span class="kw">left</span> PAGE_SHIFT)
       <span class="kw">if</span> addr <span class="op">==</span> end  escape  <span class="kw">end if</span>
     <span class="kw">end while</span>
