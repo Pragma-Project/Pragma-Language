@@ -120,8 +120,8 @@ FUNCTION POINTERS
 Declared using angle brackets around the name. Initialised by assigning a function
 (empty call with no args triggers detection).
 
-  int <fp> = square()           // fp points to the square function, returns int
-  <fp>(7)                       // call through the pointer → 49
+  none <handler> = sigHandler()  // handler points to the sigHandler function
+  <handler>()                   // call through the pointer
 
   // none <name> as parameter means void* — accepts any function pointer
   function apply(none <op>, int a, int b) returns int
