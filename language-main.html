@@ -72,7 +72,7 @@ body.theme-default #mode-toggle-top:hover {
 }
 body.theme-default .tab-btn {
   background: transparent;
-  color: #585b70;
+  color: #a6adc8;
   border: 1px solid #313244;
 }
 body.theme-default .tab-btn:hover {
@@ -150,7 +150,7 @@ body.theme-base #mode-toggle-top:hover {
 }
 body.theme-base .tab-btn {
   background: transparent;
-  color: #555;
+  color: #aaa;
   border: 1px solid #2a2a2a;
   font-family: 'Share Tech Mono', monospace;
 }
@@ -255,17 +255,9 @@ nav {
 .nav-title a.nav-title-link {
   text-decoration: none;
   color: inherit;
-}
-.nav-title a.nav-home-arrow {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  opacity: 0.5;
   transition: opacity 0.15s;
-  font-weight: normal;
 }
-.nav-title a.nav-home-arrow:hover { opacity: 1; }
+.nav-title a.nav-title-link:hover { opacity: 0.75; }
 
 .mode-tabs {
   display: flex;
@@ -518,7 +510,7 @@ hr { border: none; margin: 20px 0; }
      SIDEBAR — STANDARD
 ══════════════════════════════════════════ -->
 <nav id="nav-standard">
-  <div class="nav-title"><a href="index.html" class="nav-title-link">Pragma</a><a href="index.html" class="nav-home-arrow">← Home</a></div>
+  <div class="nav-title"><a href="index.html" class="nav-title-link">← Pragma</a></div>
   <div class="mode-tabs">
     <button class="tab-btn tab-active" data-mode="standard" onclick="setMode('standard')">Standard</button>
     <button class="tab-btn" data-mode="base" onclick="setMode('base')">Base</button>
@@ -565,7 +557,7 @@ hr { border: none; margin: 20px 0; }
      SIDEBAR — BASE
 ══════════════════════════════════════════ -->
 <nav id="nav-base" style="display:none">
-  <div class="nav-title"><a href="index.html" class="nav-title-link">Base Pragma</a><a href="index.html" class="nav-home-arrow">← Home</a></div>
+  <div class="nav-title"><a href="index.html" class="nav-title-link">← Base Pragma</a></div>
   <div class="mode-tabs">
     <button class="tab-btn" data-mode="standard" onclick="setMode('standard')">Standard</button>
     <button class="tab-btn tab-active" data-mode="base" onclick="setMode('base')">Base</button>
