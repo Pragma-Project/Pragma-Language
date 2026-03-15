@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pragma — Translation &amp; XPile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #1c1c1c;
+  background: #f4f5f7;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+nav {
+  position: fixed;
+  top: 0; left: 0;
+  width: 220px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 28px 0 40px;
+  z-index: 100;
+  background: #1a2332;
+  border-right: 1px solid #243044;
+}
+
+.nav-logo {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0 20px 16px;
+  color: #5b8fc9;
+  border-bottom: 1px solid #243044;
+  margin-bottom: 8px;
+}
+
+.nav-section {
+  margin-top: 16px;
+  padding: 2px 20px 4px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #3d5068;
+  font-family: 'Inter', sans-serif;
+}
+
+nav a {
+  display: block;
+  padding: 5px 20px;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #7a93ad;
+  border-left: 3px solid transparent;
+  transition: all 0.1s;
+}
+nav a:hover {
+  background: #243044;
+  color: #c8daea;
+  border-left-color: #5b8fc9;
+}
+nav a.active {
+  color: #c8daea;
+  border-left-color: #5b8fc9;
+}
+
+.nav-back {
+  display: block;
+  padding: 5px 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #8aabca;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.1s;
+}
+.nav-back:hover { color: #c0d8ed; }
+
+/* ── MAIN ── */
+main {
+  margin-left: 220px;
+  padding: 52px 72px 100px 64px;
+  max-width: 960px;
+  width: 100%;
+}
+
+/* ── HEADER ── */
+.page-header {
+  border-bottom: 1px solid #dde1e8;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+}
+
+.page-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #5b8fc9;
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: #1a2332;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.page-intro {
+  font-size: 1rem;
+  color: #4a5568;
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+/* ── SECTIONS ── */
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a2332;
+  margin: 32px 0 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dde1e8;
+  scroll-margin-top: 32px;
+}
+
+h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2d3a4a;
+  margin: 28px 0 8px;
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  letter-spacing: 0.04em;
+}
+
+p {
+  color: #374151;
+  margin-bottom: 14px;
+  max-width: 720px;
+}
+
+/* ── CODE BLOCK ── */
+.example {
+  background: #1a2332;
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  font-size: 13px;
+  line-height: 2;
+  color: #c8daea;
+}
+
+.ex-key   { color: #89b4fa; }
+.ex-val   { color: #a6e3a1; }
+.ex-str   { color: #f9e2af; }
+.ex-cm    { color: #c8a030; }
+.ex-dim   { color: #5a7a9a; }
+.ex-warn  { color: #f38ba8; }
+.ex-ok    { color: #a6e3a1; }
+
+/* ── NOTE / WARNING ── */
+.note {
+  background: #eef4fb;
+  border-left: 3px solid #5b8fc9;
+  padding: 12px 16px;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+  color: #2d3a4a;
+  margin: 16px 0;
+  line-height: 1.6;
+}
+
+.warn-box {
+  background: #fdf4f4;
+  border-left: 3px solid #d9534f;
+  padding: 12px 16px;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+  color: #4a1a1a;
+  margin: 16px 0;
+  line-height: 1.6;
+}
+
+.warn-box strong { color: #d9534f; }
+
+/* ── FLOW DIAGRAM ── */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.flow-box {
+  background: #fff;
+  border: 1px solid #dde1e8;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #1a2332;
+  white-space: nowrap;
+}
+
+.flow-box.highlight {
+  background: #1a2332;
+  color: #c8daea;
+  border-color: #1a2332;
+}
+
+.flow-arrow {
+  padding: 0 10px;
+  color: #8a9ab0;
+  font-size: 18px;
+  font-weight: 300;
+}
+
+/* ── MAPPING TABLE ── */
+.map-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13px;
+}
+
+.map-table th {
+  background: #f0f2f5;
+  padding: 9px 14px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  color: #1a2332;
+  border-bottom: 2px solid #dde1e8;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.map-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid #eef0f4;
+  font-family: 'JetBrains Mono', monospace;
+  color: #374151;
+  vertical-align: top;
+}
+
+.map-table tr:last-child td { border-bottom: none; }
+
+.map-table td.lang { color: #5b8fc9; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-family: 'Inter', sans-serif; }
+
+/* ── CHECKER TIERS ── */
+.tier-block {
+  background: #fff;
+  border: 1px solid #dde1e8;
+  border-radius: 6px;
+  margin: 14px 0;
+  overflow: hidden;
+}
+
+.tier-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 1px solid #eef0f4;
+  background: #f8f9fb;
+}
+
+.tier-badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.tier-badge.error  { background: #fce8e8; color: #c0392b; }
+.tier-badge.warn   { background: #fef3e2; color: #b07800; }
+
+.tier-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2332;
+}
+
+.tier-body {
+  padding: 12px 18px 14px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.65;
+}
+
+hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="dynamic-runtime.html" class="nav-back">← dynamic runtime</a>
+  <div class="nav-logo">Pragma / XPile</div>
+
+  <div class="nav-section">Overview</div>
+  <a href="#what-is-xpile">What is XPile</a>
+  <a href="#round-trip">Round-trip workflow</a>
+
+  <div class="nav-section">Style Profiles</div>
+  <a href="#profiles">Translation profiles</a>
+  <a href="#what-is-mappable">What is mappable</a>
+  <a href="#profile-format">Profile format</a>
+
+  <div class="nav-section">Validation</div>
+  <a href="#checker">Profile checker</a>
+
+  <div class="nav-section">Related</div>
+  <a href="deployment-targets.html">Deployment Targets</a>
+  <a href="dynamic-runtime.html">Dynamic Runtime</a>
+</nav>
+
+<main>
+
+<div class="page-header">
+  <div class="page-label">XPile — Transpiler</div>
+  <h1>Translation</h1>
+  <p class="page-intro">
+    XPile is Pragma's transpiler. It converts source code between Pragma and any supported language in both directions. Translation is not just mechanical substitution — it is configurable, so output code reads the way the target codebase expects it to.
+  </p>
+</div>
+
+<p>XPile handles two directions: importing foreign code into Pragma so you can work in it, and exporting Pragma back to a target language for deployment. Both directions are lossless in behaviour. Style is a separate concern, controlled by translation profiles.</p>
+
+<h2 id="what-is-xpile">What is XPile</h2>
+
+<p>XPile is a standalone tool that ships with Pragma. It reads source code in a supported language and produces equivalent source code in another. It is not a compiler — it does not produce binaries. It produces source that can then be compiled or run by whatever toolchain the target language uses.</p>
+
+<p>Supported translation directions:</p>
+
+<table class="map-table">
+  <tr><th>From</th><th>To</th></tr>
+  <tr><td>C</td><td>Pragma</td></tr>
+  <tr><td>Python</td><td>Pragma</td></tr>
+  <tr><td>JavaScript</td><td>Pragma</td></tr>
+  <tr><td>Java</td><td>Pragma</td></tr>
+  <tr><td>Pragma</td><td>C, Python, JavaScript, Java</td></tr>
+</table>
+
+<p>The compiler (<code>pragma</code>) handles the Pragma → target direction as part of its normal build pipeline. XPile is the dedicated tool for the reverse — and for round-tripping.</p>
+
+<h2 id="round-trip">Round-trip workflow</h2>
+
+<p>The primary use case for XPile is working in a foreign codebase. You translate the foreign source into Pragma, do your work in Pragma, then translate back to the original language for deployment. The rest of the team never sees Pragma. They see their own language, in their own style.</p>
+
+<div class="flow">
+  <div class="flow-box">their C</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box highlight">Pragma</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">your work</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box highlight">Pragma</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">C they deploy</div>
+</div>
+
+<p>The challenge in the last step is that the output C has to look like <em>their</em> C, not like C produced by a tool that has never seen their codebase before. Different teams use different idioms, different loop styles, different allocation functions, different naming conventions. If the output code looks foreign, it creates friction — and friction turns into resistance to the tool.</p>
+
+<p>This is what translation profiles solve.</p>
+
+<hr>
+
+<h2 id="profiles">Translation profiles</h2>
+
+<p>A translation profile is a configuration file that defines how Pragma constructs map to syntax in a specific target language. Profiles are per-target — you write a profile for C, a separate one for Java, and so on. Profiles are optional: if you don't provide one, XPile uses its defaults.</p>
+
+<p>A profile does not change what the code does. It only changes how it is written. The output with a custom profile and the output with the default profile must be behaviourally identical.</p>
+
+<div class="note">
+  Profiles give you control over style. They do not give you control over semantics. XPile validates this — see <a href="#checker">Profile checker</a>.
+</div>
+
+<p>Profiles are stored as <code>.xpile</code> files and referenced by name when invoking the transpiler:</p>
+
+<div class="example">
+xpile input.run --to c --profile <span class="ex-str">team-style.xpile</span>
+</div>
+
+<h2 id="what-is-mappable">What is mappable</h2>
+
+<p>Every mappable construct has a set of defined equivalent forms. You can choose any of them, or write your own — with the caveat that custom forms are checked for equivalence and flagged if XPile cannot confirm they produce the same behaviour. The following constructs are mappable per target language.</p>
+
+<h3>Loops</h3>
+<table class="map-table">
+  <tr>
+    <th>Pragma</th>
+    <th>Default C output</th>
+    <th>Example custom mapping</th>
+  </tr>
+  <tr>
+    <td>for i in 0..5</td>
+    <td>for (int i = 0; i &lt; 5; i++)</td>
+    <td>for (i = 0; i &lt; 5; i += 1)</td>
+  </tr>
+  <tr>
+    <td>while cond</td>
+    <td>while (cond)</td>
+    <td>while (cond)</td>
+  </tr>
+  <tr>
+    <td>loop</td>
+    <td>for (;;)</td>
+    <td>while (1)</td>
+  </tr>
+</table>
+
+<h3>Variable declarations</h3>
+<table class="map-table">
+  <tr>
+    <th>Pragma</th>
+    <th>Default C output</th>
+    <th>Example custom mapping</th>
+  </tr>
+  <tr>
+    <td>let x = 5</td>
+    <td>int x = 5;</td>
+    <td>int x = 5; &nbsp;<span style="color:#8a9ab0">// same</span></td>
+  </tr>
+  <tr>
+    <td>let x: int32 = 5</td>
+    <td>int32_t x = 5;</td>
+    <td>int x = 5; &nbsp;<span style="color:#8a9ab0">// if team uses plain int</span></td>
+  </tr>
+</table>
+
+<h3>Memory allocation</h3>
+<table class="map-table">
+  <tr>
+    <th>Pragma</th>
+    <th>Default C output</th>
+    <th>Mappable alternatives</th>
+  </tr>
+  <tr>
+    <td>alloc(T)</td>
+    <td>malloc(sizeof(T))</td>
+    <td>calloc(1, sizeof(T)) &nbsp;·&nbsp; custom allocator call</td>
+  </tr>
+  <tr>
+    <td>free(ptr)</td>
+    <td>free(ptr)</td>
+    <td>custom free call</td>
+  </tr>
+</table>
+
+<h3>Null checks</h3>
+<table class="map-table">
+  <tr>
+    <th>Pragma</th>
+    <th>Default C output</th>
+    <th>Mappable alternatives</th>
+  </tr>
+  <tr>
+    <td>if x == null</td>
+    <td>if (x == NULL)</td>
+    <td>if (!x) &nbsp;·&nbsp; if (x == 0)</td>
+  </tr>
+</table>
+
+<h3>Boolean literals</h3>
+<table class="map-table">
+  <tr>
+    <th>Pragma</th>
+    <th>Default C output</th>
+    <th>Mappable alternatives</th>
+  </tr>
+  <tr>
+    <td>true / false</td>
+    <td>true / false (stdbool.h)</td>
+    <td>1 / 0 &nbsp;·&nbsp; TRUE / FALSE (custom macro)</td>
+  </tr>
+</table>
+
+<h3>Function signatures</h3>
+<table class="map-table">
+  <tr>
+    <th>Pragma</th>
+    <th>Default C output</th>
+    <th>Mappable alternatives</th>
+  </tr>
+  <tr>
+    <td>fn add(a: int, b: int) → int</td>
+    <td>int add(int a, int b)</td>
+    <td>int add(int a, int b) &nbsp;<span style="color:#8a9ab0">// same — C has one form</span></td>
+  </tr>
+</table>
+
+<h2 id="profile-format">Profile format</h2>
+
+<p>A profile is a plain text file. Each entry maps a Pragma construct to its target-language form. Entries use a simple <code>construct: "template"</code> syntax. Templates use <code>{}</code> placeholders for the parts XPile fills in.</p>
+
+<div class="example">
+<span class="ex-cm">// team-style.xpile — target: c</span><br>
+<br>
+target: <span class="ex-val">c</span><br>
+<br>
+<span class="ex-cm">// Loop style</span><br>
+for_range:    <span class="ex-str">"for ({type} {var} = {start}; {var} &lt; {end}; {var} += 1)"</span><br>
+<br>
+<span class="ex-cm">// Allocation — team uses calloc instead of malloc</span><br>
+alloc:        <span class="ex-str">"calloc(1, sizeof({type}))"</span><br>
+<br>
+<span class="ex-cm">// Null style — team prefers !ptr over ptr == NULL</span><br>
+null_check:   <span class="ex-str">"(!{expr})"</span><br>
+<br>
+<span class="ex-cm">// Boolean literals — team uses 1/0, no stdbool</span><br>
+bool_true:    <span class="ex-str">"1"</span><br>
+bool_false:   <span class="ex-str">"0"</span>
+</div>
+
+<p>Any construct not listed in the profile uses the default. You only need to specify what you want to override.</p>
+
+<hr>
+
+<h2 id="checker">Profile checker</h2>
+
+<p>XPile validates every profile before using it. Validation has two tiers that operate independently.</p>
+
+<div class="tier-block">
+  <div class="tier-header">
+    <span class="tier-badge error">Error</span>
+    <span class="tier-title">Syntax validity</span>
+  </div>
+  <div class="tier-body">
+    The output produced by the mapping must be syntactically valid in the target language. XPile parses the rendered template and checks it against the target language's grammar. If the result is not valid syntax, the profile is rejected and translation does not proceed.
+    <div class="example" style="margin-top:12px; margin-bottom:0; line-height:1.8;">
+<span class="ex-warn">error:</span> profile 'team-style.xpile' — construct 'for_range'<br>
+<span class="ex-warn">       rendered output is not valid C:</span><br>
+<span class="ex-warn">       for (int i = 0; i &lt; 5 i++)   </span><span class="ex-cm">// missing semicolon</span><br>
+<span class="ex-warn">       translation aborted</span>
+    </div>
+  </div>
+</div>
+
+<div class="tier-block">
+  <div class="tier-header">
+    <span class="tier-badge warn">Warning</span>
+    <span class="tier-title">Behavioural equivalence</span>
+  </div>
+  <div class="tier-body">
+    XPile checks whether the custom mapping produces the same behaviour as one of Pragma's defined equivalents for that construct. It does not execute or prove the code — it compares the mapping structurally against the known-equivalent forms. If the mapping does not match any of them, a warning is issued and translation continues.
+    <p style="margin-top:10px; margin-bottom:0; font-size:13px; color:#5a6a7a;">This is not an error because the mapping may still be correct — XPile simply cannot confirm it. If you proceed past this warning, the behaviour of the output relative to the Pragma source is your responsibility.</p>
+    <div class="example" style="margin-top:12px; margin-bottom:0; line-height:1.8;">
+<span class="ex-warn">warning:</span> profile 'team-style.xpile' — construct 'for_range'<br>
+<span class="ex-warn">         mapping does not match any defined equivalent</span><br>
+<span class="ex-cm">         known equivalents: for(init;cond;incr) · while(cond){...incr}</span><br>
+<span class="ex-cm">         your mapping:      for(items=0 while items&lt;5 do items+=items)</span><br>
+<span class="ex-warn">         behavioural equivalence unconfirmed — output may be undefined</span><br>
+<span class="ex-ok">         translation proceeded with warning</span>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  The warning tier exists because XPile defines a finite set of known-equivalent forms for each construct. If your mapping is outside that set, XPile has no basis to confirm it is equivalent. It may be — but you are outside checked territory. The warning is there to make that explicit, not to block you.
+</div>
+
+</main>
+</body>
+</html>

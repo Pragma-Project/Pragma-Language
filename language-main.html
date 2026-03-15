@@ -705,7 +705,6 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
   <a href="#base-uint">uint types</a>
 
   <div class="nav-section">Reference</div>
-  <a href="#why-base-pragma">Why Base Pragma?</a>
   <a href="#base-coming-from-c">Coming from C</a>
   <a href="safety.html">Safety &amp; MemProof ↗</a>
 </nav>
@@ -1113,7 +1112,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><td>Increment / decrement</td><td><code>x++  x--</code></td><td>same (postfix only)</td></tr>
 </table>
 
-<p class="subtitle" style="margin-top:48px;">Standard Pragma. Source files use the <code>.run</code> extension. For lower level programming with memory management, pointers, and bitwise operations, click <strong>Base</strong> on the left.</p>
+<p class="subtitle" style="margin-top:48px;">Pragma source files use the <code>.run</code> extension.</p>
 
 </div><!-- /content-standard -->
 
@@ -1303,7 +1302,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <h1>Base Pragma Reference</h1>
 <p class="subtitle">Low-level operations and systems work. These concepts may not exist or be as easily accessible in Python, Java, or other modern languages. The angle brackets <code>&lt; &gt;</code> are the signal that you are working at the memory level.</p>
 
-<p><a href="#why-base-pragma" style="color:#cba6f7; font-family:'Share Tech Mono','Courier New',monospace; font-size:0.9rem; text-decoration:none;">Why Base Pragma?</a></p>
+<p>Not every program needs to manage memory, work with pointers, or think in bits. Most application code never touches any of this. If that describes your work, the Standard page is everything you need — you have no reason to be here. This section exists for systems-level work: memory management, pointer arithmetic, bitwise operations.</p>
 
 <hr>
 
@@ -1479,10 +1478,6 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
 
 <hr>
 
-<h2 id="why-base-pragma" class="anchor-target">Why Base Pragma?</h2>
-<p>Not every program needs to manage memory, work with pointers, or think in bits. Most application code never touches any of this. Separating it into its own file type means beginners and those who don't need these details are never forced to encounter them. A <code>.run</code> file stays clean. A <code>.base</code> file signals immediately that something lower-level is happening. That separation makes programming more comfortable for people who aren't ready for it, and clearer for those who are.</p>
-
-<hr>
 
 <h2 id="base-coming-from-c" class="anchor-target">Coming from C</h2>
 <p>If you already know C, Base Pragma maps directly onto what you know. The semantics are the same — only the syntax changes. The goal is maximum readability without sacrificing any low-level control.</p>
@@ -1548,7 +1543,6 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   In C, a <code>struct</code> is a named group of typed fields — nothing more. A Pragma <code>type</code> is the same thing, with the option to add methods, inheritance, default field values, and constructors. If you ignore those features and just declare fields, it compiles to an identical struct. There is no separate <code>struct</code> keyword in Pragma because the only difference is capability, not concept.
 </div>
 
-<p class="subtitle" style="margin-top:48px;">Base Pragma files use the <code>.base</code> extension.</p>
 
 </div><!-- /content-base -->
 </main>

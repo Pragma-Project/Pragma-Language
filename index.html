@@ -109,6 +109,31 @@ body.theme-base .landing-title { color: #fff; font-family: 'VT323', monospace; f
 body.theme-default .landing-desc p { color: #2a2a2a; }
 body.theme-base .landing-desc p { color: #c8c8c8; }
 
+.tagline-sentence {
+  font-size: clamp(0.6rem, 0.95vw, 0.82rem);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-bottom: clamp(8px, 1.2vh, 16px);
+  text-align: center;
+}
+.scatter-label {
+  position: fixed;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.8rem, 1.1vw, 1rem);
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  opacity: 0.82;
+  z-index: 1;
+}
+
+.usams-credit { font-size: clamp(1.1rem, 1.6vw, 1.4rem) !important; margin-top: 4px; opacity: 0.75; font-family: 'Georgia', serif; }
+.usams-link { text-decoration: none; border-bottom: 1px dotted; transition: opacity 0.15s; }
+body.theme-default .usams-link { color: #6c7086; border-color: #6c7086; }
+body.theme-default .usams-link:hover { color: #cba6f7; border-color: #cba6f7; opacity: 1; }
+body.theme-base .usams-link { color: #888; border-color: #555; }
+body.theme-base .usams-link:hover { color: #e0e0e0; border-color: #aaa; }
+
 /* ══════ HOVER BUTTONS ══════ */
 .hover-btns-row {
   display: inline-flex;
@@ -230,6 +255,23 @@ body.theme-default .lang-ref-btn:hover { background: #a87fd4; }
 body.theme-base .lang-ref-btn { background: #2a2a2a; color: #fff; border: 1px solid #555; }
 body.theme-base .lang-ref-btn:hover { background: #333; }
 
+.industry-btn {
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 5px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  line-height: 1.45;
+  transition: background 0.15s, color 0.15s;
+}
+body.theme-default .industry-btn { background: rgba(203,166,247,0.14); color: #8b5cf6; border: 1.5px solid #8b5cf6; }
+body.theme-default .industry-btn:hover { background: rgba(203,166,247,0.28); }
+body.theme-base .industry-btn { background: rgba(92,45,145,0.07); color: #5c2d91; border: 1.5px solid #5c2d91; }
+body.theme-base .industry-btn:hover { background: rgba(92,45,145,0.15); }
+
 /* ══════ README OVERLAY ══════ */
 #page-readme {
   display: none;
@@ -291,8 +333,7 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
       </div>
 
       <div class="landing-desc">
-        <p>A universal language for both low and high-level applications, designed to be readable to anyone. Transpiles between C, Python, Java, and JavaScript.</p>
-        <p>Dynamic Runtime and memory safety features are part of the standard library.</p>
+        <p class="tagline-sentence">Unified Syntax · Configurable Runtime · Verifiable Memory Safety</p>
       </div>
 
       <div class="hover-btns-row">
@@ -314,6 +355,8 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
         </div>
       </div>
 
+      <p class="usams-credit">Part of the <a href="usams/index.html" class="usams-link">USAMS Project</a></p>
+
     </div><!-- /left-col -->
 
     <!-- RIGHT: memory safety + DR -->
@@ -326,7 +369,7 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
 
       <div style="border:1px solid #e0e0e0; border-top:3px solid #1a1a1a; border-radius:0 0 6px 6px; padding:clamp(10px,1.8vh,20px) clamp(12px,2vw,24px);"><div class="dr-inner">
         <div>
-          <div style="font-family:'Playfair Display',Georgia,serif; font-size:clamp(0.8rem,1.2vw,1.05rem); font-style:italic; font-weight:700; color:#1a1a1a; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><em>Dynamic Runtime</em> <span style="font-style:normal; font-size:clamp(0.65rem,0.9vw,0.8rem); font-family:'Share Tech Mono',monospace; font-weight:normal; color:#555;">(DR)</span><a href="runtime-policy.html" style="font-style:normal; font-weight:normal; font-family:'Share Tech Mono',monospace; font-size:clamp(0.68rem,0.95vw,0.8rem); color:#89dceb; text-decoration:none; background:#1a1a1a; border:1px solid #2a4a5a; padding:4px 12px; border-radius:3px; letter-spacing:0.1em; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.borderColor='#89dceb';this.style.color='#cdd6f4'" onmouseout="this.style.borderColor='#2a4a5a';this.style.color='#89dceb'">Learn More →</a></div>
+          <div style="font-family:'Playfair Display',Georgia,serif; font-size:clamp(0.8rem,1.2vw,1.05rem); font-style:italic; font-weight:700; color:#1a1a1a; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><em>Dynamic Runtime</em> <span style="font-style:normal; font-size:clamp(0.65rem,0.9vw,0.8rem); font-family:'Share Tech Mono',monospace; font-weight:normal; color:#555;">(DR)</span><a href="dynamic-runtime.html" style="font-style:normal; font-weight:normal; font-family:'Share Tech Mono',monospace; font-size:clamp(0.68rem,0.95vw,0.8rem); color:#89dceb; text-decoration:none; background:#1a1a1a; border:1px solid #2a4a5a; padding:4px 12px; border-radius:3px; letter-spacing:0.1em; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.borderColor='#89dceb';this.style.color='#cdd6f4'" onmouseout="this.style.borderColor='#2a4a5a';this.style.color='#89dceb'">Learn More →</a></div>
           <div style="font-family:'Georgia',serif; font-size:clamp(0.7rem,1.1vw,0.9rem); color:#1a1a1a; line-height:1.5;">Memory model, Garbage Collection, Refcount — the compiler enforces up to 11 directives that <em>you</em> declare.</div>
         </div>
         <div style="background:#1a1a1a; border-radius:4px; padding:clamp(8px,1.2vh,12px) clamp(10px,1.2vw,14px); font-family:'Share Tech Mono',monospace; font-size:clamp(8px,0.9vw,11px); line-height:1.9; color:#cdd6f4;">
@@ -339,6 +382,7 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
       <!-- Buttons below DR box -->
       <div class="landing-footer">
         <a href="language-main.html" class="lang-ref-btn">Language Reference →</a>
+        <a href="industry-developments.html" class="industry-btn">Industry Research<br>&amp; Developments</a>
       </div>
 
     </div><!-- /right-col -->
@@ -346,6 +390,14 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
   </div></div><!-- /main-cols /main-area -->
 
 </div><!-- /page -->
+
+<!-- ══ SCATTER LABELS ══ -->
+<span class="scatter-label" style="top:38vh; left:44vw; color:#4a9ebe;">High-level</span>
+<span class="scatter-label" style="bottom:32vh; left:42vw; color:#7c6db5;">Web</span>
+<span class="scatter-label" style="bottom:16vh; left:53vw; color:#3d8c5a;">Low-level</span>
+<span class="scatter-label" style="bottom:24vh; left:6vw; color:#b07830;">Minimal Syntax</span>
+<span class="scatter-label" style="bottom:13vh; left:26vw; color:#5878a8;">Readability</span>
+<span class="scatter-label" style="bottom:19vh; right:14vw; color:#8c4fa0;">Maximum Flexibility</span>
 
 <!-- ══ HOVER POPUPS (position:fixed, JS-positioned, never clipped) ══ -->
 <div id="c-hover-img" style="display:none; position:fixed; z-index:9999; background:#1e1e2e; border:1px solid #313244; border-radius:6px; padding:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); width:min(780px,calc(100vw - 20px)); box-sizing:border-box;">
@@ -471,37 +523,99 @@ body.theme-base .lang-ref-btn:hover { background: #333; }
 <div id="page-readme">
   <button id="readme-close" onclick="closeReadme()">← back</button>
   <div class="readme-inner">
-    <div class="readme-hero">Pragma is an independent research project. Here is what it is and why it exists.</div>
+    <div class="readme-hero">Pragma is an independent research endeavor. This page is the totally informal answer to "why would you do that?".</div>
     <div class="readme-body">
-      <p>The starting point was a practical frustration: systems code, web code, and general application code each live in separate languages with separate conventions, separate learning curves, and separate toolchains. Moving between them carries friction that has nothing to do with the underlying problem being solved. It is just the cost of the ecosystem as it exists.</p>
-      <p>At the same time, watching code generation models work — and more importantly watching them fail — made something clear. The failure mode is not that the models are insufficiently powerful. It is that natural language is a noisy, ambiguous input for producing deterministic output. The model interprets, guesses, fills gaps. The result varies. A mechanized approach to code generation — structured input that maps predictably to structured output — would produce something more reliable, more reproducible, and easier for a person to read and verify without needing to understand the full underlying implementation.</p>
-      <p>Those two observations together are what Pragma and its broader conceptual framework, <strong>USAMS — Unified Syntax and Architectural Model for Software</strong>, are an attempt to address. One syntax that covers the range from low-level systems work to high-level application development. Runtime behavior that is declared rather than inherited from whichever language you happened to pick. And a schema-based expression layer that describes what a program does in the same terms you would use to explain it to another person, rather than the terms required to build it in an IDE.</p>
-      <p>This is a hobby project and an ongoing design exercise, not a product. The work is documented as it develops. Feedback and collaboration from people who find this worth thinking about is genuinely welcome.</p>
+      <p>A tiny bit of background here I think is relevant because it starts to put into perspective what would lead a stray to such a spot. I grew up pretty much through the computer as a kid from around 11-15. Sam's Teach Yourself TCP/IP in 21 Days was my favorite book in those years. I diverged into other things, came back in college for a year, diverged again, did some work with APIs and whatnot but computing was not in my main responsibilities list. Then came Claude Code and immediately it was an outright addiction. I'm doing things I never would have dreamt of trying before. This is one of those things stumbled upon, but has quickly become something I feel is the most promising and goes in the direction of true advances more than anything else.</p>
+
+      <p>This started with me getting interested in testing the waters in a space I wouldn't have dared venturing into as a kid: kernels. I started looking through the Linux cross reference and other things, and quickly got fed up with the complexity and overall just the sheer vastness of what's in all those folders. It's a true universe unto itself. I started to want more explicit, natural language-style, verbose syntax. Now this project was really first born: I became interested in what it'd take to have my own language simply compile to C. Apparently not too much. Mr. Claude can basically code Apollo 13 probably at this point, let's stumble through building a kernel to learn those basics. Plenty of people did exactly that to learn. As research went on and I built a barebones kernel booting to a terminal, with a init for the VFS and even finally later an interface to the physical disk, I started learning that the reason so many OS's had failed were pretty basic: compatibility, trusted/tried brand names, etc. I originally thought maybe a nice feature for someone that might make use of this work would be light weight, but I found Glaucus Linux and others are already light. A light OS doesn't change your giant app you're hosting or the web server or whatever else that makes up the bulk of consumed resources.</p>
+
+      <p>Going the unholy route of not-C landed me Nim, a very new language with the ability to compile to C or C++ or itself. As time went on, and I worked in lockstep with Claude even writing much of the code manually and having him only review in some cases, I started to not like its non-natural syntax. I also learned that the compatibility problem could be solved – the main cause of death of the non-microsoft and non-linux OS world, hardware compatibility, had a pretty clear and simple solution: loading Linux as a driver and filesystem and memory management component but not the overarching OS. As I kept mapping direct to C, or using structures of C code/lines to map to one expression in my language, I realized that there were actually quite a few interesting and, importantly, novel avenues to go down. Every language had specific runtime behavior. Java had GC, but apparently you didn't want that and explicitly needed its absence in low-level work. Python has that ability for people to not declare types and leave things like arrays open-ended. But what stood out at this point to me was that it seemed like no one had made this a configurable option. And instead of the usual conversion from one language mapping to another one-way, what if you went both ways, and did so for a collection of languages? This way you could effectively code in multiple languages, without truly having to learn them fully first. One toolkit, many applications. One representation, the ability to modify many others. A single runtime, but configurable to mimic the others. I didn't see where this had really been something developed before – or at least not easily visible via google and other search queries.</p>
+
+      <p>The real project's inception was at this point. Before this, it was more just focused around kernel work and "say it like I want it". Now I had decided that probably a fair initial design of such a language would be one which targeted 4 languages: Python, Java, C, and JavaScript. With these, you hit it all – most of modern day to day software development is either in or can by covered by these 4, it seemed. And they covered a large portion if not bulk of talent present, as well.</p>
+
+      <p>But there were things I saw and couldn't see as obstacles lying in short distance ahead:</p>
     </div>
-    <hr style="border:none; border-top:1px solid #ddd; margin:48px 0 0;">
-    <div class="readme-body" style="margin-top:40px;"><p>Different languages behave differently.</p></div>
+
     <div class="readme-lang-compare">
-      <p><strong>Rust</strong> already toggles safety with unsafe blocks. Inside unsafe, you get raw pointers, manual memory, no borrow checker. Outside, you get full safety guarantees. Same language, two modes, toggled per-block.</p>
-      <p><strong>C#</strong> has unsafe context too — lets you use pointers and fixed-size buffers, opting out of GC for that scope.</p>
-      <p><strong>D</strong> has @nogc annotation — marks functions that aren't allowed to allocate from the garbage collector. You can mix GC and manual memory in the same program.</p>
-      <p><strong>Zig</strong> lets you choose allocators per-call. Want arena allocation here, general purpose there, no allocation at all in this hot path? You pass the allocator explicitly.</p>
-      <p><strong>Swift</strong> has both ARC (reference counting) and unsafe pointers available in the same language.</p>
+      <p>Balancing syntax breadth with minimization of bloat</p>
+      <p>Maximization of power with minimization of syntax</p>
+      <p>Managing such a configurable and large runtime environment</p>
+      <p>Designing the runtime system to balance important options with desires</p>
+      <p>Managing conflicts that range from banned, to dangerous or of note, to harmless</p>
+      <p>An even bigger conceptual leap that completed the idea at this point unseen</p>
     </div>
-    <div style="background:linear-gradient(135deg,#1e1e2e 0%,#2a1a5e 100%); border-radius:6px; padding:18px 24px; margin:28px 0; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
-      <div style="color:#cba6f7; font-family:'Georgia',serif; font-size:1rem; font-style:italic; flex:1;">Mathematically-proven, Verified and Signed Proof of Memory Safety</div>
-      <a href="safety.html" style="flex-shrink:0; background:rgba(203,166,247,0.18); border:1px solid #cba6f7; color:#cba6f7; text-decoration:none; padding:8px 20px; border-radius:4px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:0.1em; white-space:nowrap; transition:background 0.15s;" onmouseover="this.style.background='rgba(203,166,247,0.35)'" onmouseout="this.style.background='rgba(203,166,247,0.18)'">See How →</a>
-    </div>
-    <div class="readme-kicker">But no language puts all of these on a single dial panel. Every one picks a default and lets you escape from it in limited ways. Pragma has no default — you declare <strong>your</strong> policy and the compiler enforces it.</div>
-    <div class="readme-code"><span class="rc-key">memory</span>: <span class="rc-val">manual</span>          <span class="rc-cm">// or gc, or refcount, or arena</span>
-<span class="rc-key">safety</span>: <span class="rc-val">checked</span>         <span class="rc-cm">// or unchecked</span>
-<span class="rc-key">types</span>: <span class="rc-val">strict</span>           <span class="rc-cm">// or dynamic</span>
-<span class="rc-key">int_width</span>: <span class="rc-val">32</span>           <span class="rc-cm">// or 64, or platform</span>
-<span class="rc-key">concurrency</span>: <span class="rc-val">threads</span>    <span class="rc-cm">// or async, or cooperative</span></div>
+
     <div class="readme-body">
-      <p>Every function that allocates, every data structure, every IO operation works under all configurations. A linked list under GC doesn't need a destructor. Under manual memory it does. Under refcount it needs weak reference support.</p>
-      <p>One standard library with three implementations of everything makes this a reality.</p>
+      <p>It thus far been a bit of a monotonous, frustrating journey. It's somewhat of a thinking exercise, but a lot of an effort exercise. I've since then had a handful of several hundred line C libraries that are third-party and random go the whole round trip back to binary. But that's the beginning of a journey, not a major milestone. The real event that crossed this from "big undertaking" to "possibly the most serious thing I've considered in terms of learning and impact" was from issues between me and Mr. Claude himself.</p>
+
+      <p>I have been spending an incredible amount of time with Claude and LLM's working on code. I usually wake up in the mid to late morning, stay up the entire night and sleep the following night. Pulling over 24 hours is normal, and I've never felt more comfortable staying at home than now. I'm always at the computer. But Claude disappoints me frequently with code that doesn't work, tests he says happened but never did, and long stints of nothing getting done and instead just making me wonder if I need blood pressure meds now rather than later. This is where the image people have of these tools being something that you say and it does, perfectly, is a fantasy at this current place in time. This will be revisited later.</p>
+
+      <p>So I thought how can I fix this? A popular solution is to take his responses, feed it back to him to critique, and even do this several times. Another is to use a second LLM that's unrelated to break the loop by way of never being in it and having a fresh start to begin with. Another one is using "hooks", basically just messages that get sent as part of the prompt every time you send a message, so you can, for example, always put a rule written out in every prompt, making him obey…theoretically. What I learned about was the reality, and it's that none of this works perfectly; it's all fighting symptoms instead of root causes, and there's a wide assortment of people complaining about the same things.</p>
+
+      <p>This is where things started to get interesting and the full realization of this came into existence. I found that pretty much the entirety of benchmarks, or at least those that matter to that space's crowd, are those involving not the coding tasks we encounter, not challenging version of tasks we encounter, not that plus an easy task list, not even something I would have guessed. It centers largely around mathematical challenges and extremely heavy, deep reasoning coding problems. These are the things younger and junior-level hires worry about in interviews. Situations that effectively never happen in practice, and even if they did, you'd arguably be foolish to just try to solve it on your own instead of lookup existing solutions from what's likely to be numerous people who've put more thought and have more capacity for it than you. If you want to see examples of this, you can simply lookup the keyword "leetcode", but my guess is if you landed here, you are already well-acquainted with these as interview questions.</p>
+
+      <p>I am going to speak with some conviction here: I think this is nearly flat-out wrong. If you are working on making your technology not first do well the basic things, but instead try to climb mount Everest or land on the moon, you have your priorities out of order. I understand – probably the money, the management, the advancement of reasoning, among other things, drive the focus in this direction. But it's a simple statement of fact: if everyone, meaning your core customer base that is made up of the developers at companies relying on you to do their job, to this new wave of hobbyists like me, are all telling you the basics are coming out wrong, that's probably at least where you should focus some of your attention, if not the bulk. The digging into this didn't seem like this was a monumental problem in comparison to the Einstein medals being chased, either. It was a simpler problem set.</p>
+
+      <p>So I started to look into how to tune models and possibly get rid of a fair portion of this behavior. I went to ask in a Discord server, put out my message saying what was said just before this sentence, then got a response that there wasn't much of an option for this. I looked into more recent work on doing something producing similar outcomes, such as "The Critic" – a third-party agent that critiques your main agent and thus builds your model into something matching your desired outputs more closely. But it still leaves things up to interpretation, and the improvement scores I did see (what little data was available to even assume things about) was pretty sparse. Around the same time, I had the need during testing for something that would move files to replace a stale cache, and kill and start back up a process. I asked Claude to write the code. Low and behold, the output didn't work, just like the same code I'd been testing and was building this tool to assist with in testing. This time I thought about how there's only a copy, a paste, a kill process, and lastly a start process set of operations involved. That's just 4 operations: read, write, kill PID, and start process.exe. But when I looked at Claude's code, it was over 70 lines. As I started working through it, it didn't make sense and I started finding things that were not needed at all. Then I decided to manually create this script, and ended up with just 28 lines in comparison, using the same styling and lack of comments he used. And mine worked. It took about 20 or 30 minutes, and it only takes him not even 30 seconds to create something like that. But his solution was nearly 3x as long and did not work. It was poorly structured, included pointless, redundant code, and failed to do the things I told him I needed it to do. This was the point I thought to myself that instead of looking to everyone else's thinking, I'd try to think through this on my own.</p>
+
+      <p>Then an epiphany came: one way to make these models better on my own was not by fine-tuning or training from the start all over again, but rather to do something pretty simple and widely-applied in other scenarios: take the AI out of the problem. Instead of worrying about it reasoning correctly, you remove that reasoning aspect where you can. The model is taking your natural language input, trying to match that to what looks most to it like the highest scored output, then taking this base concept and extrapolating other abstractions or the actual logic and code that makes up your output. If it's the problem, get rid of it. And the place to do that is in the very place that produces the problems: the code generation. He gets what I want (generally), he creates good specification documents and outlines (I keep those on the big ones), but he fumbles miserably when it comes to the code. Even if it works, it's bloated and inefficient. This led me to the final form of this project: addition of something higher-level than the logical, algebraic expression you see in effectively all widely-used, modern languages. In its place would be something that's a more barebones system of syntax. It doesn't use logic, but rather things and their associated operations, with the others being details. This is the form that came from just starting from the point of composing what something that's shorter on logic and longer on compactness and relation to spoken terms regarding software. The natural language aim was a key goal from the very beginning. What I found was that what I had written out was basically the same schema-based syntax that you find in JSON, YAML, and even SQL, among others. As I mention in the more formal whitepaper-format of the what and how for this endeavor, this was something that had happened in software several times, and was a natural progression away from logic towards exactly the ideas I had wanted.</p>
+
+      <p>When you mention software or work you've done, you talk about things and you associate things to data you're working with, the packages you have dependencies for, the workbook, the json file, the endpoint – all those virtual entities. All these things are associated with actions – read data, write data, make an API call, send this query, etc. And everything else just becomes an associated detail of those two aspects. I now had something that encompassed a language with the following traits:</p>
     </div>
-    <div class="readme-conclusion">No novel ideas, no reinventing the wheel. The syntax decisions borrow from what already exists across C, Python, and others — the goal is to unify and minimize, not to invent. The runtime configuration layer formalizes choices that languages already make implicitly, just without giving you a say. And the schema expression layer applies the same pattern that worked in SQL, HTML, CSS, and JSON to general application programming. The USAMS document linked below covers this in full if you want the complete argument.</div>
+
+    <div class="readme-lang-compare">
+      <p>System of unified syntax</p>
+      <p>Conversion to and from core languages comprising the bulk of modern software</p>
+      <p>A language that kept most of the power and flexibility for a single super language</p>
+      <p>A language that simultaneously minimized what's lost to keep that power and flexibility instead of a weak substitute that's not good in any particular direction</p>
+      <p>Serves as a Proof of Concept for an idea that, at least at this time, I haven't seen proven, though a couple research works outline such a system that were published in just the last couple of years</p>
+      <p>Continues the progression of software languages towards schema instead of logic</p>
+      <p>Bears striking resemblance to the two effects and disruptions of assembly and C</p>
+      <p>Stands poised to benefit from a large culmination of factors pointing the space in this same direction</p>
+      <p>Improves quality of the code written by LLM agents that are rapidly being adopted</p>
+      <p>Promotes this new paradigm of agents in coding as a learning tool rather than a cheap contraption that only those with experience or even furthermore specific use cases and careful handling can benefit from</p>
+    </div>
+
+    <div class="readme-body">
+      <p>I'm not going to list out everything here. The key idea I'm trying to express is that did the following:</p>
+    </div>
+
+    <div class="readme-lang-compare">
+      <p>Started with an idea of building a kernel with a language that would compile to C</p>
+      <p>Arrived at a language which converted to and from Java, C, Python, and JavaScript (the bulk of modern software)</p>
+      <p>Then came to something that additionally took the idea of the runtime as a setting (you can mimic the behavior of the environment you want)</p>
+      <p>And last arrived at a bigger solution overall that truly rested upon a broader top layer (you use a new form of expression in programming altogether)</p>
+    </div>
+
+    <div class="readme-body">
+      <p>This is a large undertaking. Help from the community makes this a quicker reality, adds brainpower to this process and outcome, and allows for that same curiosity and energy the Claude and other agents create in this new era to be multiplied between us in teams. As you read through the site, take note now that this is the design documentation and drafts. I do keep some other paperwork locally, but this website serves as the source of truth. I intend not only to host the reference here, but also later the work as it's ongoing – detailing what has happened, what we've found, any fun findings or stories along the way, and anything else I think makes this a logged and able-to-be-revisited project. There's a lot to learn, and writing things down makes them known forever, not to mention serves as a source of information to someone else, for something that there may be sparse information for otherwise.</p>
+
+      <p>That's probably as much narrative as I've written in the past few months at all or maybe even ever; I'm not sure. This is not about me, it's about what's going on here. I want others to get as excited about it as I am. So without taking up any more room on your screen with data about me, I want to thank you for taking the time to explore this site and what I'm doing. You can also contact me via an email address listed on the explanation page. <a href="usams/index.html" style="color:#5c2d91;">That document serves as the single, formal why.</a> This is the totally informal why. It's the "what is this guy thinking?" answer. I hope that did provide an answer or a nice break from some deeper thinking.</p>
+
+      <p>Feel free to reach out – I'd love to hear from anyone about their thoughts. Below are a few overarching, basic details I thought I'd add as an ending that gives some slight direction and starts you down the formal path.</p>
+
+      <p><em>Tariq</em></p>
+    </div>
+
+    <hr style="border:none; border-top:1px solid #ddd; margin:48px 0;">
+
+    <div class="readme-body">
+      <p><strong>Q: What is this called?</strong></p>
+      <p>USAMS — Unified Syntactical and Architectural Model for Software. One syntax that covers the range from low-level systems work to high-level application development. Runtime behavior that is declared rather than inherited from whichever language you happened to pick. And a schema-based expression layer that describes what a program does in the same terms you would use to explain it to another person, rather than the terms required to build it in an IDE.</p>
+      <p>This is a hobby project and an ongoing design exercise, not a product. The work is documented as it develops. Feedback and collaboration from people who find this worth thinking about is genuinely welcome.</p>
+
+      <p><strong>Q: What's some differences in runtime behaviors?</strong></p>
+      <p>Rust already toggles safety with unsafe blocks. Inside unsafe, you get raw pointers, manual memory, no borrow checker. Outside, you get full safety guarantees. Same language, two modes, toggled per-block.</p>
+      <p>C# has unsafe context too, by letting you use pointers and fixed-size buffers, opting out of GC for that scope.</p>
+      <p>D has @nogc annotation, which marks functions that aren't allowed to allocate from the garbage collector. You can mix GC and manual memory in the same program.</p>
+      <p>Zig lets you choose allocators per-call. You can have arena allocation in one place, general purpose style allocation in another, with no allocation at all in some hot path. You pass the allocator explicitly.</p>
+      <p>Swift has both ARC (reference counting) and unsafe pointers available in the same language.</p>
+      <p>No language puts all of these on a single dial panel. Every one picks a default and lets you escape from it in limited ways. Here, you declare your policy and the compiler enforces it.</p>
+      <p>Every function, data structure, and IO operation works under all configurations. A linked list under GC doesn't need a destructor. Under manual memory it does. Under refcount it needs weak reference support. These are the sorts of things that are a coverage goal, and is a necessary part of a system of unified syntax.</p>
+      <p>One standard library with an implementation of everything is the route to achieving a successful build for this concept. There's no novel ideas and reinventing the wheel, but rather just patching together and recreating past work. However, there is some design of interfacing and other systems that allow for co-existence of these systems.</p>
+      <p>The syntax decisions borrow from what already exists across C, Python, Java, and Javascript. The angle of attack in this component is to unify and minimize, not to invent. I want anyone to be able to see it and understand it. Verbosity is chosen over efficiency or what many might see as elegance. It's not something prioritizing functional programming; the entire personality and image being built is one revolving around practicality.</p>
+      <p>The component last mentioned and more towards a novel solution is described in <a href="usams/index.html" style="color:#5c2d91;">this USAMS document</a>. This is the formal argument and conceptual basis that covers this angle in its entirety.</p>
+    </div>
   </div>
 </div>
 
