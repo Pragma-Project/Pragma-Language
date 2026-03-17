@@ -676,6 +676,17 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
   <a href="#result-option">Result / Option</a>
   <a href="#killswitch">killswitch</a>
 
+  <div class="nav-section">Standard Library</div>
+  <a href="#stdlib-math">Math</a>
+  <a href="#stdlib-strings">Strings</a>
+  <a href="#stdlib-collections">Collections</a>
+  <a href="#stdlib-io">I/O</a>
+  <a href="#stdlib-memory">Memory</a>
+  <a href="#stdlib-concurrency">Concurrency</a>
+  <a href="#stdlib-types">Type System</a>
+  <a href="#stdlib-system">System</a>
+  <a href="#stdlib-random">Random</a>
+
   <div class="nav-section">Reference</div>
   <a href="#coming-from-c">Coming from C</a>
   <a href="safety.html">Safety &amp; MemProof ↗</a>
@@ -1019,6 +1030,206 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <pre><span class="kw">print</span> <span class="str">"hello world"</span>
 <span class="kw">print</span> <span class="str">"Score: "</span> <span class="op">+</span> change(score)-&gt;<span class="ty">string</span>
 <span class="kw">print</span> add(<span class="num">3</span>, <span class="num">7</span>)</pre>
+<p><code>prompt(msg)</code> prints <code>msg</code>, reads a line from stdin, and returns a <code>string</code>. C and Python targets only.</p>
+<pre><span class="ty">string</span> name = <span class="fn">prompt</span>(<span class="str">"Enter your name: "</span>)</pre>
+
+<hr>
+
+<h2 id="stdlib-math" class="anchor-target">Standard Library — Math</h2>
+<p>Import: <code>import Math</code>, or use the most common functions directly without an import.</p>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>absval(x)</code></td><td>Absolute value. Works on int, float, double. Compiler selects underlying function per type.</td><td>All</td></tr>
+  <tr><td><code>sqrt(x)</code></td><td>Square root. Returns same type as input.</td><td>All</td></tr>
+  <tr><td><code>pow(x, y)</code></td><td>x raised to power y. Returns float.</td><td>All</td></tr>
+  <tr><td><code>exp(x)</code></td><td>e raised to x. Returns float.</td><td>All</td></tr>
+  <tr><td><code>log(x)</code></td><td>Natural logarithm. Returns float.</td><td>All</td></tr>
+  <tr><td><code>log2(x)</code></td><td>Base-2 logarithm. Returns float.</td><td>All</td></tr>
+  <tr><td><code>log10(x)</code></td><td>Base-10 logarithm. Returns float.</td><td>All</td></tr>
+  <tr><td><code>sin(x)</code></td><td>Sine, radians. Returns float.</td><td>All</td></tr>
+  <tr><td><code>cos(x)</code></td><td>Cosine, radians. Returns float.</td><td>All</td></tr>
+  <tr><td><code>tan(x)</code></td><td>Tangent, radians. Returns float.</td><td>All</td></tr>
+  <tr><td><code>tanh(x)</code></td><td>Hyperbolic tangent. Returns float.</td><td>All</td></tr>
+  <tr><td><code>floor(x)</code></td><td>Round down. Returns float.</td><td>All</td></tr>
+  <tr><td><code>ceil(x)</code></td><td>Round up. Returns float.</td><td>All</td></tr>
+  <tr><td><code>round(x)</code></td><td>Round to nearest. Returns float.</td><td>All</td></tr>
+  <tr><td><code>min(a, b)</code></td><td>Minimum of two values. Works on int and float.</td><td>All</td></tr>
+  <tr><td><code>max(a, b)</code></td><td>Maximum of two values. Works on int and float.</td><td>All</td></tr>
+  <tr><td><code>clamp(v, lo, hi)</code></td><td>Clamp v between lo and hi inclusive.</td><td>All</td></tr>
+  <tr><td><code>Math.PI</code></td><td>3.14159265358979… Constant.</td><td>All</td></tr>
+  <tr><td><code>Math.E</code></td><td>2.71828182845904… Constant.</td><td>All</td></tr>
+</table>
+
+<hr>
+
+<h2 id="stdlib-strings" class="anchor-target">Standard Library — Strings</h2>
+<p>All string operations are methods on the string type. No import needed.</p>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>s.length</code></td><td>Number of characters. Property, not a function.</td><td>All</td></tr>
+  <tr><td><code>s.upper()</code></td><td>Return uppercase copy.</td><td>All</td></tr>
+  <tr><td><code>s.lower()</code></td><td>Return lowercase copy.</td><td>All</td></tr>
+  <tr><td><code>s.trim()</code></td><td>Remove leading and trailing whitespace.</td><td>All</td></tr>
+  <tr><td><code>s.split(delim)</code></td><td>Split by delimiter. Returns <code>string[]</code>.</td><td>All</td></tr>
+  <tr><td><code>s.join(list)</code></td><td>Join list of strings with s as separator.</td><td>All</td></tr>
+  <tr><td><code>s.starts_with(t)</code></td><td>True if s starts with t.</td><td>All</td></tr>
+  <tr><td><code>s.ends_with(t)</code></td><td>True if s ends with t.</td><td>All</td></tr>
+  <tr><td><code>s.replace(a, b)</code></td><td>Replace all occurrences of a with b. Returns new string.</td><td>All</td></tr>
+  <tr><td><code>s.find(t)</code></td><td>Index of first occurrence of t. Returns -1 if not found.</td><td>All</td></tr>
+  <tr><td><code>s[i:j]</code></td><td>Substring from index i to j exclusive.</td><td>All</td></tr>
+  <tr><td><code>s + t</code></td><td>Concatenation.</td><td>All</td></tr>
+  <tr><td><code>s == t</code></td><td>String equality comparison.</td><td>All</td></tr>
+  <tr><td><code>change(x)-&gt;string</code></td><td>Convert any value to its string representation.</td><td>All</td></tr>
+  <tr><td><code>t in s</code></td><td>True if t is a substring of s.</td><td>All</td></tr>
+</table>
+
+<hr>
+
+<h2 id="stdlib-collections" class="anchor-target">Standard Library — Collections</h2>
+
+<h3>List</h3>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>list.append(x)</code></td><td>Add x to end of list.</td><td>All</td></tr>
+  <tr><td><code>list.remove(x)</code></td><td>Remove first occurrence of x.</td><td>All</td></tr>
+  <tr><td><code>list.pop()</code></td><td>Remove and return last element.</td><td>All</td></tr>
+  <tr><td><code>list.pop(i)</code></td><td>Remove and return element at index i.</td><td>All</td></tr>
+  <tr><td><code>list.insert(i, x)</code></td><td>Insert x at index i.</td><td>All</td></tr>
+  <tr><td><code>list.length</code></td><td>Number of elements. Property.</td><td>All</td></tr>
+  <tr><td><code>list.sort()</code></td><td>Sort ascending in place.</td><td>All</td></tr>
+  <tr><td><code>list.sort(fn)</code></td><td>Sort in place using comparison function fn.</td><td>All</td></tr>
+  <tr><td><code>list.reverse()</code></td><td>Reverse in place.</td><td>All</td></tr>
+  <tr><td><code>list.clear()</code></td><td>Remove all elements.</td><td>All</td></tr>
+  <tr><td><code>list[i:j]</code></td><td>Sublist from index i to j exclusive.</td><td>All</td></tr>
+  <tr><td><code>x in list</code></td><td>True if x is in the list. Compiler emits linear search for C target.</td><td>All</td></tr>
+</table>
+
+<h3>Map</h3>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>map[key]</code></td><td>Read value at key.</td><td>All</td></tr>
+  <tr><td><code>map[key] = val</code></td><td>Write value at key.</td><td>All</td></tr>
+  <tr><td><code>map_has(key)</code></td><td>True if key exists.</td><td>All</td></tr>
+  <tr><td><code>map_remove(key)</code></td><td>Remove key.</td><td>All</td></tr>
+  <tr><td><code>map.keys()</code></td><td>Returns list of all keys.</td><td>All</td></tr>
+  <tr><td><code>map.values()</code></td><td>Returns list of all values.</td><td>All</td></tr>
+  <tr><td><code>map.length</code></td><td>Number of entries. Property.</td><td>All</td></tr>
+  <tr><td><code>key in map</code></td><td>True if key exists. Equivalent to <code>map_has(key)</code>.</td><td>All</td></tr>
+</table>
+
+<hr>
+
+<h2 id="stdlib-io" class="anchor-target">Standard Library — I/O</h2>
+
+<h3>Terminal</h3>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>print x</code></td><td>Print value to stdout with newline.</td><td>All</td></tr>
+  <tr><td><code>prompt(msg)</code></td><td>Read line from stdin. Returns string.</td><td>C, Python only</td></tr>
+</table>
+
+<h3>File</h3>
+<p>File operations use the <code>file</code> stdlib type. <code>open()</code> returns a file object.</p>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>file f = open(path)</code></td><td>Open file for reading.</td><td>All</td></tr>
+  <tr><td><code>file f = open(path, 'w')</code></td><td>Open file for writing. Creates if not exists, truncates if exists.</td><td>All</td></tr>
+  <tr><td><code>file f = open(path, 'a')</code></td><td>Open file for appending.</td><td>All</td></tr>
+  <tr><td><code>f.read()</code></td><td>Read entire file as string.</td><td>All</td></tr>
+  <tr><td><code>f.read_bytes(n)</code></td><td>Read n bytes. Returns <code>uint8[]</code>.</td><td>All</td></tr>
+  <tr><td><code>f.read_line()</code></td><td>Read one line. Returns string.</td><td>All</td></tr>
+  <tr><td><code>f.write(s)</code></td><td>Write string to file.</td><td>All</td></tr>
+  <tr><td><code>f.write_bytes(buf, n)</code></td><td>Write n bytes from buffer.</td><td>All</td></tr>
+  <tr><td><code>f.close()</code></td><td>Close file.</td><td>All</td></tr>
+  <tr><td><code>f.seek(n)</code></td><td>Move file position to byte n.</td><td>All</td></tr>
+  <tr><td><code>f.tell()</code></td><td>Return current file position as int.</td><td>All</td></tr>
+  <tr><td><code>f.eof()</code></td><td>True if at end of file.</td><td>All</td></tr>
+  <tr><td><code>file.exists(path)</code></td><td>True if file exists at path.</td><td>All</td></tr>
+  <tr><td><code>file.delete(path)</code></td><td>Delete file at path.</td><td>All</td></tr>
+</table>
+
+<hr>
+
+<h2 id="stdlib-memory" class="anchor-target">Standard Library — Memory</h2>
+<p>All memory functions are Base UL only. Requires <code>memory: manual</code> in the DR block.</p>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>memtake(n)</code></td><td>Allocate n bytes on the heap. Returns <code>none &lt;ptr&gt;</code>.</td><td>C only — Base UL</td></tr>
+  <tr><td><code>memgive(&lt;ptr&gt;)</code></td><td>Free heap allocation at ptr.</td><td>C only — Base UL</td></tr>
+  <tr><td><code>memmove(dst, src, n)</code></td><td>Move n bytes from src to dst. Handles overlapping regions.</td><td>C only — Base UL</td></tr>
+  <tr><td><code>memcopy(dst, src, n)</code></td><td>Copy n bytes from src to dst. No overlap handling. C: memcpy.</td><td>C only — Base UL</td></tr>
+  <tr><td><code>memset(&lt;ptr&gt;, val, n)</code></td><td>Set n bytes at ptr to val.</td><td>C only — Base UL</td></tr>
+  <tr><td><code>size(T)</code></td><td>Byte size of type T. C: sizeof(T).</td><td>C only — Base UL</td></tr>
+  <tr><td><code>arena a = arena.new()</code></td><td>Create arena allocator.</td><td>C only — Base UL</td></tr>
+  <tr><td><code>a.alloc(n)</code></td><td>Allocate n bytes from arena.</td><td>C only — Base UL</td></tr>
+  <tr><td><code>a.free()</code></td><td>Free entire arena at once.</td><td>C only — Base UL</td></tr>
+</table>
+
+<hr>
+
+<h2 id="stdlib-concurrency" class="anchor-target">Standard Library — Concurrency</h2>
+<p>Concurrency behavior is declared in the DR block via the <code>concurrency:</code> setting. See the Dynamic Runtime page for full details.</p>
+
+<h3>Threads (concurrency: threaded)</h3>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>Thread t = Thread.new(fn)</code></td><td>Create thread running function fn.</td><td>C, Python</td></tr>
+  <tr><td><code>t.start()</code></td><td>Start thread.</td><td>C, Python</td></tr>
+  <tr><td><code>t.join()</code></td><td>Wait for thread to finish.</td><td>C, Python</td></tr>
+  <tr><td><code>Mutex m = Mutex.new()</code></td><td>Create mutex.</td><td>C, Python</td></tr>
+  <tr><td><code>m.lock()</code></td><td>Acquire mutex. Blocks until available.</td><td>C, Python</td></tr>
+  <tr><td><code>m.unlock()</code></td><td>Release mutex.</td><td>C, Python</td></tr>
+  <tr><td><code>m.try_lock()</code></td><td>Attempt to acquire. Returns bool.</td><td>C, Python</td></tr>
+</table>
+
+<h3>Parallel (concurrency: parallel)</h3>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>parallel for i=0, i&lt;n, i++</code></td><td>Run loop iterations in parallel across CPU cores. C: OpenMP. Python: multiprocessing.Pool.</td><td>C, Python only</td></tr>
+</table>
+
+<h3>Async (concurrency: async)</h3>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>@async function f()</code></td><td>Mark function as a coroutine.</td><td>Python, JS only</td></tr>
+  <tr><td><code>@await expr</code></td><td>Suspend until expr resolves.</td><td>Python, JS only</td></tr>
+</table>
+
+<hr>
+
+<h2 id="stdlib-types" class="anchor-target">Standard Library — Type System</h2>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>typeof(x)</code></td><td>Returns string name of type. e.g. <code>'int'</code>, <code>'float'</code>, <code>'Player'</code>.</td><td>All</td></tr>
+  <tr><td><code>change(x)-&gt;T</code></td><td>Cast x to type T. Truncates float-to-int.</td><td>All</td></tr>
+  <tr><td><code>size(T)</code></td><td>Byte size of type T. Base UL only.</td><td>C only — Base UL</td></tr>
+  <tr><td><code>x is T</code></td><td>True if x is an instance of type T.</td><td>All</td></tr>
+  <tr><td><code>x in collection</code></td><td>True if x is in collection. Keyword, not a function.</td><td>All</td></tr>
+</table>
+
+<hr>
+
+<h2 id="stdlib-system" class="anchor-target">Standard Library — System</h2>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>abort()</code></td><td>Terminate program immediately with non-zero exit code.</td><td>All</td></tr>
+  <tr><td><code>exit(code)</code></td><td>Exit program with given return code.</td><td>All</td></tr>
+  <tr><td><code>args()</code></td><td>Returns <code>string[]</code> of command line arguments.</td><td>C, Python only</td></tr>
+  <tr><td><code>env(name)</code></td><td>Returns value of environment variable. Returns <code>Option(string)</code>.</td><td>C, Python only</td></tr>
+  <tr><td><code>time()</code></td><td>Returns current Unix timestamp as int64.</td><td>All</td></tr>
+  <tr><td><code>clock()</code></td><td>High-resolution timer for benchmarking. Returns int64 nanoseconds.</td><td>All</td></tr>
+  <tr><td><code>sleep(ms)</code></td><td>Sleep for ms milliseconds.</td><td>All</td></tr>
+</table>
+
+<hr>
+
+<h2 id="stdlib-random" class="anchor-target">Standard Library — Random</h2>
+<table>
+  <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
+  <tr><td><code>rand()</code></td><td>Returns random float between 0.0 and 1.0.</td><td>All</td></tr>
+  <tr><td><code>rand_int(lo, hi)</code></td><td>Returns random int between lo and hi inclusive.</td><td>All</td></tr>
+  <tr><td><code>rand_seed(n)</code></td><td>Set random seed for reproducibility.</td><td>All</td></tr>
+</table>
 
 <hr>
 
