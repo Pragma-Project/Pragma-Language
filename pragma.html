@@ -5,651 +5,281 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pragma</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 <style>
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 1.65;
-  color: #1c1c1c;
-  background: #f4f5f7;
-  display: flex;
+  background: #13130a;
+  color: #d4cebc;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   min-height: 100vh;
-}
-
-/* ── SIDEBAR ── */
-nav {
-  position: fixed;
-  top: 0; left: 0;
-  width: 220px;
-  height: 100vh;
-  overflow-y: auto;
-  padding: 28px 0 40px;
-  z-index: 100;
-  background: #1a1a0a;
-  border-right: 1px solid #2e2e10;
-}
-
-.nav-logo {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 0 20px 16px;
-  border-bottom: 1px solid #2e2e10;
-  margin-bottom: 8px;
-}
-
-.nav-logo img {
-  height: 32px;
-  width: auto;
-  filter: brightness(1.1);
-}
-
-.nav-section {
-  margin-top: 16px;
-  padding: 2px 20px 4px;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #5a5a20;
-  font-family: 'Inter', sans-serif;
-}
-
-nav a {
-  display: block;
-  padding: 5px 20px;
-  text-decoration: none;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  color: #9a9a60;
-  border-left: 3px solid transparent;
-  transition: all 0.1s;
-}
-nav a:hover {
-  background: #252510;
-  color: #d4d4a0;
-  border-left-color: #c8a030;
-}
-
-.nav-back {
-  display: block;
-  padding: 5px 20px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: #9a9a60;
-  text-decoration: none;
-  margin-bottom: 8px;
-  transition: color 0.1s;
-}
-.nav-back:hover { color: #d4d4a0; }
-
-/* ── MAIN ── */
-main {
-  margin-left: 220px;
-  padding: 52px 72px 100px 64px;
-  max-width: 960px;
-  width: 100%;
 }
 
 /* ── HEADER ── */
-.page-header {
-  padding-bottom: 32px;
-  margin-bottom: 48px;
+header {
+  width: 100%;
+  padding: 52px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 1px solid #2a2a14;
+}
+
+.header-logo-row {
   display: flex;
   align-items: center;
-  gap: 28px;
-  border-bottom: 2px solid #e0e0cc;
-}
-
-.header-logo {
-  height: clamp(60px, 8vw, 90px);
-  width: auto;
-  flex-shrink: 0;
-}
-
-.header-text h1 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 2.2rem;
-  font-weight: 400;
-  color: #1a1a0a;
-  letter-spacing: -0.01em;
-  margin-bottom: 6px;
-}
-
-.header-text .tagline {
-  font-size: 0.95rem;
-  color: #5a5a30;
-  font-style: italic;
-  line-height: 1.5;
-  max-width: 560px;
-}
-
-/* ── SECTIONS ── */
-h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1a1a0a;
-  margin: 52px 0 6px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #ddddc8;
-  scroll-margin-top: 32px;
-}
-
-h3 {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #3a3a10;
-  margin: 28px 0 8px;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.04em;
-}
-
-p {
-  color: #374151;
+  gap: 16px;
   margin-bottom: 14px;
-  max-width: 740px;
 }
 
-/* ── WHAT IT IS ── */
-.what-box {
-  background: #fff;
-  border: 1px solid #ddddc8;
-  border-left: 4px solid #c8a030;
-  border-radius: 0 6px 6px 0;
-  padding: 18px 22px;
-  margin: 20px 0;
-  max-width: 740px;
+.header-logo-row img {
+  height: 48px;
+  width: auto;
 }
-.what-box p { margin: 0; color: #2a2a10; font-size: 0.96rem; line-height: 1.7; }
 
-/* ── BOUNDARY BOX ── */
-.boundary-grid {
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #e8dfc8;
+  letter-spacing: 0.02em;
+}
+
+header .tagline {
+  font-size: 0.95rem;
+  color: #7a7a5a;
+  font-weight: 300;
+  max-width: 520px;
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+header .lang-credit {
+  margin-top: 12px;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: #5a5a3a;
+}
+
+header .lang-credit a {
+  color: #c8a030;
+  text-decoration: none;
+  border-bottom: 1px dotted #c8a030;
+}
+
+/* ── MAIN ── */
+main {
+  width: 100%;
+  max-width: 1080px;
+  padding: 56px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+.compare-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #5a5a3a;
+  align-self: flex-start;
+}
+
+/* ── SIDE-BY-SIDE ── */
+.compare {
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 20px 0;
-  max-width: 740px;
-}
-.boundary-col {
-  background: #fff;
-  border: 1px solid #ddddc8;
-  border-radius: 6px;
-  padding: 16px 18px;
-}
-.boundary-col h4 {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.boundary-col.yes h4 { color: #3a7a3a; }
-.boundary-col.no  h4 { color: #7a3a3a; }
-.boundary-col ul {
-  list-style: none;
-  font-size: 13px;
-  color: #374151;
-  line-height: 2;
-}
-.boundary-col.yes ul li::before { content: "✓  "; color: #3a7a3a; }
-.boundary-col.no  ul li::before { content: "✗  "; color: #7a3a3a; }
-
-/* ── SYNTAX RULES ── */
-.rule-list {
-  margin: 16px 0;
-  max-width: 740px;
-}
-.rule {
-  display: flex;
-  gap: 14px;
-  padding: 10px 0;
-  border-bottom: 1px solid #eeeedd;
-  align-items: baseline;
-}
-.rule:last-child { border-bottom: none; }
-.rule-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: #c8a030;
-  white-space: nowrap;
-  min-width: 160px;
-  flex-shrink: 0;
-}
-.rule-desc {
-  font-size: 13.5px;
-  color: #374151;
-  line-height: 1.5;
-}
-
-/* ── ACTION BLOCKS ── */
-.action-block {
-  background: #fff;
-  border: 1px solid #ddddc8;
-  border-radius: 6px;
-  margin: 20px 0;
+  gap: 2px;
+  border-radius: 8px;
   overflow: hidden;
+  border: 1px solid #2a2a14;
 }
 
-.action-header {
+.pane {
+  background: #1a1a0e;
+  padding: 0;
   display: flex;
-  align-items: baseline;
-  gap: 14px;
-  padding: 12px 20px 10px;
-  background: #f8f8ee;
-  border-bottom: 1px solid #ddddc8;
+  flex-direction: column;
 }
 
-.action-name {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 15px;
+.pane-header {
+  padding: 10px 18px;
+  font-size: 0.73rem;
   font-weight: 500;
-  color: #c8a030;
-}
-
-.action-desc {
-  font-size: 13px;
-  color: #5a5a30;
-  font-style: italic;
-}
-
-.action-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.action-table th {
-  text-align: left;
-  padding: 8px 20px;
-  background: #f4f4e8;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #7a7a40;
-  border-bottom: 1px solid #eeeedd;
+  border-bottom: 1px solid #2a2a14;
 }
 
-.action-table td {
-  padding: 8px 20px;
-  border-bottom: 1px solid #f0f0e0;
-  vertical-align: top;
-}
-.action-table tr:last-child td { border-bottom: none; }
+.pane-header.python { color: #7a8a6a; background: #161610; }
+.pane-header.pragma { color: #c8a030; background: #161610; }
 
-.action-table td:first-child {
+.pane pre {
   font-family: 'JetBrains Mono', monospace;
-  color: #3a3a10;
-  white-space: nowrap;
-  width: 140px;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  padding: 22px 20px;
+  overflow-x: auto;
+  flex: 1;
+  color: #b0a88a;
 }
 
-.action-table td:nth-child(2) {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: #7a7a40;
+.pane.pragma-pane pre {
+  color: #c8c0a0;
 }
 
-.action-table td:nth-child(3) {
-  color: #374151;
-  line-height: 1.5;
+/* Python syntax colouring */
+.py-kw   { color: #c792ea; }
+.py-fn   { color: #82aaff; }
+.py-str  { color: #c3e88d; }
+.py-cm   { color: #4a5a3a; font-style: italic; }
+.py-num  { color: #f78c6c; }
+.py-var  { color: #b0a88a; }
+
+/* Pragma syntax colouring */
+.pr-action { color: #c8a030; font-weight: 500; }
+.pr-key    { color: #82aaff; }
+.pr-val    { color: #c3e88d; }
+.pr-name   { color: #e8dfc8; }
+.pr-cm     { color: #4a5a3a; font-style: italic; }
+
+/* ── BUTTON ── */
+.ref-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 13px 36px;
+  background: #c8a030;
+  color: #13130a;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.18s;
 }
 
-/* ── CODE EXAMPLE ── */
-.example {
-  background: #1a1a0a;
-  border-radius: 6px;
-  padding: 20px 24px;
-  margin: 20px 0;
-  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
-  font-size: 13px;
-  line-height: 2;
-  color: #d4d4a0;
-  max-width: 740px;
-}
+.ref-btn:hover { background: #d4b040; }
 
-.ex-action  { color: #c8a030; font-weight: 500; }
-.ex-key     { color: #89b4fa; }
-.ex-val     { color: #a6e3a1; }
-.ex-str     { color: #f9e2af; }
-.ex-name    { color: #cba6f7; }
-.ex-cm      { color: #5a5a30; font-style: italic; }
-.ex-indent  { padding-left: 20px; display: block; }
-
-/* ── BIDIR NOTE ── */
-.bidir-note {
-  background: #f8f8ee;
-  border: 1px solid #ddddc8;
-  border-left: 4px solid #89b4fa;
-  border-radius: 0 6px 6px 0;
-  padding: 14px 18px;
-  margin: 20px 0;
-  font-size: 14px;
-  color: #2a2a10;
-  max-width: 740px;
-  line-height: 1.65;
+.nav-back {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  color: #5a5a3a;
+  text-decoration: none;
+  margin-bottom: -16px;
 }
+.nav-back:hover { color: #c8a030; }
 
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="nav-back">← UniLogic Home</a>
-  <div class="nav-logo">
+<header>
+  <div class="header-logo-row">
     <img src="logo.png" alt="Pragma">
+    <h1>Pragma</h1>
   </div>
-
-  <div class="nav-section">Overview</div>
-  <a href="#what">What it is</a>
-  <a href="#syntax">Syntax rules</a>
-  <a href="#example">Code example</a>
-
-  <div class="nav-section">Actions</div>
-  <a href="#fetch">fetch</a>
-  <a href="#save">save</a>
-  <a href="#convert">convert</a>
-  <a href="#query">query</a>
-  <a href="#delete">delete</a>
-  <a href="#notify">notify</a>
-  <a href="#schedule">schedule</a>
-  <a href="#input">input</a>
-  <a href="#output">output</a>
-  <a href="#auth">auth</a>
-
-  <div class="nav-section">Reference</div>
-  <a href="#bidir">Compilation</a>
-  <a href="#boundary">Scope</a>
-</nav>
+  <p class="tagline">A declarative pipeline language for data movement. Replace scripts with structure.</p>
+  <p class="lang-credit">Pragma is part of the <a href="https://LANG-language-proj.github.io/">LANG Project</a>.</p>
+</header>
 
 <main>
 
-<div class="page-header">
-  <img src="logo.png" alt="Pragma" class="header-logo">
-  <div class="header-text">
-    <h1>Pragma</h1>
-    <p class="tagline">A backend data movement layer for stateless sequential pipelines.<br>Sits above UniLogic — not a replacement for programming.</p>
-    <p style="margin-top:10px; font-family:'Inter',sans-serif; font-size:0.78rem; font-style:italic; color:#6c7a8a; font-weight:300;">Pragma is part of the <a href="https://LANG-language-proj.github.io/" style="color:#c8a030; text-decoration:none; border-bottom:1px dotted #c8a030;">LANG Project</a>.</p>
+  <a class="nav-back" href="index.html">← UniLogic</a>
+
+  <span class="compare-label">The same pipeline — Python vs Pragma</span>
+
+  <div class="compare">
+
+    <!-- PYTHON PANE -->
+    <div class="pane">
+      <div class="pane-header python">Python</div>
+      <pre><span class="py-kw">import</span> requests
+<span class="py-kw">import</span> json
+<span class="py-kw">import</span> csv
+<span class="py-kw">import</span> os
+
+<span class="py-var">API_URL</span> = <span class="py-str">"https://api.openalex.org/works"</span>
+<span class="py-var">params</span> = {
+    <span class="py-str">"filter"</span>: <span class="py-str">"concept.id:C41008148"</span>,
+    <span class="py-str">"per-page"</span>: <span class="py-num">100</span>,
+}
+<span class="py-var">headers</span> = {
+    <span class="py-str">"Authorization"</span>: <span class="py-str">"Bearer mytoken123"</span>
+}
+
+<span class="py-var">resp</span> = requests.<span class="py-fn">get</span>(<span class="py-var">API_URL</span>, params=<span class="py-var">params</span>, headers=<span class="py-var">headers</span>)
+<span class="py-kw">if</span> <span class="py-var">resp</span>.status_code != <span class="py-num">200</span>:
+    <span class="py-kw">raise</span> <span class="py-fn">Exception</span>(
+        <span class="py-str">f"Request failed: <span class="py-var">{resp.status_code}</span>"</span>
+    )
+
+<span class="py-var">data</span> = <span class="py-var">resp</span>.<span class="py-fn">json</span>()
+<span class="py-var">records</span> = <span class="py-var">data</span>.<span class="py-fn">get</span>(<span class="py-str">"results"</span>, [])
+
+<span class="py-var">rows</span> = []
+<span class="py-kw">for</span> <span class="py-var">r</span> <span class="py-kw">in</span> <span class="py-var">records</span>:
+    <span class="py-var">rows</span>.<span class="py-fn">append</span>({
+        <span class="py-str">"title"</span>: <span class="py-var">r</span>.<span class="py-fn">get</span>(<span class="py-str">"title"</span>, <span class="py-str">""</span>),
+        <span class="py-str">"year"</span>:  <span class="py-var">r</span>.<span class="py-fn">get</span>(<span class="py-str">"publication_year"</span>, <span class="py-str">""</span>),
+        <span class="py-str">"doi"</span>:   <span class="py-var">r</span>.<span class="py-fn">get</span>(<span class="py-str">"doi"</span>, <span class="py-str">""</span>),
+    })
+
+<span class="py-var">outpath</span> = <span class="py-str">"output/records.csv"</span>
+os.<span class="py-fn">makedirs</span>(<span class="py-str">"output"</span>, exist_ok=<span class="py-kw">True</span>)
+
+<span class="py-kw">with</span> <span class="py-fn">open</span>(<span class="py-var">outpath</span>, <span class="py-str">"w"</span>, newline=<span class="py-str">""</span>) <span class="py-kw">as</span> <span class="py-var">f</span>:
+    <span class="py-var">writer</span> = csv.<span class="py-fn">DictWriter</span>(
+        <span class="py-var">f</span>, fieldnames=[<span class="py-str">"title"</span>, <span class="py-str">"year"</span>, <span class="py-str">"doi"</span>]
+    )
+    <span class="py-var">writer</span>.<span class="py-fn">writeheader</span>()
+    <span class="py-var">writer</span>.<span class="py-fn">writerows</span>(<span class="py-var">rows</span>)
+
+<span class="py-fn">print</span>(<span class="py-str">f"Saved <span class="py-var">{len(rows)}</span> records to <span class="py-var">{outpath}</span>"</span>)</pre>
+    </div>
+
+    <!-- PRAGMA PANE -->
+    <div class="pane pragma-pane">
+      <div class="pane-header pragma">Pragma</div>
+      <pre><span class="pr-cm">// fetch from the API</span>
+<span class="pr-action">fetch:</span>
+      <span class="pr-key">from</span>=<span class="pr-val">[http or file]</span>
+      <span class="pr-key">source</span>=<span class="pr-val">https://api.openalex.org/works</span>
+      <span class="pr-key">auth</span>=<span class="pr-name">openalex_auth</span>
+      <span class="pr-key">format</span>=<span class="pr-val">json</span>
+      <span class="pr-key">structure</span>=<span class="pr-name">openalex.map</span>
+      <span class="pr-key">name</span>=<span class="pr-name">records</span>
+
+<span class="pr-cm">// convert to csv</span>
+<span class="pr-action">convert:</span>
+      <span class="pr-key">content</span>=<span class="pr-name">records</span>
+      <span class="pr-key">from</span>=<span class="pr-val">json</span>
+      <span class="pr-key">to</span>=<span class="pr-val">csv</span>
+      <span class="pr-key">name</span>=<span class="pr-name">report</span>
+
+<span class="pr-cm">// save to disk</span>
+<span class="pr-action">save:</span>
+      <span class="pr-key">to</span>=<span class="pr-val">file</span>
+      <span class="pr-key">dest</span>=<span class="pr-val">output/records.csv</span>
+      <span class="pr-key">content</span>=<span class="pr-name">report</span>
+      <span class="pr-key">format</span>=<span class="pr-val">csv</span>
+      <span class="pr-key">mode</span>=<span class="pr-val">overwrite</span></pre>
+    </div>
+
   </div>
-</div>
 
-<!-- ═══ WHAT IT IS ═══ -->
-<h2 id="what">What it is</h2>
-
-<div class="what-box">
-  <p>Pragma is a declarative pipeline language for data movement. Each pipeline is a flat sequence of named actions — fetch, convert, save, notify, and others — each with key-value attributes. There is no control flow, no variables in the programming sense, and no business logic. The output of one action becomes the input to the next by name assignment. When a pipeline requires branching, conditionals, or computation, that work belongs in UniLogic. Pragma generates UniLogic code; changes to the generated code fold back up into the Pragma representation.</p>
-</div>
-
-<!-- ═══ SYNTAX RULES ═══ -->
-<h2 id="syntax">Syntax rules</h2>
-<p>All Pragma pipelines follow the same flat indented structure regardless of what actions are used.</p>
-
-<div class="rule-list">
-  <div class="rule">
-    <span class="rule-label">action as header</span>
-    <span class="rule-desc">Each step opens with its action name followed by a colon. The action name is the only thing on that line.</span>
-  </div>
-  <div class="rule">
-    <span class="rule-label">key-value beneath</span>
-    <span class="rule-desc">Attributes are indented one level under the action header. Each attribute is <code>key=value</code> on its own line.</span>
-  </div>
-  <div class="rule">
-    <span class="rule-label">name= assigns output</span>
-    <span class="rule-desc"><code>name=identifier</code> captures the result of that step. Subsequent steps reference it by that identifier.</span>
-  </div>
-  <div class="rule">
-    <span class="rule-label">[a, b, c] — multi-value</span>
-    <span class="rule-desc">Square brackets with comma separation indicate a list of accepted or produced values.</span>
-  </div>
-  <div class="rule">
-    <span class="rule-label">[a or b or c] — fallback</span>
-    <span class="rule-desc">Square brackets with <code>or</code> separation indicate ordered fallback — try the first, fall back to the next on failure.</span>
-  </div>
-  <div class="rule">
-    <span class="rule-label">no nesting</span>
-    <span class="rule-desc">Actions do not nest inside each other. The pipeline is always a flat sequence. If nesting is needed, the logic belongs in UniLogic.</span>
-  </div>
-</div>
-
-<!-- ═══ CODE EXAMPLE ═══ -->
-<h2 id="example">Code example — fetch, convert, save</h2>
-<p>The most common Pragma pattern: pull data from a source, transform its format, write it to a destination.</p>
-
-<div class="example">
-<span class="ex-cm">// Step 1 — fetch JSON from an API endpoint</span><br>
-<span class="ex-action">fetch:</span><br>
-<span class="ex-indent"><span class="ex-key">from</span>=<span class="ex-val">[http or file]</span></span>
-<span class="ex-indent"><span class="ex-key">source</span>=<span class="ex-str">https://api.example.com/records</span></span>
-<span class="ex-indent"><span class="ex-key">auth</span>=<span class="ex-name">api_auth</span></span>
-<span class="ex-indent"><span class="ex-key">format</span>=<span class="ex-val">json</span></span>
-<span class="ex-indent"><span class="ex-key">structure</span>=<span class="ex-name">openalex.map</span></span>
-<span class="ex-indent"><span class="ex-key">name</span>=<span class="ex-name">raw_records</span></span>
-<br>
-<span class="ex-cm">// Step 2 — convert to xlsx for delivery</span><br>
-<span class="ex-action">convert:</span><br>
-<span class="ex-indent"><span class="ex-key">content</span>=<span class="ex-name">raw_records</span></span>
-<span class="ex-indent"><span class="ex-key">from</span>=<span class="ex-val">json</span></span>
-<span class="ex-indent"><span class="ex-key">to</span>=<span class="ex-val">xlsx</span></span>
-<span class="ex-indent"><span class="ex-key">name</span>=<span class="ex-name">report</span></span>
-<br>
-<span class="ex-cm">// Step 3 — save to cloud storage</span><br>
-<span class="ex-action">save:</span><br>
-<span class="ex-indent"><span class="ex-key">to</span>=<span class="ex-val">cloud</span></span>
-<span class="ex-indent"><span class="ex-key">dest</span>=<span class="ex-str">reports/monthly.xlsx</span></span>
-<span class="ex-indent"><span class="ex-key">content</span>=<span class="ex-name">report</span></span>
-<span class="ex-indent"><span class="ex-key">format</span>=<span class="ex-val">xlsx</span></span>
-<span class="ex-indent"><span class="ex-key">mode</span>=<span class="ex-val">overwrite</span></span>
-</div>
-
-<!-- ═══ ACTIONS ═══ -->
-<h2>Actions</h2>
-
-<!-- FETCH -->
-<div class="action-block" id="fetch">
-  <div class="action-header">
-    <span class="action-name">fetch</span>
-    <span class="action-desc">Retrieve data from an HTTP endpoint, local file, database, or browser source.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>from</td><td>[http or file or db or browser]</td><td>Source type. Ordered fallback — tries http first, falls back to file on failure.</td></tr>
-    <tr><td>source</td><td>address or fallback</td><td>URL, filepath, table name, or fallback address.</td></tr>
-    <tr><td>auth</td><td>authname</td><td>References a named <code>auth</code> step defined elsewhere in the pipeline.</td></tr>
-    <tr><td>format</td><td>[json or csv or html or text or xml]</td><td>Expected format of the fetched data.</td></tr>
-    <tr><td>structure</td><td>filename.map</td><td>Mapping file describing the message structure the source API expects. Used to normalise incoming data to a common schema.</td></tr>
-    <tr><td>name</td><td>identifier</td><td>Assigns the result for use in subsequent steps.</td></tr>
-  </table>
-</div>
-
-<!-- SAVE -->
-<div class="action-block" id="save">
-  <div class="action-header">
-    <span class="action-name">save</span>
-    <span class="action-desc">Write data to a file, database table, or cloud storage bucket.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>to</td><td>[file or db or cloud]</td><td>Destination type.</td></tr>
-    <tr><td>dest</td><td>filepath or table or bucket</td><td>Target path, table name, or bucket identifier.</td></tr>
-    <tr><td>content</td><td>name reference</td><td>The named result from a previous step to write.</td></tr>
-    <tr><td>format</td><td>[xlsx or csv or json or pdf or text]</td><td>Output format for the saved file.</td></tr>
-    <tr><td>mode</td><td>[overwrite or append or new]</td><td>How to handle an existing destination.</td></tr>
-    <tr><td>mapping</td><td>mapfile.conf</td><td>Optional field mapping configuration for schema translation.</td></tr>
-  </table>
-</div>
-
-<!-- CONVERT -->
-<div class="action-block" id="convert">
-  <div class="action-header">
-    <span class="action-name">convert</span>
-    <span class="action-desc">Transform data from one format to another using a named package.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>content</td><td>name reference</td><td>The named result to convert.</td></tr>
-    <tr><td>from</td><td>[json or csv or pdf or html or text or xml or xlsx]</td><td>Source format.</td></tr>
-    <tr><td>to</td><td>[json or csv or pdf or html or text or xml or xlsx]</td><td>Target format.</td></tr>
-    <tr><td>package</td><td>packagename</td><td>Conversion library or handler to use.</td></tr>
-    <tr><td>name</td><td>identifier</td><td>Assigns the converted result for use in subsequent steps.</td></tr>
-  </table>
-</div>
-
-<!-- QUERY -->
-<div class="action-block" id="query">
-  <div class="action-header">
-    <span class="action-name">query</span>
-    <span class="action-desc">Run a filtered field-selection query against a database table.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>from</td><td>db</td><td>Source must be a database connection.</td></tr>
-    <tr><td>source</td><td>tablename</td><td>The table to query.</td></tr>
-    <tr><td>where</td><td>"filter expression"</td><td>Filter condition as a quoted expression string.</td></tr>
-    <tr><td>fields</td><td>[field1, field2, ...]</td><td>List of fields to return. Omit for all fields.</td></tr>
-    <tr><td>limit</td><td>integer</td><td>Maximum number of rows to return.</td></tr>
-    <tr><td>name</td><td>identifier</td><td>Assigns the query result for use in subsequent steps.</td></tr>
-  </table>
-</div>
-
-<!-- DELETE -->
-<div class="action-block" id="delete">
-  <div class="action-header">
-    <span class="action-name">delete</span>
-    <span class="action-desc">Remove a file, database record set, or cloud object.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>from</td><td>[file or db or cloud]</td><td>Source type to delete from.</td></tr>
-    <tr><td>target</td><td>filepath or table or bucket</td><td>The specific file, table, or bucket to delete from.</td></tr>
-    <tr><td>where</td><td>"filter expression"</td><td>For database targets — limits deletion to matching rows.</td></tr>
-    <tr><td>confirm</td><td>[true or false]</td><td>Whether to require confirmation before executing. Default false.</td></tr>
-  </table>
-</div>
-
-<!-- NOTIFY -->
-<div class="action-block" id="notify">
-  <div class="action-header">
-    <span class="action-name">notify</span>
-    <span class="action-desc">Send a message via email, SMS, webhook, Slack, Discord, or popup.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>via</td><td>[email or sms or webhook or slack or discord or popup]</td><td>Delivery channel.</td></tr>
-    <tr><td>dest</td><td>address or channel</td><td>Recipient address, phone number, webhook URL, or channel name.</td></tr>
-    <tr><td>content</td><td>name reference or "literal"</td><td>The data to send or a literal message string.</td></tr>
-    <tr><td>subject</td><td>"subject line"</td><td>Optional subject for email notifications.</td></tr>
-    <tr><td>auth</td><td>authname</td><td>References a named <code>auth</code> step for authenticated channels.</td></tr>
-  </table>
-</div>
-
-<!-- SCHEDULE -->
-<div class="action-block" id="schedule">
-  <div class="action-header">
-    <span class="action-name">schedule</span>
-    <span class="action-desc">Attach a recurring trigger to a named action.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>action</td><td>actionname</td><td>The named step to schedule.</td></tr>
-    <tr><td>every</td><td>[5min or 1h or 1d or cron="..."]</td><td>Recurrence interval. Accepts shorthand or a full cron expression.</td></tr>
-    <tr><td>start</td><td>datetime</td><td>When to begin the schedule.</td></tr>
-    <tr><td>end</td><td>datetime</td><td>When to stop the schedule.</td></tr>
-    <tr><td>on_fail</td><td>[stop or skip or notify]</td><td>Behaviour if the scheduled action fails.</td></tr>
-  </table>
-</div>
-
-<!-- INPUT -->
-<div class="action-block" id="input">
-  <div class="action-header">
-    <span class="action-name">input</span>
-    <span class="action-desc">Prompt the user for a value at runtime — text, file, dropdown, or toggle.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>type</td><td>[text or file or dropdown or toggle]</td><td>The input control type.</td></tr>
-    <tr><td>label</td><td>"prompt string"</td><td>The text shown to the user when requesting input.</td></tr>
-    <tr><td>options</td><td>[opt1, opt2, opt3]</td><td>For dropdown — the list of available choices.</td></tr>
-    <tr><td>name</td><td>identifier</td><td>Assigns the user-provided value for use in subsequent steps.</td></tr>
-  </table>
-</div>
-
-<!-- OUTPUT -->
-<div class="action-block" id="output">
-  <div class="action-header">
-    <span class="action-name">output</span>
-    <span class="action-desc">Present a result to the console, UI, or file without saving it permanently.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>content</td><td>name reference</td><td>The named result to display.</td></tr>
-    <tr><td>to</td><td>[console or ui or file]</td><td>Destination for the output.</td></tr>
-    <tr><td>format</td><td>[table or raw or json]</td><td>How to render the output.</td></tr>
-    <tr><td>label</td><td>"display label"</td><td>Optional heading or label shown above the output.</td></tr>
-  </table>
-</div>
-
-<!-- AUTH -->
-<div class="action-block" id="auth">
-  <div class="action-header">
-    <span class="action-name">auth</span>
-    <span class="action-desc">Define a named authentication credential set for use by fetch, notify, or other steps.</span>
-  </div>
-  <table class="action-table">
-    <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>method</td><td>[apikey or oauth2 or basic or jwt or cert or ssh]</td><td>Authentication method.</td></tr>
-    <tr><td>credentials</td><td>secretsfile.conf</td><td>Path to the credentials file. Never inlined in the pipeline.</td></tr>
-    <tr><td>name</td><td>identifier</td><td>The name other steps use to reference this auth definition.</td></tr>
-    <tr><td>scope</td><td>"scope string"</td><td>Optional OAuth2 or API scope string.</td></tr>
-  </table>
-</div>
-
-<!-- ═══ COMPILATION ═══ -->
-<h2 id="bidir">Compilation</h2>
-
-<div class="bidir-note">
-  Pragma compiles to UniLogic. Each action in a pipeline generates the corresponding UL code — fetch becomes an HTTP call, convert becomes a format transformation function, save becomes a write operation. The generated UL is the authoritative output; Pragma is the high-level representation above it.<br><br>
-  Changes made directly in the generated UL fold back up: the compiler reads the modified UL, reconstructs the pipeline attributes that produced it, and updates the Pragma source to match. The two representations stay in sync.
-</div>
-
-<!-- ═══ SCOPE ═══ -->
-<h2 id="boundary">What Pragma covers — and what it doesn't</h2>
-
-<p>The boundary is stateless sequential pipelines. A step takes input, produces output, and does not depend on the results of steps other than those explicitly passed to it by name. If a pipeline step needs to examine its own previous output, branch on a condition, loop, maintain state, or perform computation beyond format transformation, it has left Pragma's domain.</p>
-
-<p>The natural test: if you can describe the step as an action with a flat set of attributes and a named result, it belongs in Pragma. If you need an <code>if</code>, a loop, a variable that accumulates across steps, or any logic that refers to itself — write it in UniLogic and call it from the pipeline.</p>
-
-<div class="boundary-grid">
-  <div class="boundary-col yes">
-    <h4>Pragma handles</h4>
-    <ul>
-      <li>Fetching data from a source</li>
-      <li>Converting between formats</li>
-      <li>Saving to a destination</li>
-      <li>Querying a database</li>
-      <li>Sending a notification</li>
-      <li>Scheduling a recurring action</li>
-      <li>Collecting user input</li>
-      <li>Displaying output</li>
-    </ul>
-  </div>
-  <div class="boundary-col no">
-    <h4>UniLogic handles</h4>
-    <ul>
-      <li>Conditional branching</li>
-      <li>Loops and iteration</li>
-      <li>Stateful accumulation</li>
-      <li>Business logic and computation</li>
-      <li>Error recovery with decisions</li>
-      <li>Anything that refers to itself</li>
-    </ul>
-  </div>
-</div>
+  <a class="ref-btn" href="pragma-reference.html">Language Reference →</a>
 
 </main>
+
 </body>
 </html>
