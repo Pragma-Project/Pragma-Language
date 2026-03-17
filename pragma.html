@@ -427,6 +427,7 @@ p {
 <span class="ex-indent"><span class="ex-key">source</span>=<span class="ex-str">https://api.example.com/records</span></span>
 <span class="ex-indent"><span class="ex-key">auth</span>=<span class="ex-name">api_auth</span></span>
 <span class="ex-indent"><span class="ex-key">format</span>=<span class="ex-val">json</span></span>
+<span class="ex-indent"><span class="ex-key">structure</span>=<span class="ex-name">openalex.map</span></span>
 <span class="ex-indent"><span class="ex-key">name</span>=<span class="ex-name">raw_records</span></span>
 <br>
 <span class="ex-cm">// Step 2 — convert to xlsx for delivery</span><br>
@@ -460,6 +461,7 @@ p {
     <tr><td>source</td><td>address or fallback</td><td>URL, filepath, table name, or fallback address.</td></tr>
     <tr><td>auth</td><td>authname</td><td>References a named <code>auth</code> step defined elsewhere in the pipeline.</td></tr>
     <tr><td>format</td><td>[json or csv or html or text or xml]</td><td>Expected format of the fetched data.</td></tr>
+    <tr><td>structure</td><td>filename.map</td><td>Mapping file describing the message structure the source API expects. Used to normalise incoming data to a common schema.</td></tr>
     <tr><td>name</td><td>identifier</td><td>Assigns the result for use in subsequent steps.</td></tr>
   </table>
 </div>
