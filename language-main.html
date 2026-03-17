@@ -737,7 +737,7 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
   <a href="#ann-alias">@alias</a>
 
   <div class="nav-section">Functions</div>
-  <a href="#ann-inline">@callembed</a>
+  <a href="#ann-inline">@hotcall</a>
   <a href="#ann-extends">@extends</a>
   <a href="#ann-operator">@operator</a>
   <a href="#ann-receiver">@receiver</a>
@@ -1259,9 +1259,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <div class="mods-grid">
 
     <div class="mods-card" id="ann-inline">
-      <div class="mods-card-name">@callembed</div>
+      <div class="mods-card-name">@hotcall</div>
       <div class="mods-card-desc">Substitutes the function body at every call site at compile time. No call overhead. Enforced — the compiler will not ignore it.</div>
-      <pre><span class="ann">@callembed</span>
+      <pre><span class="ann">@hotcall</span>
 <span class="kw">function</span> <span class="fn">clamp</span>(<span class="kw">int</span> v, <span class="kw">int</span> lo, <span class="kw">int</span> hi)
   <span class="kw">if</span> v <span class="op">&lt;</span> lo
     <span class="kw">return</span> lo
