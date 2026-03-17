@@ -28,4 +28,4 @@ UniLogic targets mathematically proven memory safety and functional correctness 
 
 ## Dynamic Runtime
 
-UniLogic exposes 10 runtime settings — memory model, allocator, overflow behaviour, stack size, bounds checking, float semantics, and more — declared per source file at compile time. See the [Runtime page](https://albazzaztariq.github.io/UniLogic/dynamic-runtime.html) for all settings.
+UniLogic exposes 9 runtime settings — memory model, allocator, overflow behaviour, stack size, bounds checking, float semantics, and more — declared per source file at compile time. See the [Runtime page](https://albazzaztariq.github.io/UniLogic/dynamic-runtime.html) for all settings.
