@@ -1377,13 +1377,12 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 
 <hr>
 
-<h2 id="base-mem" class="anchor-target">mem — Raw Address Access</h2>
+<h2 id="base-mem" class="anchor-target">Raw Address Access</h2>
 <p>Read or write at any numeric address. Used for memory-mapped hardware registers.</p>
 
-<pre><span class="ty">uint32</span> <span class="ang">&lt;</span>reg<span class="ang">&gt;</span> <span class="op">=</span> <span class="kw">address</span>(someVar)
-<span class="kw">mem</span>(<span class="ang">&lt;</span>reg<span class="ang">&gt;</span>)                          <span class="cm">// read at address reg</span>
-<span class="kw">mem</span>(<span class="ang">&lt;</span><span class="num">0xDEAD0000</span><span class="ang">&gt;</span>)                  <span class="cm">// read at hard-coded address</span>
-<span class="kw">mem</span>(<span class="ang">&lt;</span><span class="num">0xDEAD0000</span><span class="ang">&gt;</span>) <span class="op">=</span> <span class="num">1</span>              <span class="cm">// write to that address</span></pre>
+<pre><span class="ang">&lt;</span>reg<span class="ang">&gt;</span>                    <span class="cm">// read at address reg</span>
+<span class="ang">&lt;</span><span class="num">0xDEAD0000</span><span class="ang">&gt;</span>             <span class="cm">// read at hard-coded address</span>
+<span class="ang">&lt;</span><span class="num">0xDEAD0000</span><span class="ang">&gt;</span> <span class="op">=</span> <span class="num">1</span>         <span class="cm">// write to that address</span></pre>
 
 <hr>
 
@@ -1541,7 +1540,7 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   <tr><td><code>*ptr</code></td><td><code>deref(&lt;ptr&gt;)</code></td><td>Read or write through pointer</td></tr>
   <tr><td><code>*(ptr + n)</code></td><td><code>&lt;ptr&gt; + n</code></td><td>Pointer arithmetic — units are element size, not bytes</td></tr>
   <tr><td><code>sizeof(T)</code></td><td><code>size(T)</code></td><td>Byte size of type T</td></tr>
-  <tr><td><code>*(uint32*)0xDEAD</code></td><td><code>mem(&lt;0xDEAD&gt;)</code></td><td>Read/write at hard-coded address</td></tr>
+  <tr><td><code>*(uint32*)0xDEAD</code></td><td><code>&lt;0xDEAD&gt;</code></td><td>Read/write at hard-coded address</td></tr>
 </table>
 
 <h3>Control Flow</h3>
