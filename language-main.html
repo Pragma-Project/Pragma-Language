@@ -1000,7 +1000,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <p>UL has no exception syntax. There is no <code>try</code>, <code>catch</code>, <code>throw</code>, or <code>raise</code>. Errors are values. The standard library provides <code>Result</code> and <code>Option</code> — tagged union types that make error handling explicit and compiler-enforced.</p>
 
 <h3>Result</h3>
-<p><code>Result</code> has two variants: <code>ok</code> wrapping a success value, and <code>err</code> wrapping an error value with type information. You cannot use the success value without first unwrapping it — the compiler rejects code that ignores the error case.</p>
+<p><code>Result</code> has two variants: <code>ok</code> wrapping a success value, and <code>error</code> wrapping an error value with type information. You cannot use the success value without first unwrapping it — the compiler rejects code that ignores the error case.</p>
 <pre><span class="cm">// a function that can fail returns Result</span>
 <span class="kw">function</span> <span class="fn">read_file</span>(<span class="ty">string</span> path) <span class="kw">returns</span> Result&lt;<span class="ty">string</span>, IOError&gt;
   <span class="cm">// ...</span>
@@ -1009,13 +1009,13 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <span class="cm">// explicit match on both variants</span>
 <span class="kw">match</span> read_file(<span class="str">"data.txt"</span>)
   <span class="kw">ok</span>(contents)  <span class="op">→</span>  <span class="kw">print</span> contents
-  <span class="kw">err</span>(e)        <span class="op">→</span>  <span class="kw">print</span> <span class="str">"failed: "</span> + e.message
+  <span class="kw">error</span>(e)        <span class="op">→</span>  <span class="kw">print</span> <span class="str">"failed: "</span> + e.message
 <span class="kw">end match</span></pre>
 
 <h3>Propagation operator</h3>
-<p>Appending <code>?</code> to a call means: if the result is <code>err</code>, return that <code>err</code> from the current function immediately; if it is <code>ok</code>, unwrap the value and continue. The current function must itself return a compatible <code>Result</code> type.</p>
+<p>Appending <code>?</code> to a call means: if the result is <code>error</code>, return that <code>error</code> from the current function immediately; if it is <code>ok</code>, unwrap the value and continue. The current function must itself return a compatible <code>Result</code> type.</p>
 <pre><span class="kw">function</span> <span class="fn">process</span>(<span class="ty">string</span> path) <span class="kw">returns</span> Result&lt;<span class="ty">int</span>, IOError&gt;
-  <span class="ty">string</span> contents = read_file(path)<span class="op">?</span>   <span class="cm">// propagates err, unwraps ok</span>
+  <span class="ty">string</span> contents = read_file(path)<span class="op">?</span>   <span class="cm">// propagates error, unwraps ok</span>
   <span class="kw">return</span> <span class="kw">ok</span>(contents.length())
 <span class="kw">end function</span></pre>
 
@@ -1031,8 +1031,8 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <span class="kw">end match</span></pre>
 
 <h3>Transpilation boundary</h3>
-<p>When generating Python or JavaScript, the compiler wraps target-runtime calls in <code>try/except</code> or <code>try/catch</code> at the boundary and converts caught exceptions into <code>err</code> variants before they surface in UL code. The UL developer always sees <code>Result</code>. Exceptions from the target runtime are an implementation detail of the generated code.</p>
-<p>When XPile transpiles foreign code <em>into</em> UL, each source language's error mechanism is normalised: Python exceptions map to <code>err</code> variants with the exception type preserved; C error codes and null returns map to <code>err</code> variants; JavaScript promise rejections map to <code>err</code> in async contexts.</p>
+<p>When generating Python or JavaScript, the compiler wraps target-runtime calls in <code>try/except</code> or <code>try/catch</code> at the boundary and converts caught exceptions into <code>error</code> variants before they surface in UL code. The UL developer always sees <code>Result</code>. Exceptions from the target runtime are an implementation detail of the generated code.</p>
+<p>When XPile transpiles foreign code <em>into</em> UL, each source language's error mechanism is normalised: Python exceptions map to <code>error</code> variants with the exception type preserved; C error codes and null returns map to <code>error</code> variants; JavaScript promise rejections map to <code>error</code> in async contexts.</p>
 
 <hr>
 
