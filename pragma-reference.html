@@ -435,7 +435,6 @@ p {
 <div class="example">
 <span class="ex-cm">// Step 1 — fetch JSON from an API endpoint</span><br>
 <span class="ex-action">fetch:</span><br>
-<span class="ex-indent"><span class="ex-key">from</span>=<span class="ex-val">[http or file]</span></span>
 <span class="ex-indent"><span class="ex-key">source</span>=<span class="ex-str">https://api.example.com/records</span></span>
 <span class="ex-indent"><span class="ex-key">auth</span>=<span class="ex-name">api_auth</span></span>
 <span class="ex-indent"><span class="ex-key">format</span>=<span class="ex-val">json</span></span>
@@ -469,7 +468,7 @@ p {
   </div>
   <table class="action-table">
     <tr><th>Attribute</th><th>Values</th><th>Description</th></tr>
-    <tr><td>from</td><td>[http or file or db or browser]</td><td>Source type. Ordered fallback — tries http first, falls back to file on failure.</td></tr>
+    <tr><td>from</td><td>[http or file or db or browser]</td><td>Source type. Optional — inferred from the <code>structure</code> map file if omitted.</td></tr>
     <tr><td>source</td><td>address or fallback</td><td>URL, filepath, table name, or fallback address.</td></tr>
     <tr><td>auth</td><td>authname</td><td>References a named <code>auth</code> step defined elsewhere in the pipeline.</td></tr>
     <tr><td>format</td><td>[json or csv or html or text or xml]</td><td>Expected format of the fetched data.</td></tr>
