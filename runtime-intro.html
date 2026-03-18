@@ -379,7 +379,7 @@ main {
     <div class="section" data-title="Why This Matters">
       <div class="step-label">Section 1 of 13</div>
       <h1>Why This Matters</h1>
-      <p>Every programming language makes decisions for you. How memory is managed, how types are checked, how threads work &mdash; these are baked into the language before you write a single line. Pick Python and you get garbage collection whether you want it or not. Pick C and you're responsible for every byte of memory you touch.</p>
+      <p>Every programming language makes decisions for you. How memory is managed, how types are checked, how threads work &mdash; these are baked into the language before you write a single line. Pick Python and it automatically cleans up your variables from memory whether you want it to or not. Pick C and you're responsible for every byte of memory you touch.</p>
       <p>These aren't just academic details. They determine whether your program leaks memory, crashes under load, runs on a microcontroller, or works in a browser. Most developers never think about them because most languages never let you choose. UL takes these aspects of other languages and makes them features and options.</p>
       <p>This tutorial explains what those choices are, what they mean, and why having control over them changes what you can build.</p>
     </div>
@@ -388,14 +388,14 @@ main {
       <div class="step-label">Section 2 of 13</div>
       <h1>What Runtime Behavior Is</h1>
       <p><strong>Runtime behavior</strong> is everything that happens while your program runs &mdash; as opposed to what happens when it compiles. How does it allocate memory? Does it check array bounds? Does it use one thread or many? These questions have answers in every language, but in most languages the answer is fixed and you don't get a say.</p>
-      <p>Some examples: Python uses garbage collection to free memory automatically. C makes you free memory yourself. Java checks every array access at runtime. C trusts you and skips the check. JavaScript runs in a single thread. Go spawns lightweight goroutines.</p>
+      <p>Some examples: Python automatically detects unused variables and frees their memory for you. C makes you free memory yourself. Java checks every array access at runtime. C trusts you and skips the check. JavaScript runs in a single thread. Go spawns lightweight goroutines.</p>
       <p>Each choice has tradeoffs. The next few sections look at how four major languages handle this, and what you give up in each case.</p>
     </div>
 
     <div class="section" data-title="Python">
       <div class="step-label">Section 3 of 13</div>
       <h1>Python</h1>
-      <p>Python manages memory for you using reference counting plus a cyclic garbage collector. You never call <code>free()</code>. When nothing points to an object, it disappears. Types are checked at runtime &mdash; you can put a string where an integer was expected and Python won't complain until that line actually executes.</p>
+      <p>Python manages memory for you automatically. It tracks how many things reference each object, and when nothing points to something anymore, it cleans it up. You never call <code>free()</code>. Types are checked at runtime &mdash; you can put a string where an integer was expected and Python won't complain until that line actually executes.</p>
       <p>This makes Python fast to write and forgiving to learn. It also means bugs hide until production, performance is 10&ndash;100x slower than compiled languages, and the GIL (Global Interpreter Lock) prevents true CPU parallelism. You can't turn any of this off. There's no <code>manual memory</code> mode. There's no <code>strict types</code> switch.</p>
       <p>For scripting and prototyping, these tradeoffs are fine. For systems programming, embedded work, or latency-sensitive applications, they're dealbreakers.</p>
     </div>
@@ -405,37 +405,37 @@ main {
       <h1>C</h1>
       <p>C gives you total control and total responsibility. You allocate memory with <code>malloc()</code> and free it with <code>free()</code>. The compiler trusts everything you write &mdash; no bounds checking, no null-pointer guards, no type safety beyond what you declare. If you write past the end of an array, C will happily corrupt whatever sits next to it in memory.</p>
       <p>This makes C the fastest language for systems work. Operating systems, databases, and embedded firmware are written in C because nothing is wasted on safety checks you didn't ask for. The cost: memory bugs are the #1 source of security vulnerabilities. Google and Microsoft both report that ~70% of their critical CVEs are memory safety issues in C and C++ code.</p>
-      <p>C's runtime behavior is fixed at the opposite extreme from Python &mdash; manual everything, checked nothing. You can't ask for garbage collection. You can't ask for bounds checking. The language doesn't offer those options.</p>
+      <p>C's runtime behavior is fixed at the opposite extreme from Python &mdash; manual everything, checked nothing. You can't ask for automatic memory cleanup. You can't ask for bounds checking. The language doesn't offer those options.</p>
     </div>
 
     <div class="section" data-title="JavaScript">
       <div class="step-label">Section 5 of 13</div>
       <h1>JavaScript</h1>
-      <p>JavaScript runs in a browser engine (V8, SpiderMonkey) with automatic garbage collection, dynamic types, and a single-threaded event loop. You can't manage memory directly &mdash; there's no pointer, no allocator, no way to control when objects are freed. The engine decides.</p>
+      <p>JavaScript runs in a browser engine (V8, SpiderMonkey) that automatically cleans up unused memory, uses dynamic types, and runs on a single-threaded event loop. You can't manage memory directly &mdash; there's no pointer, no allocator, no way to control when objects are freed. The engine decides.</p>
       <p>The event loop means JavaScript handles concurrency through callbacks and promises rather than threads. This avoids data races entirely but makes CPU-heavy work block the entire UI. Web Workers exist but run in isolated contexts with message-passing &mdash; no shared memory by default.</p>
-      <p>Like Python, JavaScript's runtime is take-it-or-leave-it. You get GC, dynamic types, and single-threaded execution. There's no switch for manual memory, strict types, or real threads. The language was designed for the browser and its runtime reflects that.</p>
+      <p>Like Python, JavaScript's runtime is take-it-or-leave-it. You get automatic memory cleanup, dynamic types, and single-threaded execution. There's no switch for manual memory, strict types, or real threads. The language was designed for the browser and its runtime reflects that.</p>
     </div>
 
     <div class="section" data-title="Java">
       <div class="step-label">Section 6 of 13</div>
       <h1>Java</h1>
-      <p>Java runs on the JVM with automatic garbage collection, strict static types, and built-in threading. Memory is managed entirely by the GC &mdash; you create objects with <code>new</code> and never think about freeing them. The JVM's JIT compiler optimizes hot paths to near-native speed over time.</p>
-      <p>Java's GC is sophisticated (G1, ZGC, Shenandoah) but still pauses threads to collect. For most applications this is invisible. For low-latency trading systems or real-time audio, GC pauses of even a few milliseconds are unacceptable. You can tune the collector but you can't remove it.</p>
-      <p>The JVM gives you real threads and a strong type system. What it doesn't give you is a choice. GC is always on. Bounds checking is always on. The type system is always strict. These are good defaults, but they're not configurable.</p>
+      <p>Java runs on the JVM with automatic memory cleanup, strict static types, and built-in threading. You create objects with <code>new</code> and never think about freeing them &mdash; the runtime detects when they're no longer used and reclaims the memory. The JVM's JIT compiler optimizes hot paths to near-native speed over time.</p>
+      <p>Java's automatic cleanup system is sophisticated (multiple implementations exist) but still pauses threads to scan and free memory. For most applications this is invisible. For low-latency trading systems or real-time audio, pauses of even a few milliseconds are unacceptable. You can tune the cleanup behavior but you can't turn it off.</p>
+      <p>The JVM gives you real threads and a strong type system. What it doesn't give you is a choice. Automatic cleanup is always on. Bounds checking is always on. The type system is always strict. These are good defaults, but they're not configurable.</p>
     </div>
 
     <div class="section" data-title="The DR System">
       <div class="step-label">Section 7 of 13</div>
       <h1>The DR System</h1>
       <p>UniLogic's Dynamic Runtime lets you declare runtime behavior per file. Instead of inheriting a fixed set of rules from the language, you state what you want at the top of each source file: <code>memory: gc</code> or <code>memory: manual</code>. <code>safety: checked</code> or <code>safety: unchecked</code>. <code>concurrency: threaded</code> or <code>concurrency: async</code>.</p>
-      <p>The compiler reads these directives and enforces them. If two files with incompatible settings call each other, the compiler flags it before you run anything. A GC file passing a pointer to a manual-memory file gets a warning at the call site &mdash; not a crash at 3am.</p>
-      <p>The next five sections show how the four memory models work: garbage collection, manual, reference counting, and arena. Each has an interactive animation. Hit Play or step through to see what happens.</p>
+      <p>The compiler reads these directives and enforces them. If two files with incompatible settings call each other, the compiler flags it before you run anything. A file using automatic cleanup passing a pointer to a manual-memory file gets a warning at the call site &mdash; not a crash at 3am.</p>
+      <p>The next five sections show how the four memory models work: automatic cleanup (GC), manual, reference counting, and arena. Each has an interactive animation. Hit Play or step through to see what happens.</p>
     </div>
 
     <div class="section" data-title="Memory: Garbage Collection">
       <div class="step-label">Section 8 of 13</div>
       <h1>Memory: Garbage Collection</h1>
-      <p style="margin-bottom:10px;">The garbage collector runs in the background, tracking which objects are still reachable from the stack. When nothing points to an object anymore, the GC frees it automatically. The catch: it has to pause all threads to do a full scan. Press Play to see the stop-the-world cycle in action.</p>
+      <p style="margin-bottom:10px;"><strong>Garbage collection</strong> is a system that automatically frees memory you're no longer using. Instead of you deciding when to clean up, the runtime periodically scans for objects that nothing points to anymore and deletes them for you. The catch: to do this safely, it has to pause everything else your program is doing while it scans. This is called "stop-the-world." Press Play to see the cycle in action.</p>
       <div id="gc-w">
 <style>
 #gc-w .cell{width:28px;height:28px;border-radius:4px;border:0.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;transition:background 0.4s,border-color 0.4s;}
@@ -520,7 +520,7 @@ build();apply(0);
     <div class="section" data-title="Memory: Manual">
       <div class="step-label">Section 9 of 13</div>
       <h1>Memory: Manual</h1>
-      <p style="margin-bottom:10px;">Manual memory means you allocate with <code>memtake()</code> and free with <code>memgive()</code>. No garbage collector, no automatic cleanup. You control every byte &mdash; and you own every mistake. The animation walks through correct usage, then shows the two classic bugs: a memory leak and a use-after-free.</p>
+      <p style="margin-bottom:10px;"><strong>Manual memory</strong> means there is no automatic cleanup. You explicitly ask for memory when you need it (<code>memtake</code>) and explicitly give it back when you're done (<code>memgive</code>). Nothing happens automatically &mdash; if you forget to give it back, it's gone forever. The animation walks through correct usage, then shows two classic bugs: a leak and a use-after-free.</p>
       <div id="manual-w">
 <style>
 #manual-w .cell{width:28px;height:28px;border-radius:4px;border:0.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;transition:background 0.35s,border-color 0.35s;}
@@ -617,7 +617,7 @@ window.play_m=play;
     <div class="section" data-title="Memory: Reference Counting">
       <div class="step-label">Section 10 of 13</div>
       <h1>Memory: Reference Counting</h1>
-      <p style="margin-bottom:10px;">Each object tracks how many things point to it. When the count hits zero, it frees itself immediately &mdash; no GC pause needed. The tradeoff: if two objects point to each other, neither count ever hits zero and neither ever frees. This is a reference cycle, and it's a permanent memory leak that refcounting alone cannot fix.</p>
+      <p style="margin-bottom:10px;"><strong>Reference counting</strong> means each object tracks how many things point to it. When the count hits zero, it frees itself immediately &mdash; no pause needed. The tradeoff: if two objects point to each other, neither count ever hits zero and neither ever frees. This is called a reference cycle, and it's a permanent memory leak that counting alone cannot fix.</p>
       <div id="rc-w">
 <style>
 #rc-w .cell{width:28px;height:28px;border-radius:4px;border:0.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;transition:background 0.35s,border-color 0.35s;}
