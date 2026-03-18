@@ -95,6 +95,7 @@ p { margin-bottom: 14px; color: #2a2a2a; }
 <nav>
   <a href="index.html" class="nav-logo">&larr; UniLogic Home</a>
   <div class="nav-section">Features</div>
+  <a href="safety.html">Memory Safety</a>
   <a href="dynamic-runtime.html">Dynamic Runtime</a>
   <a href="translation.html">Translation / XPile</a>
   <a href="deployment-targets.html">Deployment Targets</a>
@@ -106,20 +107,24 @@ p { margin-bottom: 14px; color: #2a2a2a; }
 
 <h1>Features &amp; Functionality</h1>
 
-<p class="intro-text">UniLogic's compiler infrastructure has three core components. The Dynamic Runtime lets you configure memory, safety, types, and concurrency per file. The Translation layer (XPile) handles conversion between UL and target languages. Deployment Targets define what platforms and languages the compiler emits to. Together they form the full compilation and runtime system.</p>
+<p class="intro-text">UniLogic's core features span memory safety, runtime configuration, compilation, and deployment. Together they form the full system that lets you write once and target any platform, any memory model, and any safety level.</p>
 
 <div class="card-grid">
+  <a href="safety.html" class="card">
+    <h3>Memory Safety</h3>
+    <p>Mathematically-proven memory safety via MemProof. Formal verification with SMT solvers, digital signing, and functional correctness contracts. No lifetime annotations, no runtime overhead.</p>
+  </a>
   <a href="dynamic-runtime.html" class="card">
     <h3>Dynamic Runtime</h3>
     <p>Per-file runtime configuration. Memory model, safety level, type system, integer width, and concurrency &mdash; declared at the top of each file, enforced by the compiler. Conflicts between files detected at compile time.</p>
   </a>
   <a href="translation.html" class="card">
     <h3>Translation / XPile</h3>
-    <p>The compilation engine. Converts UL source to C, Python, JavaScript, or LLVM IR. Round-trip capable &mdash; style profiles control how target code maps back to UL syntax. Profile checker validates translation rules.</p>
+    <p>The compilation engine. Converts UL source to C, Python, JavaScript, or LLVM IR. Round-trip capable &mdash; style profiles control how target code maps back to UL syntax.</p>
   </a>
   <a href="deployment-targets.html" class="card">
     <h3>Deployment Targets</h3>
-    <p>What platforms and languages the compiler can emit to. Each target has its own codegen backend with target-specific optimizations and idioms.</p>
+    <p>What platforms and languages the compiler can emit to. Native binaries via C/LLVM, portable scripts via Python, browser apps via JavaScript.</p>
   </a>
 </div>
 

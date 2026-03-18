@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding Memory Safety</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Georgia', serif; font-size: 16px; line-height: 1.7; color: #1a1a1a; background: #fafaf8; display: flex; }
+nav { position: fixed; top: 0; left: 0; width: 230px; height: 100vh; overflow-y: auto; padding: 24px 0 40px; z-index: 100; background: #1e1e2e; border-right: 1px solid #313244; }
+.nav-logo { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 20px 16px; color: #5b8fc9; border-bottom: 1px solid #313244; margin-bottom: 8px; display: block; text-decoration: none; }
+.nav-section { margin-top: 14px; padding: 3px 20px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; font-family: sans-serif; font-weight: bold; color: #585b70; }
+nav a { display: block; padding: 5px 20px 5px 23px; text-decoration: none; font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #a6adc8; border-left: 3px solid transparent; transition: background 0.12s, color 0.12s; }
+nav a:hover { background: #313244; color: #cdd6f4; border-left-color: #7ab3e0; }
+main { margin-left: 230px; padding: 56px 80px 100px 72px; max-width: 920px; width: 100%; }
+h1 { font-size: 2.2rem; font-weight: normal; margin-bottom: 8px; padding-bottom: 14px; color: #1a1a1a; border-bottom: 2px solid #e0d8f0; }
+.subtitle { font-size: 1rem; margin-bottom: 32px; font-style: italic; color: #666; }
+h2 { font-size: 1.5rem; font-weight: normal; margin-top: 48px; margin-bottom: 4px; padding-bottom: 6px; color: #2d1b69; border-bottom: 1px solid #e0d8f0; }
+h3 { font-size: 1.05rem; font-weight: bold; margin-top: 28px; margin-bottom: 8px; color: #333; }
+p { margin-bottom: 14px; color: #2a2a2a; }
+code { padding: 1px 6px; border-radius: 3px; font-family: 'Share Tech Mono', monospace; font-size: 14px; background: #ede8f5; color: #1a3a7a; }
+.note { padding: 12px 16px; margin: 16px 0; border-radius: 0 4px 4px 0; font-size: 15px; background: #f0f4ff; border-left: 4px solid #6c7ef7; }
+.note strong { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #4a5fcc; }
+.warn { padding: 12px 16px; margin: 16px 0; border-radius: 0 4px 4px 0; font-size: 15px; background: #fff8e8; border-left: 4px solid #f5a623; }
+.warn strong { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #c07820; }
+.link-card { display: inline-block; margin-top: 16px; padding: 10px 24px; background: #1e1e2e; color: #7ab3e0; border: 1px solid #313244; border-radius: 5px; text-decoration: none; font-family: 'Share Tech Mono', monospace; font-size: 13px; letter-spacing: 0.08em; transition: background 0.15s; }
+.link-card:hover { background: #0a1f5e; }
+@media (max-width: 700px) { nav { display: none; } main { margin-left: 0; padding: 20px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="javascript:history.back()" class="nav-logo">&larr; Back</a>
+  <div class="nav-section">On This Page</div>
+  <a href="#what">What Memory Safety Is</a>
+  <a href="#bugs">The Bugs</a>
+  <a href="#who-cares">Who Cares</a>
+  <a href="#standards">Industry Standards</a>
+  <a href="#approaches">How Languages Handle It</a>
+  <a href="#ul">How UL Handles It</a>
+</nav>
+
+<main>
+
+<h1>Memory Safety</h1>
+<p class="subtitle">What it is, why entire industries spend millions on it, and why ~70% of critical vulnerabilities come from getting it wrong.</p>
+
+<h2 id="what">What Memory Safety Is</h2>
+
+<p>Every program uses memory &mdash; variables, strings, arrays, objects, everything lives in memory while the program runs. Memory safety means the program only accesses memory it's supposed to access, in the way it's supposed to access it, for the duration it's supposed to access it.</p>
+
+<p>An unsafe program can read memory that belongs to something else (buffer overread), write past the end of an array (buffer overflow), use memory after it's been freed (use-after-free), or free the same memory twice (double-free). These aren't just bugs that crash your program. They're the primary attack surface for security exploits.</p>
+
+<h2 id="bugs">The Bugs That Break Everything</h2>
+
+<h3>Buffer overflow</h3>
+<p>You allocate an array of 10 elements and write to index 15. The write lands on whatever happens to be next to your array in memory &mdash; maybe another variable, maybe a return address. An attacker who controls the input can use this to execute arbitrary code. This is how the Morris Worm worked in 1988. It's still how exploits work today.</p>
+
+<h3>Use-after-free</h3>
+<p>You free a block of memory, then continue using the pointer. The memory may have been reallocated to something else. You're now reading or writing someone else's data. This class of bug is responsible for a significant portion of Chrome and Firefox CVEs every year.</p>
+
+<h3>Null pointer dereference</h3>
+<p>You access memory through a pointer that was never initialized or was set to null. The program crashes or, on some systems, the attacker can map memory at address zero and control what the program reads.</p>
+
+<h3>Data races</h3>
+<p>Two threads access the same memory at the same time, and at least one is writing. The result depends on timing &mdash; which thread happens to run first. The program works 99% of the time and fails catastrophically the other 1%, in ways that are nearly impossible to reproduce or debug.</p>
+
+<h2 id="who-cares">Who Cares About This</h2>
+
+<p>Everyone who builds software that can't afford to fail:</p>
+
+<p><strong>Aviation.</strong> Airbus and Boeing follow DO-178C, a certification standard that requires demonstrating absence of certain classes of errors in flight-critical software. A memory bug in an autopilot system is not a crash report &mdash; it's an actual crash. Airbus has invested heavily in formal verification tools to prove memory safety mathematically rather than relying on testing alone.</p>
+
+<p><strong>Automotive.</strong> ISO 26262 governs functional safety in vehicles. With modern cars running 100+ million lines of code across dozens of ECUs, memory corruption in brake control or steering software is a safety-of-life concern. MISRA-C exists specifically to constrain how C is written in these contexts.</p>
+
+<p><strong>Medical devices.</strong> The FDA requires software validation for any device that touches patient care. A buffer overflow in an insulin pump or pacemaker firmware is a direct threat to human life. IEC 62304 defines the software lifecycle requirements.</p>
+
+<p><strong>Finance.</strong> Trading systems, payment processors, and banking infrastructure handle billions of dollars in transactions. A memory corruption bug that alters a transaction amount or allows unauthorized access has immediate, measurable financial impact.</p>
+
+<p><strong>Operating systems and browsers.</strong> Google has reported that roughly 70% of serious Chrome security bugs are memory safety issues. Microsoft has reported the same ratio for Windows CVEs. These are not obscure edge cases &mdash; they're the dominant source of critical vulnerabilities in the software that billions of people use daily.</p>
+
+<h2 id="standards">Industry Standards</h2>
+
+<h3>MISRA-C</h3>
+<p>MISRA-C is a set of coding guidelines for C, originally developed for the automotive industry by the Motor Industry Software Reliability Association. It restricts which C features you can use &mdash; no dynamic memory allocation, no recursion, no pointer arithmetic in certain contexts. The goal is to eliminate the patterns that lead to memory bugs. It doesn't prove safety; it reduces the probability of unsafe code by banning dangerous constructs. It's widely adopted in automotive, aerospace, rail, and medical device development.</p>
+
+<h3>Formal verification</h3>
+<p>Rather than testing a program with a finite set of inputs, formal verification uses mathematical proof to show that a property holds for <em>all possible inputs</em>. Tools like Frama-C (for C) and SPARK (for Ada) can prove that a program never accesses out-of-bounds memory, never dereferences a null pointer, and never has a data race. This is the gold standard &mdash; not "we tested it and it didn't fail" but "we proved it cannot fail." The cost is that writing the proof annotations and running the solvers takes significant effort.</p>
+
+<h2 id="approaches">How Languages Handle It</h2>
+
+<p><strong>C.</strong> Doesn't handle it. C trusts the programmer completely. You can do anything &mdash; cast any pointer, write past any buffer, free memory and keep using the pointer. Tools like Valgrind and AddressSanitizer catch some of these at runtime, but only for the inputs you happen to test.</p>
+
+<p><strong>Java, Python, JavaScript.</strong> Prevent most memory bugs by using garbage collection and hiding raw pointers. You can't have a buffer overflow in Python because the runtime checks every array access. The cost is performance and the loss of low-level control.</p>
+
+<p><strong>Rust.</strong> Prevents memory bugs at compile time through the borrow checker &mdash; an ownership system that tracks which code owns which memory and prevents you from using it incorrectly. It works, but learning lifetimes, ownership, and borrowing has a real cost, especially for developers coming from other languages.</p>
+
+<h2 id="ul">How UniLogic Handles It</h2>
+
+<p>UL takes a different path: it <strong>proves memory safety mathematically</strong>. You write code. The compiler generates proof obligations and an SMT solver discharges them. If every obligation is satisfied, the program is proven safe for every possible input &mdash; not just the ones you tested. No lifetime annotations. No fighting the borrow checker. No runtime overhead.</p>
+
+<p>This is the same class of guarantee that Airbus uses for flight-critical software and that MISRA-C attempts to approximate through coding restrictions. UL builds it into the compiler toolchain so you don't need separate tools, separate annotation languages, or separate verification workflows.</p>
+
+<div class="note">
+<strong>Proven, not tested</strong>
+Testing shows the absence of bugs for the inputs you tried. Proof shows the absence of bugs for all inputs that could ever exist. UL's MemProof system targets the latter.
+</div>
+
+<a href="safety.html" class="link-card">Memory Safety in UL &mdash; full reference &rarr;</a>
+
+</main>
+
+</body>
+</html>
