@@ -218,10 +218,10 @@ body.theme-base .findings { background: #e8f0e0; color: #2a5a20; border-left: 3p
 
 <button id="mode-toggle-top" onclick="toggleMode()">
   <span class="flip-label" id="flip-label-top">⬛</span>
-  <span class="mode-label" id="mode-label-top">DARK</span>
+  <span class="mode-label" id="mode-label-top">LIGHT</span>
 </button>
 
-<a href="index.html" class="back-link">← Back to UniLogic</a>
+<a href="learning.html" class="back-link">← Back to Learning &amp; Resources</a>
 
 <div class="page-wrap">
 
@@ -392,7 +392,7 @@ function toggleMode() {
   var isDefault = document.body.classList.contains('theme-default');
   document.body.classList.toggle('theme-default', !isDefault);
   document.body.classList.toggle('theme-base', isDefault);
-  document.getElementById('mode-label-top').textContent = isDefault ? 'LIGHT' : 'DARK';
+  document.getElementById('mode-label-top').textContent = isDefault ? 'DARK' : 'LIGHT';
 }
 </script>
 
