@@ -228,7 +228,8 @@ body.theme-base .findings { background: #e8f0e0; color: #2a5a20; border-left: 3p
 <header class="page-header">
   <p class="intro" style="margin-bottom:24px;">Coding Agents like Claude Code and Codex are revolutionizing application development. However, there are lingering issues with code quality, from over-engineering and bloat, all the way to invalid/broken code. Research on the application of intermediate representations of design requirements or outright code are of interest and being investigated. This page lists advances in this research area.</p>
   <h1>Industry Research &amp; Developments</h1>
-  <p class="intro">Recent research with direct bearing on USAMS and UniLogic's core premises. Ranked by relevance.</p>
+  <p class="intro">UniLogic for Model and Agent Programming (UMAP) is planned for future development. It's an attempt to solve the issues with code that doesn't work, doesn't resemble requirements, is bloated or otherwise proves ineffective or inefficient. Agents misunderstand and overengineer. UMAP serves as an intermediate representation of software that formalizes the concept into language closer to the actual code that it will be made of. At the same time, this representation maps directly to syntax in UL, making overengineering and broken code much less likely. The goal is to stay close enough to natural language that those outside of software understand, but also close enough to UL and typical programming syntax to drastically reduce interpretation and variability.</p>
+  <p class="intro">Recent Industry and Research Developments in this area are listed below.</p>
 </header>
 
 <div class="ranking-note">Title describes the relationship to this project. Link to full paper included with each entry.</div>
@@ -249,7 +250,7 @@ body.theme-base .findings { background: #e8f0e0; color: #2a5a20; border-left: 3p
   <div class="entry-body">
     <p>Natural language prompts to LLMs produce code that cannot be formally verified to be correct. The authors built Astrogator: a formally-defined query language placed between the user prompt and LLM output. The user expresses intent in that structured form; Astrogator verifies the generated code against it. The formal intermediary is what makes verification possible.</p>
 
-    <p>USAMS addresses the specification side of the same gap — the structured schema is the formal intermediary. Where Astrogator adds a verification layer on top of LLM output, USAMS starts from a representation that is already unambiguous. The two approaches are working the same problem from opposite ends.</p>
+    <p>UMAP addresses the specification side of the same gap — the structured schema is the formal intermediary. Where Astrogator adds a verification layer on top of LLM output, UMAP starts from a representation that is already unambiguous. The two approaches are working the same problem from opposite ends.</p>
   </div>
 
   <div class="findings">
@@ -305,8 +306,8 @@ body.theme-base .findings { background: #e8f0e0; color: #2a5a20; border-left: 3p
   </div>
 
   <div class="findings">
-    <div class="findings-label">Relation to USAMS</div>
-    Survey identified structured syntax as a core necessity. USAMS is built around the same idea.
+    <div class="findings-label">Relation to UMAP</div>
+    Survey identified structured syntax as a core necessity. UMAP is built around the same idea.
   </div>
 
 </div><!-- /entry -->
@@ -332,8 +333,8 @@ body.theme-base .findings { background: #e8f0e0; color: #2a5a20; border-left: 3p
   </div>
 
   <div class="findings">
-    <div class="findings-label">Relation to USAMS</div>
-    Lecture 1: a practical explanation of the problem space USAMS naturally fits as a solution. Lecture 15: USAMS is a program-in-control architecture. The schema runs the process; the LLM is an optional tool alongside it.
+    <div class="findings-label">Relation to UMAP</div>
+    Lecture 1: a practical explanation of the problem space UMAP naturally fits as a solution. Lecture 15: UMAP is a program-in-control architecture. The schema runs the process; the LLM is an optional tool alongside it.
   </div>
 
 </div><!-- /entry -->
@@ -380,8 +381,8 @@ body.theme-base .findings { background: #e8f0e0; color: #2a5a20; border-left: 3p
   </div>
 
   <div class="findings">
-    <div class="findings-label">Relation to USAMS</div>
-    USAMS' goal contradicts this position. <a href="usams/index.html" style="color:inherit; border-bottom:1px dotted; text-decoration:none;">Finance, telecom</a>, and other sectors use codes, contracts, and other standardized and heavily minimized language for modification and quicker comprehension. Programming goes farther in the direction of requiring such notation.
+    <div class="findings-label">Relation to UMAP</div>
+    <a href="usams/index.html" style="color:inherit; border-bottom:1px dotted; text-decoration:none;">Finance, telecom</a>, and other sectors use codes, contracts, and other standardized and heavily minimized language for modification and quicker comprehension. Programming goes farther in the direction of requiring such notation.
   </div>
 
 </div><!-- /entry -->
