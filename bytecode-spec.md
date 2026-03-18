@@ -1,20 +1,20 @@
 # UniLogic Bytecode Format Specification
 
-**Version:** 0.1
+**Version:** 1.0
 **Status:** Draft
 **Date:** 2026-03-18
 
 ---
 
-## 1. Design Decision: Stack-Based
+## 1. Design Decision: Register-Based
 
-The UL bytecode uses a **stack-based** architecture for v0.1. Each instruction pushes to or pops from an operand stack rather than naming registers. This eliminates register allocation from the compiler, produces smaller bytecode (no register operands in most instructions), and simplifies the VM implementation to under 500 lines for a conforming interpreter. The JVM and CPython both validate this approach at scale.
+The UL bytecode uses a **register-based** architecture. Each instruction names its source and destination registers explicitly rather than pushing to and popping from an implicit stack. UL is a new language with no legacy bytecode to maintain — this is the right call to make now rather than retrofitting later.
 
-**Acknowledged tradeoff:** Research is clear that register-based VMs eliminate an average of 46.5% of executed VM instructions compared to stack-based equivalents, with bytecode only ~26% larger (Shi et al., "Virtual Machine Showdown," ACM VEE 2005). The stack-based choice is correct for v0.1 because compiler simplicity is the priority at this stage — register allocation is a significant implementation cost. The superinstruction mechanism (§7.1) and quickening (§5.3) recover a substantial portion of the instruction-count disadvantage without requiring a register allocator.
+**Research basis:** Register-based VMs execute 2–3x fewer instructions than stack VMs for equivalent programs, with bytecode only 25–30% larger (Shi et al., "Virtual Machine Showdown," ACM VEE 2005). The instruction count reduction compounds when adding JIT compilation later — fewer bytecode instructions means fewer IR nodes to lower, faster compilation, and better native code. RegCPython — a register-based reimplementation of CPython — confirmed the register architecture is appreciably faster and that "compilation speed is never a reason for choosing stack architecture" (Brito & Valente, ACM SAC 2023).
 
-**Why this matters more than it appears:** CPython 3.11–3.14 has invested heavily in the "Faster CPython" project, retrofitting quickening and specialization onto its stack-based interpreter — essentially bolting performance optimizations onto an architecture that wasn't designed for them. Even after all that work, PyPy (which uses JIT compilation) remains ~18x faster than CPython 3.14, and ~3x faster than Node.js (Grinberg, 2025). That gap shows how much headroom remains in the stack-based model even with aggressive optimization. More directly, RegCPython — a register-based reimplementation of CPython — found the register architecture is appreciably faster, and that "compilation speed is never a reason for choosing stack architecture" (Brito & Valente, ACM SAC 2023).
+**Why not stack-based:** CPython 3.11–3.14 invested heavily in the "Faster CPython" project, retrofitting quickening and specialization onto its stack-based interpreter. Even after that work, PyPy remains ~18x faster than CPython 3.14, and ~3x faster than Node.js (Grinberg, 2025). That gap demonstrates the ceiling of the stack-based model even with aggressive optimization. UL avoids this ceiling by starting register-based.
 
-**v0.2 migration path:** Start stack-based in v0.1 for simplicity — get the VM built, proven, and tested. Design the register-based instruction format in parallel. Migrate to register-based in v0.2 once the VM is stable. This puts UL ahead of CPython by design rather than by accident — choosing the faster architecture from the outset instead of retrofitting optimizations onto the wrong foundation. The file format (§2) and versioning scheme (§8) are designed to support this: a major version increment signals the encoding change, and the constant pool / function table layout remains compatible.
+**Compiler cost:** Register allocation adds complexity to the compiler. UL uses a simple linear-scan allocator — each local variable and temporary maps to a register slot at compile time. Functions with more than 256 live values at any point (the register limit per frame) spill to a frame-local memory area. In practice, this limit is never reached in normal code.
 
 ---
 
@@ -24,11 +24,13 @@ A `.ulb` file (UniLogic Bytecode) has the following layout:
 
 ```
 ┌──────────────────────────────────┐
-│  Header              (16 bytes)  │
+│  Header              (20 bytes)  │
 ├──────────────────────────────────┤
 │  Constant Pool       (variable)  │
 ├──────────────────────────────────┤
 │  Function Table      (variable)  │
+├──────────────────────────────────┤
+│  Block Metadata      (variable)  │
 ├──────────────────────────────────┤
 │  Instruction Blocks  (variable)  │
 └──────────────────────────────────┘
@@ -39,10 +41,11 @@ A `.ulb` file (UniLogic Bytecode) has the following layout:
 | Offset | Size | Field | Value |
 |--------|------|-------|-------|
 | 0 | 4 | Magic bytes | `0x554C4243` (`ULBC` in ASCII) |
-| 4 | 2 | Major version | `0x0001` |
+| 4 | 2 | Major version | `0x0100` (1.0) |
 | 6 | 2 | Minor version | `0x0000` |
-| 8 | 4 | Constant pool entry count | u32, little-endian |
-| 12 | 4 | Function table entry count | u32, little-endian |
+| 8 | 4 | Constant pool entry count | u32 LE |
+| 12 | 4 | Function table entry count | u32 LE |
+| 16 | 4 | Block metadata entry count | u32 LE |
 
 All multi-byte integers are **little-endian** throughout the file.
 
@@ -68,190 +71,280 @@ Contains `function_count` entries, each:
 |--------|------|-------|
 | 0 | 4 | Name length (u32 LE) |
 | 4 | N | Name (UTF-8 bytes) |
-| 4+N | 2 | Parameter count (u16 LE) |
-| 6+N | 2 | Local variable count (u16 LE, includes params) |
-| 8+N | 4 | Instruction offset (u32 LE, byte offset into instruction block) |
-| 12+N | 4 | Instruction length (u32 LE, byte count) |
+| 4+N | 1 | Parameter count (u8) |
+| 5+N | 1 | Register count (u8, total registers needed including params) |
+| 6+N | 4 | Instruction offset (u32 LE, byte offset into instruction block) |
+| 10+N | 4 | Instruction count (u32 LE, number of 32-bit instructions) |
+| 14+N | 4 | First block metadata index (u32 LE) |
+| 18+N | 2 | Block count (u16 LE) |
 
-Functions are referenced by **zero-based index**. Function 0 is not required to be `main`; the entry point is specified by the VM invocation (default: function named `main`).
+Functions are referenced by **zero-based index**. The entry point is resolved by name (default: `main`). Register slots 0..param_count-1 hold function parameters on entry.
 
-### 2.4 Instruction Block
+### 2.4 Instruction Encoding
 
-A single contiguous byte stream. Each function's instructions occupy a slice identified by its offset and length from the function table. Instructions are variable-width: 1-byte opcode optionally followed by operands.
-
-**v0.2 encoding target: fixed-width 16-bit instructions.** The current variable-width encoding is simple to emit but complicates PC arithmetic, branch offset calculation, and superinstruction patching. The v0.2 format will use fixed 16-bit instruction words:
+All instructions are **fixed-width 32 bits** (4 bytes). This simplifies PC arithmetic (`pc += 4` always), makes in-place patching a single aligned write, and improves I-cache utilization.
 
 ```
-Standard form:   [8-bit opcode | 8-bit operand]
-Extended form:   [8-bit opcode | 8-bit 0xFF] [16-bit operand]
+Standard 3-register form:
+┌────────┬────────┬────────┬────────┐
+│ opcode │  rA    │  rB    │  rC    │
+│ 8 bits │ 8 bits │ 8 bits │ 8 bits │
+└────────┴────────┴────────┴────────┘
+
+2-register + immediate form:
+┌────────┬────────┬─────────────────┐
+│ opcode │  rA    │    imm16        │
+│ 8 bits │ 8 bits │   16 bits LE    │
+└────────┴────────┴─────────────────┘
+
+1-register + wide immediate form:
+┌────────┬────────────────────────────┐
+│ opcode │         imm24              │
+│ 8 bits │        24 bits LE          │
+└────────┴────────────────────────────┘
 ```
 
-Most instructions fit in one word (256 locals, 256 constants covers the vast majority of functions). Instructions needing a larger operand use the extended form with `0xFF` as the escape sentinel in the operand byte. Fixed-width simplifies the dispatch loop (`pc += 2` always), makes superinstruction patching a single 16-bit write, and improves instruction cache utilization. The v0.1 variable-width format remains valid and must be supported by any VM claiming v0.1 conformance.
+The opcode determines which form applies. 256 registers per frame (r0–r255) covers any real function. The compiler assigns registers via linear-scan allocation.
+
+### 2.5 Block Metadata Table
+
+Contains `block_count` entries (one per basic block across all functions). Each entry:
+
+| Offset | Size | Field |
+|--------|------|-------|
+| 0 | 4 | Start instruction index (u32 LE, within owning function) |
+| 4 | 4 | End instruction index (u32 LE, exclusive) |
+| 8 | 1 | Register pressure at entry (u8, highest live register) |
+| 9 | 1 | Successor count (u8) |
+| 10 | 2 | Reserved / padding (u16, zero) |
+| 12 | 4 | Hotness counter slot (u32 LE, initialized to 0) |
+
+The hotness counter is incremented by the VM each time the block is entered. This enables cheap profiling for JIT tiering — when a block's counter exceeds a threshold, the VM can trigger compilation of the owning function. The metadata table is writable at runtime (mapped read-write by the VM, not shared across processes).
+
+Successor blocks are identified implicitly from the terminator instruction of each block (jump targets, fall-through). The VM does not need to recompute control flow on each execution — block boundaries are pre-identified by the compiler.
 
 ---
 
-## 3. Type Encoding on the Stack
+## 3. Type Encoding in Registers
 
-The VM operand stack holds tagged values. Each stack slot is a discriminated union:
+Each register holds a tagged value. The tag is stored alongside the value in a discriminated union:
 
-| Tag | Type | Stack representation |
-|-----|------|---------------------|
+| Tag | Type | Register representation |
+|-----|------|----------------------|
 | `0x01` | int | signed 64-bit integer |
 | `0x02` | float | IEEE 754 64-bit double |
 | `0x03` | string | pointer to heap-allocated UTF-8 string |
 | `0x04` | bool | 0 or 1 |
 | `0x05` | empty | null/none sentinel |
 
-Type tags are carried at runtime. Type errors (e.g. adding a string to an int) produce a runtime error, not undefined behavior.
+Type tags are carried at runtime for Tier 0 instructions. Tier 1 instructions with type feedback slots may bypass the tag check after specialization (see §7).
 
 ---
 
 ## 4. Instruction Set
 
-All opcodes are 1 byte. Operands follow the opcode where specified.
+All opcodes are 8 bits. Instructions are 32 bits wide. Opcode numbering places the hottest instructions in the lowest range for I-cache locality and dense jump-table dispatch.
 
-**Opcode numbering rationale:** The hottest instructions are assigned the lowest opcode values. This groups the most frequently executed handlers together in the VM's code segment for I-cache locality. Profiling of typical UL programs shows `LOAD_LOCAL`, `STORE_LOCAL`, `LOAD_CONST`, `ADD`, `CALL`, `RETURN`, and `JUMP_IF_FALSE` account for >80% of executed instructions.
+### 4.1 Hot Path — Tier 0 (0x01–0x0F)
 
-### 4.1 Hot Path (0x01–0x0F)
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `MOV` | `0x01` | `rA, rB, _` | `rA = rB` |
+| `LOAD_CONST` | `0x02` | `rA, imm16` | `rA = constant_pool[imm16]` |
+| `ADD` | `0x03` | `rA, rB, rC` | `rA = rB + rC` |
+| `SUB` | `0x04` | `rA, rB, rC` | `rA = rB - rC` |
+| `MUL` | `0x05` | `rA, rB, rC` | `rA = rB * rC` |
+| `DIV` | `0x06` | `rA, rB, rC` | `rA = rB / rC` (int truncates, zero = error) |
+| `CMP_LT` | `0x07` | `rA, rB, rC` | `rA = (rB < rC) ? true : false` |
+| `JUMP_IF_FALSE` | `0x08` | `rA, imm16` | `if !rA: pc += sign_extend(imm16) * 4` |
+| `CALL` | `0x09` | `rA, rB, rC` | Call function `rB` with `rC` args starting at `rA`. Result in `rA`. |
+| `RETURN` | `0x0A` | `rA, _, _` | Return value in `rA` to caller |
+| `PRINT` | `0x0B` | `rA, _, _` | Print `rA` to stdout |
 
-| Opcode | Hex | Operands | Stack effect | Description |
-|--------|-----|----------|-------------|-------------|
-| `LOAD_LOCAL` | `0x01` | u16 slot | → value | Push local variable `slot` onto stack |
-| `STORE_LOCAL` | `0x02` | u16 slot | value → | Pop stack top into local variable `slot` |
-| `LOAD_CONST` | `0x03` | u16 index | → value | Push constant pool entry `index` onto stack |
-| `ADD` | `0x04` | — | b, a → result | `a + b`. Int+int→int, float+float→float, int+float→float, string+string→concat |
-| `CALL` | `0x05` | u16 func_index, u8 arg_count | arg_count values → return_value | Pop `arg_count` arguments (top = last arg), invoke function, push return value |
-| `RETURN` | `0x06` | — | value → | Pop return value, return to caller |
-| `JUMP_IF_FALSE` | `0x07` | i16 offset | cond → | Pop top; if falsy, PC += offset |
-| `CMP_LT` | `0x08` | — | b, a → bool | `a < b` |
-| `SUB` | `0x09` | — | b, a → result | `a - b`. Numeric only |
-| `PRINT` | `0x0A` | — | value → | Pop and print to stdout. Bool as `0`/`1`, float as `%f`, empty as `empty` |
+### 4.2 Arithmetic and Logic — Tier 0 (0x10–0x1F)
 
-Local variable slots are numbered 0..N-1 where slots 0..param_count-1 hold function parameters (populated by the caller before `CALL`).
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `MOD` | `0x10` | `rA, rB, rC` | `rA = rB % rC` |
+| `NEG` | `0x11` | `rA, rB, _` | `rA = -rB` |
+| `NOT` | `0x12` | `rA, rB, _` | `rA = !rB` (logical) |
+| `AND` | `0x13` | `rA, rB, rC` | `rA = rB && rC` |
+| `OR` | `0x14` | `rA, rB, rC` | `rA = rB \|\| rC` |
+| `ADD_IMM` | `0x15` | `rA, rB, imm8` | `rA = rB + imm8` (unsigned 8-bit immediate) |
+| `SUB_IMM` | `0x16` | `rA, rB, imm8` | `rA = rB - imm8` |
 
-The VM maintains a **call stack** of frames. Each frame stores: return address (function index + PC), local variable array, and operand stack base pointer. On `CALL`, a new frame is pushed. On `RETURN`, the frame is popped and the return value is pushed onto the caller's operand stack.
+### 4.3 Comparison — Tier 0 (0x20–0x2F)
 
-### 4.2 Arithmetic and Logic (0x10–0x1F)
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `CMP_EQ` | `0x20` | `rA, rB, rC` | `rA = (rB == rC)` |
+| `CMP_NE` | `0x21` | `rA, rB, rC` | `rA = (rB != rC)` |
+| `CMP_GT` | `0x22` | `rA, rB, rC` | `rA = (rB > rC)` |
+| `CMP_LE` | `0x23` | `rA, rB, rC` | `rA = (rB <= rC)` |
+| `CMP_GE` | `0x24` | `rA, rB, rC` | `rA = (rB >= rC)` |
 
-| Opcode | Hex | Operands | Stack effect | Description |
-|--------|-----|----------|-------------|-------------|
-| `MUL` | `0x10` | — | b, a → result | `a * b`. Numeric only |
-| `DIV` | `0x11` | — | b, a → result | `a / b`. Int/int→truncated int, float involved→float. Division by zero = runtime error |
-| `MOD` | `0x12` | — | b, a → result | `a % b`. Numeric only. Zero divisor = runtime error |
-| `NEG` | `0x13` | — | a → result | `-a`. Numeric only |
-| `NOT` | `0x14` | — | a → result | Logical not. Truthy→false, falsy→true |
-| `AND` | `0x15` | — | b, a → result | Logical and (not short-circuit in bytecode; compiler emits jumps for short-circuit) |
-| `OR` | `0x16` | — | b, a → result | Logical or |
+Note: `CMP_LT` is in the hot path at `0x07`.
 
-### 4.3 Comparison (0x20–0x2F)
+### 4.4 Control Flow — Tier 0 (0x30–0x3F)
 
-| Opcode | Hex | Operands | Stack effect | Description |
-|--------|-----|----------|-------------|-------------|
-| `CMP_EQ` | `0x20` | — | b, a → bool | `a == b` |
-| `CMP_NE` | `0x21` | — | b, a → bool | `a != b` |
-| `CMP_GT` | `0x22` | — | b, a → bool | `a > b` |
-| `CMP_LE` | `0x23` | — | b, a → bool | `a <= b` |
-| `CMP_GE` | `0x24` | — | b, a → bool | `a >= b` |
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `JUMP` | `0x30` | `imm24` | `pc += sign_extend(imm24) * 4` |
+| `JUMP_IF_TRUE` | `0x31` | `rA, imm16` | `if rA: pc += sign_extend(imm16) * 4` |
+| `RETURN_NONE` | `0x32` | `_, _, _` | Return `empty` |
 
-Note: `CMP_LT` is in the hot path at `0x08`.
+Note: `JUMP_IF_FALSE` is in the hot path at `0x08`. Jump offsets are in **instruction units** (multiply by 4 for byte offset), signed. Range: ±8M instructions for `JUMP` (imm24), ±32K instructions for conditional jumps (imm16).
 
-### 4.4 Control Flow (0x30–0x3F)
+### 4.5 Globals — Tier 0 (0x40–0x4F)
 
-| Opcode | Hex | Operands | Stack effect | Description |
-|--------|-----|----------|-------------|-------------|
-| `JUMP` | `0x30` | i16 offset | — | Unconditional jump. PC += offset (signed, relative to instruction after operand) |
-| `JUMP_IF_TRUE` | `0x31` | i16 offset | cond → | Pop top; if truthy, PC += offset |
-| `RETURN_NONE` | `0x32` | — | — | Return `empty` (void return shorthand) |
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `LOAD_GLOBAL` | `0x40` | `rA, imm16` | `rA = globals[imm16]` |
+| `STORE_GLOBAL` | `0x41` | `rA, imm16` | `globals[imm16] = rA` |
 
-Note: `JUMP_IF_FALSE` is in the hot path at `0x07`. Jump offsets are **signed 16-bit**, relative to the byte immediately after the operand. Range: ±32KB per jump. For larger functions, the compiler must use jump chains.
+### 4.6 Arrays — Tier 0 (0x60–0x6F)
 
-### 4.5 Variables (0x40–0x4F)
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `NEW_ARRAY` | `0x60` | `rA, rB, rC` | Create array of `rC` elements starting at register `rB`, store in `rA` |
+| `INDEX_GET` | `0x61` | `rA, rB, rC` | `rA = rB[rC]` (bounds checked) |
+| `INDEX_SET` | `0x62` | `rA, rB, rC` | `rA[rB] = rC` |
+| `LENGTH` | `0x63` | `rA, rB, _` | `rA = len(rB)` |
 
-| Opcode | Hex | Operands | Stack effect | Description |
-|--------|-----|----------|-------------|-------------|
-| `LOAD_GLOBAL` | `0x40` | u16 index | → value | Push global variable `index` onto stack |
-| `STORE_GLOBAL` | `0x41` | u16 index | value → | Pop stack top into global variable `index` |
+### 4.7 Type Operations — Tier 0 (0x70–0x7F)
 
-### 4.6 Stack Operations (0x50–0x5F)
-
-| Opcode | Hex | Operands | Stack effect | Description |
-|--------|-----|----------|-------------|-------------|
-| `POP` | `0x50` | — | value → | Discard stack top |
-| `DUP` | `0x51` | — | a → a, a | Duplicate stack top |
-
-### 4.7 Array Operations (0x60–0x6F)
-
-| Opcode | Hex | Operands | Stack effect | Description |
-|--------|-----|----------|-------------|-------------|
-| `NEW_ARRAY` | `0x60` | u16 count | count values → array | Pop `count` values, create array (first popped = last element) |
-| `INDEX_GET` | `0x61` | — | index, array → value | Pop index and array, push `array[index]`. Out of bounds = runtime error |
-| `INDEX_SET` | `0x62` | — | value, index, array → | Set `array[index] = value` |
-| `LENGTH` | `0x63` | — | array_or_string → int | Push length |
-
-### 4.8 Type Operations (0x70–0x7F)
-
-| Opcode | Hex | Operands | Stack effect | Description |
-|--------|-----|----------|-------------|-------------|
-| `CAST_INT` | `0x70` | — | value → int | Convert top to int. Float truncates, string parses, bool→0/1 |
-| `CAST_FLOAT` | `0x71` | — | value → float | Convert top to float |
-| `CAST_STRING` | `0x72` | — | value → string | Convert top to string representation |
-| `CAST_BOOL` | `0x73` | — | value → bool | Truthy/falsy conversion |
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `CAST_INT` | `0x70` | `rA, rB, _` | `rA = int(rB)` |
+| `CAST_FLOAT` | `0x71` | `rA, rB, _` | `rA = float(rB)` |
+| `CAST_STRING` | `0x72` | `rA, rB, _` | `rA = string(rB)` |
+| `CAST_BOOL` | `0x73` | `rA, rB, _` | `rA = bool(rB)` |
 
 ---
 
 ## 5. Execution Model
 
-1. The VM loads the `.ulb` file, validates the magic bytes and version, and parses the constant pool and function table into memory.
-2. The VM locates the entry-point function (default: `main`) by name in the function table.
-3. A root call frame is created with locals allocated to `local_count` slots, all initialized to `empty`.
-4. The PC (program counter) is set to the function's instruction offset.
+1. The VM loads the `.ulb` file, validates magic bytes and version, parses the constant pool, function table, and block metadata into memory.
+2. The VM locates the entry-point function (default: `main`) by name.
+3. A root call frame is created with a register file of `register_count` slots, all initialized to `empty`.
+4. The PC is set to the function's instruction offset.
 5. The VM enters the fetch-decode-execute loop:
-   - Read opcode byte at PC, advance PC.
-   - Read operands (if any), advance PC.
-   - Execute the operation.
-   - Repeat until `RETURN` with no caller frame (program exits).
-6. The exit code is the integer value of the return value from `main`, or 0 if `main` returns `empty`.
+   - Read 32-bit instruction word at PC.
+   - Decode opcode (byte 0), operands (bytes 1–3).
+   - Execute. PC += 4 (always, unless a jump modifies PC).
+   - Repeat until `RETURN` with no caller frame.
+6. Exit code = integer value of the return register from `main`, or 0 if `empty`.
 
-### 5.1 Operand Stack
+### 5.1 Register File
 
-Each call frame has its own operand stack. Maximum stack depth per function is bounded and can be computed statically by the compiler (not stored in the file; the VM may use a fixed-size stack per frame or grow dynamically).
+Each call frame has its own register file of `register_count` slots (specified in the function table). Registers r0..r(param_count-1) are loaded with arguments by the caller. The compiler assigns all locals and temporaries to registers at compile time via linear-scan allocation. No operand stack exists.
 
 ### 5.2 Recommended Dispatch Implementation
 
-The main enemy of interpreter performance is **indirect branch misprediction** in the dispatch loop. Each opcode dispatch is a branch the CPU must predict, and a central `switch` gives the branch predictor a single branch site shared by all opcodes — it can only remember the last target, not per-opcode history.
+The main enemy of interpreter performance is **indirect branch misprediction**. Each opcode dispatch is a branch the CPU must predict, and a central `switch` gives the branch predictor a single site shared by all opcodes.
 
-**Primary recommendation: direct threaded dispatch** using computed goto (GCC/Clang `&&label` extension). Each handler ends with `goto *dispatch_table[*pc++]`, jumping directly to the next handler. This gives the branch predictor a separate branch site per handler, dramatically improving prediction accuracy. Benchmarks show 15–25% speedup over switch dispatch.
+**Primary: direct threaded dispatch** via computed goto (GCC/Clang `&&label` extension). Each handler ends with `goto *dispatch_table[*(uint8_t*)pc]`, jumping directly to the next handler. This gives the branch predictor a separate site per handler. Benchmarks show 15–25% speedup over switch dispatch.
 
-**Fallback: dense jump table.** If computed goto is unavailable (MSVC, portable C), use a `switch` with contiguous opcode values (no gaps). The compiler will emit a jump table rather than a branch chain. This is why hot opcodes are numbered `0x01–0x0A` with no gaps — the jump table stays dense and small.
+**Fallback: dense jump table.** Use a `switch` with contiguous opcode values. Hot opcodes are numbered `0x01–0x0B` with no gaps so the jump table stays dense and small.
 
-**Never use:** a chain of `if/else if` comparisons. This is O(n) in the number of opcodes per dispatch and destroys branch prediction.
-
-A conforming VM may use any dispatch method. The bytecode format does not depend on the dispatch strategy.
+**Never use:** `if/else if` chains. O(n) per dispatch, destroys branch prediction.
 
 ### 5.3 Quickening
 
-After the first execution of an instruction, the VM may **rewrite it in-place** to a specialized faster version. This is called quickening. The original opcode is replaced in the instruction buffer with a variant that skips work already done on the first pass.
-
-Examples:
+After the first execution, the VM may **rewrite an instruction's opcode byte in-place** to a specialized variant. The 32-bit fixed-width format makes this a single aligned byte write with no instruction-stream resizing.
 
 | Original | Quickened | What changes |
 |----------|-----------|-------------|
-| `LOAD_LOCAL` | `LOAD_LOCAL_INT` | Skips type tag check — slot is known to hold an int after first load |
-| `ADD` | `ADD_INT` | Both operands confirmed as int on first execution — skip type dispatch |
-| `LOAD_CONST` | `LOAD_CONST_INLINE` | Constant value cached in the instruction stream, skip pool lookup |
-| `CALL` | `CALL_RESOLVED` | Function pointer cached after first resolution by name |
+| `ADD` | `ADD_INT` | Both operands confirmed int — skip type dispatch |
+| `ADD` | `ADD_FLOAT` | Both operands confirmed float |
+| `CMP_LT` | `CMP_LT_INT` | Both operands confirmed int |
+| `CALL` | `CALL_RESOLVED` | Function pointer cached after first name resolution |
+| `LOAD_CONST` | `LOAD_CONST_INT` | Constant type cached — skip pool tag check |
 
-Quickened opcodes use the range `0xC0–0xDF`. They are never emitted by the compiler — only written by the VM at runtime. A `.ulb` file must not contain quickened opcodes; if one is encountered during initial loading, it is an error.
-
-CPython 3.11+ uses this technique extensively (PEP 659, "specializing adaptive interpreter") and attributes a significant portion of its 10–60% speedup over 3.10 to quickening.
+Quickened opcodes use the range `0xC0–0xDF`. Never emitted by the compiler. Never present in `.ulb` files on disk. See §7 for the full type specialization plan.
 
 ### 5.4 Error Handling
 
-Runtime errors (division by zero, out-of-bounds index, type mismatch in arithmetic, stack underflow) halt execution with an error message including the function name and instruction offset. There are no exceptions or try/catch in v0.1.
+Runtime errors (division by zero, out-of-bounds index, type mismatch, register out of range) halt execution with an error message including the function name and instruction offset. No exceptions or try/catch in v1.0.
 
 ---
 
-## 6. Example
+## 6. Tiered ISA
+
+The instruction set is organized into three tiers. Tier 0 ships in v1.0. Tiers 1 and 2 are designed now and implemented incrementally.
+
+### Tier 0 — Primitive Operations
+
+All instructions in §4. Integer/float arithmetic, register moves, branches, calls, returns. Each maps to one or two machine instructions under JIT. No metadata, no side tables. The baseline that every VM must implement.
+
+### Tier 1 — Semantic Operations (0x80–0x9F)
+
+Instructions that carry **inline cache (IC) metadata indices** for runtime specialization. Each Tier 1 instruction has a `rC` field that indexes into a per-function IC table (not part of the `.ulb` file — allocated by the VM at load time).
+
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `CALL_IC` | `0x80` | `rA, rB, ic_slot` | Call function in `rB` with IC slot for monomorphic/polymorphic dispatch |
+| `FIELD_GET` | `0x81` | `rA, rB, ic_slot` | `rA = rB.field` with type feedback in IC slot |
+| `FIELD_SET` | `0x82` | `rA, rB, ic_slot` | `rA.field = rB` with type feedback |
+| `ITER_INIT` | `0x83` | `rA, rB, _` | Initialize iterator over array/string in `rB`, store state in `rA` |
+| `ITER_NEXT` | `0x84` | `rA, rB, imm8` | Advance iterator `rB`, store value in `rA`, jump +imm8 instructions if exhausted |
+
+The IC table stores observed types, cached method pointers, and field offsets. On first execution, the IC slot is empty and the instruction takes the slow generic path. On subsequent executions, the cached information provides a fast path. If the observed type changes (deoptimization), the IC slot is cleared and reverts to generic.
+
+### Tier 2 — Superinstructions and Domain Operations (0xA0–0xBF)
+
+Fused instruction sequences and domain-specific operations added by the **load-time rewriting pass** (§8). Never emitted by the compiler directly. The VM rewrites Tier 0 sequences into Tier 2 equivalents when profitable.
+
+| Opcode | Hex | Form | Semantics |
+|--------|-----|------|-----------|
+| `ADD_REGS` | `0xA0` | `rA, rB, rC` | `rA = rB + rC` (int-only, no type check — post-specialization) |
+| `LOOP_TEST` | `0xA1` | `rA, rB, imm8` | `if !(rA < rB): pc += imm8 * 4`. Fused compare-and-branch for loop headers. |
+| `RETURN_REG` | `0xA2` | `rA, _, _` | Equivalent to `RETURN rA` but skips frame teardown checks for leaf functions |
+| `CALL_STORE` | `0xA3` | `rA, rB, rC` | Call `rB` with `rC` args, store result directly in `rA`. Fused call+move. |
+| `STRUCT_COPY` | `0xA4` | `rA, rB, imm8` | Copy `imm8` consecutive registers from `rB..rB+imm8` to `rA..rA+imm8` |
+| `BULK_ZERO` | `0xA5` | `rA, imm16` | Zero `imm16` consecutive registers starting at `rA` |
+| `SLICE` | `0xA6` | `rA, rB, rC` | `rA = rB[rC.start..rC.end]` (array/string slice) |
+| `INC_REG` | `0xA7` | `rA, _, _` | `rA = rA + 1` (integer only, no type check) |
+| `DEC_REG` | `0xA8` | `rA, _, _` | `rA = rA - 1` |
+| `CMP_JUMP_EQ` | `0xA9` | `rA, rB, imm8` | `if rA == rB: pc += imm8 * 4`. Fused compare-and-branch for match cases. |
+
+---
+
+## 7. Type Specialization
+
+Generic arithmetic instructions (`ADD`, `SUB`, `MUL`, `DIV`, `CMP_LT`) perform runtime type dispatch on every execution. Type specialization eliminates this overhead after the first execution reveals operand types.
+
+**Quickened typed variants** (range `0xC0–0xDF`):
+
+| Generic | Int variant | Float variant | Hex |
+|---------|-----------|--------------|-----|
+| `ADD` (0x03) | `ADD_INT` | `ADD_FLOAT` | `0xC0`, `0xC1` |
+| `SUB` (0x04) | `SUB_INT` | `SUB_FLOAT` | `0xC2`, `0xC3` |
+| `MUL` (0x05) | `MUL_INT` | `MUL_FLOAT` | `0xC4`, `0xC5` |
+| `DIV` (0x06) | `DIV_INT` | `DIV_FLOAT` | `0xC6`, `0xC7` |
+| `CMP_LT` (0x07) | `CMP_LT_INT` | `CMP_LT_FLOAT` | `0xC8`, `0xC9` |
+| `CMP_EQ` (0x20) | `CMP_EQ_INT` | `CMP_EQ_FLOAT` | `0xCA`, `0xCB` |
+| `LOAD_CONST` (0x02) | `LOAD_CONST_INT` | `LOAD_CONST_FLOAT` | `0xCC`, `0xCD` |
+
+The VM rewrites the opcode byte in-place after the first execution. If types change at that instruction site (deoptimization), the opcode reverts to generic and retries. This is CPython 3.11's PEP 659 approach, designed into UL's instruction set from the start.
+
+---
+
+## 8. Load-Time Rewriting
+
+On first load of a `.ulb` file, the VM runs a **bytecode rewriting pass** before execution begins. This pass:
+
+1. **Sequence fusion.** Scans for Tier 0 instruction sequences that match Tier 2 superinstruction patterns and rewrites them in-place. Because instructions are fixed 32-bit width, replacing a multi-instruction sequence with a superinstruction + NOPs is a simple aligned write. Example: `CMP_LT r3 r0 r1` + `JUMP_IF_FALSE r3 +4` becomes `LOOP_TEST r0 r1 +5` + `NOP`.
+
+2. **Handler reindexing.** The VM may remap opcode values in the loaded bytecode to reorder dispatch table entries for this specific program's hot paths. If profiling (via block metadata hotness counters) shows that `ADD` and `CALL` dominate, the VM can swap their dispatch table positions so they occupy adjacent I-cache lines. This is transparent to semantics — the remapping is applied to both the bytecode and the dispatch table atomically.
+
+3. **IC table allocation.** For each Tier 1 instruction, the VM allocates an inline cache slot in a per-function side table. The `ic_slot` operand in Tier 1 instructions indexes into this table. The table is not part of the `.ulb` file — it is allocated at load time and populated during execution.
+
+The rewriting pass runs once per function on first load. Subsequent invocations of the same function use the rewritten bytecode. The original `.ulb` file on disk is never modified.
+
+---
+
+## 9. Example
 
 UL source:
 
@@ -264,100 +357,48 @@ function main() returns int
 end function
 ```
 
-Bytecode (function `main`, 0 params, 2 locals):
+Bytecode (function `main`, 0 params, 3 registers: r0=x, r1=y, r2=temp):
 
 ```
-LOAD_CONST  0      ; push 3 (constant pool index 0)
-STORE_LOCAL 0      ; x = 3
-LOAD_CONST  1      ; push 4 (constant pool index 1)
-STORE_LOCAL 1      ; y = 4
-LOAD_LOCAL  0      ; push x
-LOAD_LOCAL  1      ; push y
-ADD                ; x + y → 7
-PRINT              ; print 7
-LOAD_CONST  2      ; push 0 (constant pool index 2)
-RETURN             ; return 0
+LOAD_CONST  r0, #0       ; r0 = 3  (constant pool index 0)
+LOAD_CONST  r1, #1       ; r1 = 4  (constant pool index 1)
+ADD         r2, r0, r1   ; r2 = r0 + r1 = 7
+PRINT       r2           ; print 7
+LOAD_CONST  r0, #2       ; r0 = 0  (constant pool index 2)
+RETURN      r0           ; return 0
 ```
 
 Constant pool: `[int 3, int 4, int 0]`
 
-Hex encoding of instructions (17 bytes):
+Hex encoding (6 instructions × 4 bytes = 24 bytes):
 
 ```
-03 00 00   ; LOAD_CONST 0    (0x03)
-02 00 00   ; STORE_LOCAL 0   (0x02)
-03 00 01   ; LOAD_CONST 1    (0x03)
-02 00 01   ; STORE_LOCAL 1   (0x02)
-01 00 00   ; LOAD_LOCAL 0    (0x01)
-01 00 01   ; LOAD_LOCAL 1    (0x01)
-04         ; ADD             (0x04)
-0A         ; PRINT           (0x0A)
-03 00 02   ; LOAD_CONST 2    (0x03)
-06         ; RETURN          (0x06)
+02 00 00 00   ; LOAD_CONST r0, const[0]
+02 01 01 00   ; LOAD_CONST r1, const[1]
+03 02 00 01   ; ADD r2, r0, r1
+0B 02 00 00   ; PRINT r2
+02 00 02 00   ; LOAD_CONST r0, const[2]
+0A 00 00 00   ; RETURN r0
 ```
 
----
-
-## 7. Reserved Opcodes and Superinstructions
-
-### 7.1 Superinstructions (`0xE0–0xEF`)
-
-A superinstruction combines a common multi-opcode sequence into a single opcode, eliminating intermediate stack pushes/pops and dispatch overhead. Research shows superinstructions can reduce executed VM instructions by over 46% for typical programs (Shi et al., ACM VEE 2005). The bytecode is designed so that common sequences can be fused without changing semantics — the compiler emits them as an optimization pass, and the VM must support both expanded and super forms.
-
-See **§9** for the full superinstruction candidate list based on UL's actual hot paths.
-
-### 7.2 Future Reserved (`0xF0–0xFF`)
-
-The range `0xF0–0xFF` is reserved for future use: closures, coroutines, match dispatch, DR enforcement, and memory operations. Encountering a reserved opcode halts execution with an "unknown opcode" error.
-
-### 7.3 Quickened Opcodes (`0xC0–0xDF`)
-
-Reserved for VM-internal quickened variants (see §5.3). Never emitted by the compiler. Never present in `.ulb` files on disk.
+After load-time rewriting, the VM may fuse instructions 0–1 into `BULK_ZERO` + two `LOAD_CONST_INT` (if quickening determines all constants are int).
 
 ---
 
-## 8. Versioning
+## 10. Reserved Ranges
 
-The major version increments on breaking changes to the instruction encoding or file format. The minor version increments on backward-compatible additions (new opcodes in unused ranges). A VM must reject files with a major version it does not support. A VM should accept files with a minor version greater than its own, ignoring unknown opcodes only if they appear in unreachable code paths.
-
----
-
-## 9. Superinstruction Candidates
-
-These are the highest-value instruction sequences to fuse based on UL's hot paths. Each eliminates multiple dispatch cycles and intermediate stack operations. Listed in priority order — implement top-down.
-
-| Opcode | Hex | Fused sequence | Operands | Dispatches saved | Description |
-|--------|-----|----------------|----------|-----------------|-------------|
-| `ADD_LOCALS` | `0xE0` | `LOAD_LOCAL a` + `LOAD_LOCAL b` + `ADD` | u8 slot_a, u8 slot_b | 2 | Add two locals directly. The most common arithmetic pattern in any program. |
-| `ADD_LOCAL_CONST` | `0xE1` | `LOAD_LOCAL a` + `LOAD_CONST k` + `ADD` | u8 slot, u8 const_idx | 2 | Add a constant to a local. Covers `x + 1`, loop increments, offset calculations. |
-| `LOOP_TEST` | `0xE2` | `LOAD_LOCAL a` + `LOAD_CONST k` + `CMP_LT` + `JUMP_IF_FALSE` | u8 slot, u8 const_idx, i16 offset | 3 | The most common loop header: `while i < N`. Four instructions become one. |
-| `RETURN_LOCAL` | `0xE3` | `LOAD_LOCAL a` + `RETURN` | u8 slot | 1 | Return a local variable. Most non-void functions end this way. |
-| `CALL_STORE` | `0xE4` | `CALL func` + `STORE_LOCAL s` | u8 func_idx, u8 arg_count, u8 slot | 1 | Call a function and store the result. `int x = add(a, b)` in one dispatch. |
-| `STORE_CONST` | `0xE5` | `LOAD_CONST k` + `STORE_LOCAL s` | u8 const_idx, u8 slot | 1 | Initialize a local from a constant. Every `int x = 0` or `string s = ""`. |
-| `INC_LOCAL` | `0xE6` | `LOAD_LOCAL s` + `LOAD_CONST 1` + `ADD` + `STORE_LOCAL s` | u8 slot | 3 | Increment local by 1. Loop counters, `x++` statements. |
-| `LOAD_PRINT` | `0xE7` | `LOAD_LOCAL s` + `PRINT` | u8 slot | 1 | Load and print. Debug output, REPL result display. |
-| `CMP_JUMP_EQ` | `0xE8` | `CMP_EQ` + `JUMP_IF_FALSE` | i16 offset | 1 | Compare-and-branch for equality. Match statement cases. |
-| `DEC_LOCAL` | `0xE9` | `LOAD_LOCAL s` + `LOAD_CONST 1` + `SUB` + `STORE_LOCAL s` | u8 slot | 3 | Decrement local by 1. Countdown loops. |
-
-The range `0xEA–0xEF` is reserved for additional superinstructions identified by profiling real programs. Note: superinstruction operands use **u8** (not u16) to keep instructions compact. Functions with >255 locals or constants fall back to the expanded sequence.
+| Range | Purpose |
+|-------|---------|
+| `0x01–0x7F` | Tier 0 primitive operations |
+| `0x80–0x9F` | Tier 1 semantic operations with IC slots |
+| `0xA0–0xBF` | Tier 2 superinstructions and domain operations |
+| `0xC0–0xDF` | Quickened type-specialized variants (VM-internal, never on disk) |
+| `0xE0–0xEF` | Reserved for future tiers |
+| `0xF0–0xFE` | Reserved for future use (closures, coroutines, DR enforcement) |
+| `0xFF` | `NOP` — no operation (used as padding after superinstruction fusion) |
 
 ---
 
-## 10. Type Specialization (v0.2)
+## 11. Versioning
 
-Generic arithmetic opcodes (`ADD`, `SUB`, `MUL`, `DIV`) perform runtime type dispatch on every execution — check if both operands are int, check if either is float, check for string concat, then execute the appropriate operation. This type dispatch is the single largest overhead per arithmetic instruction.
-
-**v0.2 introduces typed variants** selected by the quickening mechanism (§5.3) after the first execution of an instruction reveals the operand types at that site:
-
-| Generic | Typed variant (int) | Typed variant (float) | Quickened hex range |
-|---------|--------------------|-----------------------|-------------------|
-| `ADD` (0x04) | `ADD_INT` | `ADD_FLOAT` | `0xC0`, `0xC1` |
-| `SUB` (0x09) | `SUB_INT` | `SUB_FLOAT` | `0xC2`, `0xC3` |
-| `MUL` (0x10) | `MUL_INT` | `MUL_FLOAT` | `0xC4`, `0xC5` |
-| `DIV` (0x11) | `DIV_INT` | `DIV_FLOAT` | `0xC6`, `0xC7` |
-| `CMP_LT` (0x08) | `CMP_LT_INT` | `CMP_LT_FLOAT` | `0xC8`, `0xC9` |
-| `LOAD_LOCAL` (0x01) | `LOAD_LOCAL_INT` | `LOAD_LOCAL_FLOAT` | `0xCA`, `0xCB` |
-
-**How it works:** The VM executes the generic opcode on the first call. If both operands are int, it rewrites the opcode byte in-place to the `_INT` variant. Subsequent executions of that instruction skip the type check entirely. If the types change (rare — called "deoptimization"), the VM rewrites back to the generic opcode and retries.
-
-This is exactly what CPython 3.11+ does as a retrofit (PEP 659, "specializing adaptive interpreter"). UL designs it into the instruction set from the start — the opcode space is pre-allocated, the quickening mechanism is documented, and the deoptimization path is defined. No architectural surgery required later.
+The major version increments on breaking changes to the instruction encoding or file format. The minor version increments on backward-compatible additions (new opcodes in unused ranges). A VM must reject files with a major version it does not support. A VM should accept files with a minor version greater than its own, executing unknown Tier 1/2 opcodes via their Tier 0 expansions stored in the block metadata.
