@@ -384,11 +384,11 @@ main {
       <p>This tutorial explains what those choices are, what they mean, and why having control over them changes what you can build.</p>
     </div>
 
-    <div class="section" data-title="What Runtime Behavior Is">
+    <div class="section" data-title="What is Runtime">
       <div class="step-label">Section 2 of 14</div>
-      <h1>What Runtime Behavior Is</h1>
-      <p><strong>Runtime behavior</strong> is everything that happens while your program runs &mdash; as opposed to what happens when it compiles. How does it allocate memory? Does it check array bounds? Does it use one thread or many? These questions have answers in every language, but in most languages the answer is fixed and you don't get a say.</p>
-      <p>Some examples: Python automatically detects unused variables and frees their memory for you. C makes you free memory yourself. Java checks every array access at runtime. C trusts you and skips the check. JavaScript runs in a single thread. Go spawns lightweight goroutines.</p>
+      <h1>What is Runtime</h1>
+      <p>The <strong>Runtime Environment</strong>, or just "runtime" for short, is the system that supports your program while it's actually running. It handles things like memory management, type checking, and threading &mdash; everything that happens after the compiler is done and the program starts executing. Every language has one, whether you see it or not.</p>
+      <p><strong>Runtime behavior</strong> is the set of rules that runtime follows. How does it allocate memory? Does it check array bounds? Does it use one thread or many? In most languages, these rules are fixed and you don't get a say. Python automatically cleans up unused memory. C makes you do it yourself. Java checks every array access. C skips the check.</p>
       <p>Each choice has tradeoffs. The next few sections look at how four major languages handle this, and what you give up in each case.</p>
     </div>
 
