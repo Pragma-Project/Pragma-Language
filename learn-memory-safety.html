@@ -96,13 +96,13 @@ code { padding: 1px 6px; border-radius: 3px; font-family: 'Share Tech Mono', mon
 
 <p><strong>Java, Python, JavaScript.</strong> Prevent most memory bugs by using garbage collection and hiding raw pointers. You can't have a buffer overflow in Python because the runtime checks every array access. The cost is performance and the loss of low-level control.</p>
 
-<p><strong>Rust.</strong> Prevents memory bugs at compile time through the borrow checker &mdash; an ownership system that tracks which code owns which memory and prevents you from using it incorrectly. It works, but learning lifetimes, ownership, and borrowing has a real cost, especially for developers coming from other languages.</p>
+<p><strong>Rust.</strong> Prevents memory bugs at compile time through the borrow checker &mdash; an ownership system that tracks which code owns which memory and prevents you from using it incorrectly. It works, but it's mandatory. Every line of Rust code is subject to the borrow checker whether you need it or not. You can opt out with <code>unsafe</code> blocks, but then you're writing those annotations everywhere and losing the ergonomics that were supposed to be the point. Learning lifetimes, ownership, and borrowing has a real cost, and you don't get to skip it for the parts of your program where safety doesn't matter.</p>
 
 <h2 id="ul">How UniLogic Handles It</h2>
 
-<p>UL takes a different path: it <strong>proves memory safety mathematically</strong>. You write code. The compiler generates proof obligations and an SMT solver discharges them. If every obligation is satisfied, the program is proven safe for every possible input &mdash; not just the ones you tested. No lifetime annotations. No fighting the borrow checker. No runtime overhead.</p>
+<p>Unlike Rust, memory safety in UL is an <strong>option, not a requirement</strong>. If you're writing a quick script or prototyping, you don't have to think about it at all &mdash; defaults apply and you move on. When you need safety guarantees, you turn them on per file with a DR directive (<code>safety: checked</code>), and the compiler <strong>proves memory safety mathematically</strong>. It generates proof obligations and an SMT solver discharges them. If every obligation is satisfied, the program is proven safe for every possible input &mdash; not just the ones you tested. No lifetime annotations. No fighting a borrow checker.</p>
 
-<p>This is the same class of guarantee that Airbus uses for flight-critical software and that MISRA-C attempts to approximate through coding restrictions. UL builds it into the compiler toolchain so you don't need separate tools, separate annotation languages, or separate verification workflows.</p>
+<p>This is the same class of guarantee that Airbus uses for flight-critical software and that MISRA-C attempts to approximate through coding restrictions. UL builds it into the compiler toolchain &mdash; but only when you ask for it.</p>
 
 <div class="note">
 <strong>Proven, not tested</strong>
