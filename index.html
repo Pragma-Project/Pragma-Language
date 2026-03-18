@@ -348,6 +348,10 @@ body.theme-base .repl-btn:hover { color: #6bc4b0; border-color: #6bc4b0; backgro
         <p class="tagline-sentence">Unified Syntax · Configurable Runtime · Verifiable Memory Safety</p>
       </div>
 
+      <div style="text-align:center; margin-bottom:clamp(6px,1vh,12px);">
+        <a href="what-is-unilogic.html" style="display:inline-block; text-decoration:none; padding:10px 28px; border-radius:5px; font-family:'Share Tech Mono',monospace; font-size:clamp(0.8rem,1.2vw,0.95rem); font-weight:700; letter-spacing:0.08em; transition:background 0.15s; background:#1e1e2e; color:#7ab3e0; border:1px solid #313244;">What is UniLogic?</a>
+      </div>
+
       <div class="hover-btns-row">
         <div id="c-wrap" style="display:flex; flex-direction:column; align-items:center; gap:3px;" onmouseenter="showPopup('c-wrap','c-hover-img')" onmouseleave="hidePopup('c-hover-img')">
           <div class="lang-pill" onclick="window.location='C-Side-by-Side.html'">..but C works fine</div>
@@ -394,7 +398,7 @@ body.theme-base .repl-btn:hover { color: #6bc4b0; border-color: #6bc4b0; backgro
       <div class="landing-footer">
         <a href="language-main.html" class="lang-ref-btn">Language Reference →</a>
         <a href="industry-developments.html" class="industry-btn">Industry Research<br>&amp; Developments</a>
-        <button class="why-btn" onclick="showReadme()">Why?</button>
+        <a href="comparison.html" class="why-btn" style="text-decoration:none;">Why?</a>
         <a href="tools.html" class="glossary-btn">Tools &amp; Utilities</a>
         <a href="repl.html" class="repl-btn">Try it in your browser &rarr;</a>
         <a href="runtime-intro.html" class="glossary-btn">Learning &amp; Resources &rarr;</a>
@@ -537,9 +541,9 @@ body.theme-base .repl-btn:hover { color: #6bc4b0; border-color: #6bc4b0; backgro
   <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;"><span style="color:#cdd6f4; font-family:'Jost',sans-serif; font-size:0.72rem; flex:1;">JS <span style="font-size:0.7rem; color:#89dceb; font-family:'Share Tech Mono',monospace;">this</span> rebinds in callbacks.</span><a href="JS-Side-by-Side.html" style="color:#7ab3e0; font-family:'Share Tech Mono',monospace; font-size:0.8rem; text-decoration:none; letter-spacing:0.08em; white-space:nowrap;">See More →</a></div>
 </div>
 
-<!-- README overlay -->
-<div id="page-readme">
-  <button id="readme-close" onclick="closeReadme()">← back</button>
+<!-- README content moved to authors-note.html -->
+<!-- <div id="page-readme"> removed -->
+<div id="page-readme" style="display:none;">
   <div class="readme-inner">
     <div class="readme-hero">UniLogic is an independent research endeavor.</div>
     <div class="readme-hero"><em>Why do this?</em></div>

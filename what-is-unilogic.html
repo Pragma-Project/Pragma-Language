@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is UniLogic?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.85;
+  color: #1a1a1a;
+  background: #f8f5f0;
+}
+
+.inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 48px 140px;
+}
+
+.back {
+  display: inline-block;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #666;
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #e8e3db;
+  margin-bottom: 48px;
+  transition: all 0.15s;
+}
+.back:hover { color: #111; background: #d8d2c8; border-color: #999; }
+
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #1a1a1a;
+  margin-bottom: 48px;
+  letter-spacing: -0.01em;
+}
+
+.body p { margin-bottom: 18px; color: #2a2a2a; }
+.body p strong { color: #1a1a1a; }
+
+.body a { color: #1a3a7a; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 36px 0; }
+
+</style>
+</head>
+<body>
+
+<div class="inner">
+
+<a href="index.html" class="back">&larr; back</a>
+
+<h1>What is UniLogic?</h1>
+
+<div class="body">
+  <p><strong>Q: What is this called?</strong></p>
+  <p>UniLogic. One syntax that covers the range from low-level systems work to high-level application development. Runtime behavior that is declared rather than inherited from whichever language you happened to pick. A schema-based expression layer that describes what a program does in the same terms you would use to explain it to another person, rather than the terms required to build it in an IDE.</p>
+  <p>This is a hobby project and an ongoing design exercise, not a product. The work is documented as it develops. Feedback and collaboration from people who find this worth thinking about is genuinely welcome.</p>
+
+  <hr>
+
+  <p><strong>Q: What's some differences in runtime behaviors?</strong></p>
+  <p>Rust already toggles safety with unsafe blocks. Inside unsafe, you get raw pointers, manual memory, no borrow checker. Outside, you get full safety guarantees. Same language, two modes, toggled per-block.</p>
+  <p>C# has unsafe context too, by letting you use pointers and fixed-size buffers, opting out of GC for that scope.</p>
+  <p>D has @nogc annotation, which marks functions that aren't allowed to allocate from the garbage collector. You can mix GC and manual memory in the same program.</p>
+  <p>Zig lets you choose allocators per-call. You can have arena allocation in one place, general purpose style allocation in another, with no allocation at all in some hot path. You pass the allocator explicitly.</p>
+  <p>Swift has both ARC (reference counting) and unsafe pointers available in the same language.</p>
+  <p>No language puts all of these on a single dial panel. Every one picks a default and lets you escape from it in limited ways. Here, you declare your policy and the compiler enforces it.</p>
+  <p>Every function, data structure, and IO operation works under all configurations. A linked list under GC doesn't need a destructor. Under manual memory it does. Under refcount it needs weak reference support. These are the sorts of things that are a coverage goal, and is a necessary part of a system of unified syntax.</p>
+  <p>One standard library with an implementation of everything is the route to achieving a successful build for this concept. There's no novel ideas and reinventing the wheel, but rather just patching together and recreating past work. However, there is some design of interfacing and other systems that allow for co-existence of these systems.</p>
+  <p>The syntax decisions borrow from what already exists across C, Python, Java, and Javascript. The angle of attack in this component is to unify and minimize, not to invent. I want anyone to be able to see it and understand it. Verbosity is chosen over efficiency or what many might see as elegance. It's not something prioritizing functional programming; the entire personality and image being built is one revolving around practicality.</p>
+  <p>The full design rationale and conceptual basis is documented in the <a href="LANG_Complete_F.pdf">LANG Project document</a>.</p>
+</div>
+
+</div>
+
+</body>
+</html>

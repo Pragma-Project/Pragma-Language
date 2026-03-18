@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic — Author's Note</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.85;
+  color: #1a1a1a;
+  background: #f8f5f0;
+}
+
+.inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 48px 140px;
+}
+
+.back {
+  display: inline-block;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #666;
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #e8e3db;
+  margin-bottom: 48px;
+  transition: all 0.15s;
+}
+.back:hover { color: #111; background: #d8d2c8; border-color: #999; }
+
+.hero {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #1a1a1a;
+  margin-bottom: 80px;
+  letter-spacing: -0.01em;
+}
+.hero em { font-style: italic; color: #1a3a7a; }
+
+.body p { margin-bottom: 18px; color: #2a2a2a; }
+
+.pillar { margin: 52px 0; padding-left: 24px; border-left: 3px solid; }
+.pillar p { margin: 0; padding: 12px 0; border-bottom: 1px solid #e0dbd5; font-size: 0.96rem; line-height: 1.75; color: #333; }
+
+.kicker {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  color: #333;
+  margin: 40px 0 20px;
+  line-height: 1.7;
+  border-left: 3px solid #1a3a7a;
+  padding-left: 20px;
+}
+
+.sign-off {
+  margin-top: 40px;
+  font-style: italic;
+  color: #333;
+}
+
+.email-reveal {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 6px 16px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #e8e3db;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.email-reveal:hover { color: #111; background: #d8d2c8; border-color: #999; }
+
+#email-addr {
+  display: none;
+  margin-top: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  color: #1a3a7a;
+}
+
+</style>
+</head>
+<body>
+
+<div class="inner">
+
+<a href="index.html" class="back">&larr; back</a>
+
+<div class="hero">UniLogic is an independent research endeavor.</div>
+<div class="hero"><em>Why do this?</em></div>
+
+<div class="body">
+  <p>A tiny bit of background here I think is relevant because it starts to put into perspective what would lead to this project. I grew up pretty much through the computer as a kid from around 11-15. Sam's Teach Yourself TCP/IP in 21 Days was my favorite book in those years. I diverged into other things, came back in college for a year, diverged again, did some work with APIs and whatnot but computing was not in my main responsibilities list. Then came Claude Code and immediately it was an outright addiction. I'm doing things I never would have dreamt of trying before. This is one of those things stumbled upon, but has quickly become something I feel is the most promising and goes in the direction of true advances more than anything else.</p>
+
+  <p>This started with me getting interested in testing the waters in a space I wouldn't have dared venturing into as a kid: kernels. I started looking through the Linux cross reference and other things, and quickly got fed up with the complexity and overall just the sheer vastness of what's in all those folders. It's a true universe unto itself. I started to want more explicit, natural language-style, verbose syntax. Now this project was really first born: I became interested in what it'd take to have my own language simply compile to C. Apparently not too much. Mr. Claude can basically code Apollo 13 probably at this point, let's stumble through building a kernel to learn those basics. Plenty of people did exactly that to learn. As research went on and I built a barebones kernel booting to a terminal, with a init for the VFS and even finally later an interface to the physical disk, I started learning that the reason so many OS's had failed were pretty basic: compatibility, trusted/tried brand names, etc. I originally thought maybe a nice feature for someone that might make use of this work would be light weight, but I found Glaucus Linux and others are already light. A light OS doesn't change your giant app you're hosting or the web server or whatever else that makes up the bulk of consumed resources.</p>
+
+  <p>Going the unholy route of not-C landed me Nim, a very new language with the ability to compile to C or C++ or itself. As time went on, and I worked in lockstep with Claude even writing much of the code manually and having him only review in some cases, I started to not like its non-natural syntax. I also learned that the compatibility problem could be solved &ndash; the main cause of death of the non-microsoft and non-linux OS world, hardware compatibility, had a pretty clear and simple solution: loading Linux as a driver and filesystem and memory management component but not the overarching OS. As I kept mapping direct to C, or using structures of C code/lines to map to one expression in my language, I realized that there were actually quite a few interesting and, importantly, novel avenues to go down. Every language had specific runtime behavior. Java had GC, but apparently you didn't want that and explicitly needed its absence in low-level work. Python has that ability for people to not declare types and leave things like arrays open-ended. But what stood out at this point to me was that it seemed like no one had made this a configurable option. And instead of the usual conversion from one language mapping to another one-way, what if you went both ways, and did so for a collection of languages? This way you could effectively code in multiple languages, without truly having to learn them fully first. One toolkit, many applications. One representation, the ability to modify many others. A single runtime, but configurable to mimic the others. I didn't see where this had really been something developed before &ndash; or at least not easily visible via google and other search queries.</p>
+
+  <p>The real project's inception was at this point. Before this, it was more just focused around kernel work and "say it like I want it". Now I had decided that probably a fair initial design of such a language would be one which targeted 4 languages: Python, Java, C, and JavaScript. With these, you hit it all &ndash; most of modern day to day software development is either in or can by covered by these 4, it seemed. And they covered a large portion if not bulk of talent present, as well.</p>
+
+  <p>But there were things I saw and couldn't see as obstacles lying in short distance ahead:</p>
+</div>
+
+<div class="pillar" style="border-color:#7c4dcc;">
+  <p>Balancing syntax breadth with minimization of bloat</p>
+  <p>Maximization of power with minimization of syntax</p>
+  <p>Managing such a configurable and large runtime environment</p>
+  <p>Designing the runtime system to balance important options with desires</p>
+  <p>Managing conflicts that range from banned, to dangerous or of note, to harmless</p>
+  <p>An even bigger conceptual leap that completed the idea at this point unseen</p>
+</div>
+
+<div class="body">
+  <p>It thus far been a bit of a monotonous, frustrating journey. It's somewhat of a thinking exercise, but a lot of an effort exercise. I've since then had a handful of several hundred line C libraries that are third-party and random go the whole round trip back to binary. But that's the beginning of a journey, not a major milestone. The real event that crossed this from "big undertaking" to "possibly the most serious thing I've considered in terms of learning and impact" was from issues between me and Mr. Claude himself.</p>
+
+  <p>I have been spending an incredible amount of time with Claude and LLM's working on code. I usually wake up in the mid to late morning, stay up the entire night and sleep the following night. Pulling over 24 hours is normal, and I've never felt more comfortable staying at home than now. I'm always at the computer. But Claude disappoints me frequently with code that doesn't work, tests he says happened but never did, and long stints of nothing getting done and instead just making me wonder if I need blood pressure meds now rather than later. This is where the image people have of these tools being something that you say and it does, perfectly, is a fantasy at this current place in time. This will be revisited later.</p>
+
+  <p>So I thought how can I fix this? A popular solution is to take his responses, feed it back to him to critique, and even do this several times. Another is to use a second LLM that's unrelated to break the loop by way of never being in it and having a fresh start to begin with. Another one is using "hooks", basically just messages that get sent as part of the prompt every time you send a message, so you can, for example, always put a rule written out in every prompt, making him obey&hellip;theoretically. What I learned about was the reality, and it's that none of this works perfectly; it's all fighting symptoms instead of root causes, and there's a wide assortment of people complaining about the same things.</p>
+
+  <p>This is where things started to get interesting and the full realization of this came into existence. I found that pretty much the entirety of benchmarks, or at least those that matter to that space's crowd, are those involving not the coding tasks we encounter, not challenging version of tasks we encounter, not that plus an easy task list, not even something I would have guessed. It centers largely around mathematical challenges and extremely heavy, deep reasoning coding problems. These are the things younger and junior-level hires worry about in interviews. Situations that effectively never happen in practice, and even if they did, you'd arguably be foolish to just try to solve it on your own instead of lookup existing solutions from what's likely to be numerous people who've put more thought and have more capacity for it than you. If you want to see examples of this, you can simply lookup the keyword "leetcode", but my guess is if you landed here, you are already well-acquainted with these as interview questions.</p>
+
+  <p>I am going to speak with some conviction here: I think this is nearly flat-out wrong. If you are working on making your technology not first do well the basic things, but instead try to climb mount Everest or land on the moon, you have your priorities out of order. I understand &ndash; probably the money, the management, the advancement of reasoning, among other things, drive the focus in this direction. But it's a simple statement of fact: if everyone, meaning your core customer base that is made up of the developers at companies relying on you to do their job, to this new wave of hobbyists like me, are all telling you the basics are coming out wrong, that's probably at least where you should focus some of your attention, if not the bulk. The digging into this didn't seem like this was a monumental problem in comparison to the Einstein medals being chased, either. It was a simpler problem set.</p>
+
+  <p>So I started to look into how to tune models and possibly get rid of a fair portion of this behavior. I went to ask in a Discord server, put out my message saying what was said just before this sentence, then got a response that there wasn't much of an option for this. I looked into more recent work on doing something producing similar outcomes, such as "The Critic" &ndash; a third-party agent that critiques your main agent and thus builds your model into something matching your desired outputs more closely. But it still leaves things up to interpretation, and the improvement scores I did see (what little data was available to even assume things about) was pretty sparse. Around the same time, I had the need during testing for something that would move files to replace a stale cache, and kill and start back up a process. I asked Claude to write the code. Low and behold, the output didn't work, just like the same code I'd been testing and was building this tool to assist with in testing. This time I thought about how there's only a copy, a paste, a kill process, and lastly a start process set of operations involved. That's just 4 operations: read, write, kill PID, and start process.exe. But when I looked at Claude's code, it was over 70 lines. As I started working through it, it didn't make sense and I started finding things that were not needed at all. Then I decided to manually create this script, and ended up with just 28 lines in comparison, using the same styling and lack of comments he used. And mine worked. It took about 20 or 30 minutes, and it only takes him not even 30 seconds to create something like that. But his solution was nearly 3x as long and did not work. It was poorly structured, included pointless, redundant code, and failed to do the things I told him I needed it to do. This was the point I thought to myself that instead of looking to everyone else's thinking, I'd try to think through this on my own.</p>
+
+  <p>Then an epiphany came: one way to make these models better on my own was not by fine-tuning or training from the start all over again, but rather to do something pretty simple and widely-applied in other scenarios: take the AI out of the problem. Instead of worrying about it reasoning correctly, you remove that reasoning aspect where you can. The model is taking your natural language input, trying to match that to what looks most to it like the highest scored output, then taking this base concept and extrapolating other abstractions or the actual logic and code that makes up your output. If it's the problem, get rid of it. And the place to do that is in the very place that produces the problems: the code generation. He gets what I want (generally), he creates good specification documents and outlines (I keep those on the big ones), but he fumbles miserably when it comes to the code. Even if it works, it's bloated and inefficient. This led me to the final form of this project: addition of something higher-level than the logical, algebraic expression you see in effectively all widely-used, modern languages. In its place would be something that's a more barebones system of syntax. It doesn't use logic, but rather things and their associated operations, with the others being details. This is the form that came from just starting from the point of composing what something that's shorter on logic and longer on compactness and relation to spoken terms regarding software. The natural language aim was a key goal from the very beginning. What I found was that what I had written out was basically the same schema-based syntax that you find in JSON, YAML, and even SQL, among others. As I mention in the more formal whitepaper-format of the what and how for this endeavor, this was something that had happened in software several times, and was a natural progression away from logic towards exactly the ideas I had wanted.</p>
+
+  <p>When you mention software or work you've done, you talk about things and you associate things to data you're working with, the packages you have dependencies for, the workbook, the json file, the endpoint &ndash; all those virtual entities. All these things are associated with actions &ndash; read data, write data, make an API call, send this query, etc. And everything else just becomes an associated detail of those two aspects. I now had something that encompassed a language with the following traits:</p>
+</div>
+
+<div class="pillar" style="border-color:#2d7a5f;">
+  <p>System of unified syntax</p>
+  <p>Conversion to and from core languages comprising the bulk of modern software</p>
+  <p>A language that kept most of the power and flexibility for a single super language</p>
+  <p>A language that simultaneously minimized what's lost to keep that power and flexibility instead of a weak substitute that's not good in any particular direction</p>
+  <p>Serves as a Proof of Concept for an idea that, at least at this time, I haven't seen proven, though a couple research works outline such a system that were published in just the last couple of years</p>
+  <p>Continues the progression of software languages towards schema instead of logic</p>
+  <p>Bears striking resemblance to the two effects and disruptions of assembly and C</p>
+  <p>Stands poised to benefit from a large culmination of factors pointing the space in this same direction</p>
+  <p>Improves quality of the code written by LLM agents that are rapidly being adopted</p>
+  <p>Promotes this new paradigm of agents in coding as a learning tool rather than a cheap contraption that only those with experience or even furthermore specific use cases and careful handling can benefit from</p>
+</div>
+
+<div class="body">
+  <p>I'm not going to list out everything here. The key idea I'm trying to express is that did the following:</p>
+</div>
+
+<div class="pillar" style="border-color:#1a3a7a;">
+  <p>Started with an idea of building a kernel with a language that would compile to C</p>
+  <p>Arrived at a language which converted to and from Java, C, Python, and JavaScript (the bulk of modern software)</p>
+  <p>Then came to something that additionally took the idea of the runtime as a setting (you can mimic the behavior of the environment you want)</p>
+  <p>And last arrived at a bigger solution overall that truly rested upon a broader top layer (you use a new form of expression in programming altogether)</p>
+</div>
+
+<div class="body">
+  <p>This is a large undertaking. Help from the community makes this a quicker reality, adds brainpower to this process and outcome, and allows for that same curiosity and energy the Claude and other agents create in this new era to be multiplied between us in teams. As you read through the site, take note now that this is the design documentation and drafts. I do keep some other paperwork locally, but this website serves as the source of truth. I intend not only to host the reference here, but also later the work as it's ongoing &ndash; detailing what has happened, what we've found, any fun findings or stories along the way, and anything else I think makes this a logged and able-to-be-revisited project. There's a lot to learn, and writing things down makes them known forever, not to mention serves as a source of information to someone else, for something that there may be sparse information for otherwise.</p>
+
+  <p>That's probably as much narrative as I've written in the past few months at all or maybe even ever; I'm not sure. This is not about me, it's about what's going on here. I want others to get as excited about it as I am. So without taking up any more room on your screen with data about me, I want to thank you for taking the time to explore this site and what I'm doing. You can also contact me via email below. <a href="usams/index.html" style="color:#1a3a7a;">The formal document serves as the single, formal why.</a> This is the totally informal why. It's the "what is this guy thinking?" answer. I hope that did provide an answer or a nice break from some deeper thinking.</p>
+
+  <p>Feel free to reach out &ndash; I'd love to hear from anyone about their thoughts.</p>
+
+  <p class="sign-off"><em>Tariq Albazzaz</em></p>
+
+  <button class="email-reveal" onclick="document.getElementById('email-addr').style.display='block';this.style.display='none';">Click to show email</button>
+  <div id="email-addr"><a href="mailto:albazzaztariq@gmail.com" style="color:#1a3a7a;">albazzaztariq@gmail.com</a></div>
+</div>
+
+</div>
+
+</body>
+</html>
