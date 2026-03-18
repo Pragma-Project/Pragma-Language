@@ -177,9 +177,11 @@ td {
 
 <hr class="thick">
 
+<p style="background:#f5f5f0; border-left:3px solid #888; padding:12px 16px; margin-bottom:20px;"><strong>Industry context.</strong> The formal methods described in this document &mdash; Hoare logic, weakest precondition calculus, SMT-based discharge, abstract interpretation &mdash; are the same techniques used across safety-critical industries. Airbus uses Frama-C and SPARK/Ada for flight control software under DO-178C. Automotive manufacturers apply these methods under ISO 26262 and MISRA-C. NASA, the FDA (for medical device software), and defense contractors rely on the same mathematical foundations to prove that software cannot fail in ways testing alone cannot rule out. MemProof applies these established methods to UL.</p>
+
 <h2>1. Goals and Scope</h2>
 
-<p>MemProof is UniLogic's static formal verification layer. Its purpose is to prove, prior to deployment, that a UL program is memory safe — meaning the program cannot, for any valid input within its declared input contracts, exhibit:</p>
+<p>MemProof is UniLogic's static formal verification layer. Its purpose is to prove, prior to deployment, that a UL program is memory safe &mdash; meaning the program cannot, for any valid input within its declared input contracts, exhibit:</p>
 
 <ul>
   <li>Buffer overflows or out-of-bounds array access</li>
