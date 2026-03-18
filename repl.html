@@ -135,19 +135,19 @@ h1 { font-size: 2.2rem; font-weight: normal; margin-bottom: 8px; padding-bottom:
   font-family: 'Share Tech Mono', 'Courier New', monospace;
   font-size: 14px;
   line-height: 1.65;
-  color: #cdd6f4;
+  color: #e8e8f0;
 }
 
 #terminal-output::-webkit-scrollbar { width: 6px; }
 #terminal-output::-webkit-scrollbar-track { background: transparent; }
 #terminal-output::-webkit-scrollbar-thumb { background: #313244; border-radius: 3px; }
 
-.line-input  { color: #cdd6f4; }
-.line-output { color: #a6adc8; }
-.line-error  { color: #f38ba8; }
-.line-info   { color: #7ab3e0; }
-.line-banner { color: #1A4A6B; }
-.prompt-color { color: #1A4A6B; font-weight: bold; }
+.line-input  { color: #f0f0f5; }
+.line-output { color: #e0e0e8; }
+.line-error  { color: #ff6b8a; }
+.line-info   { color: #8ecfff; }
+.line-banner { color: #5ba0d0; }
+.prompt-color { color: #4a9ad0; font-weight: bold; }
 
 #input-row {
   display: flex;
@@ -160,7 +160,7 @@ h1 { font-size: 2.2rem; font-weight: normal; margin-bottom: 8px; padding-bottom:
 #input-prompt {
   font-family: 'Share Tech Mono', monospace;
   font-size: 14px;
-  color: #1A4A6B;
+  color: #4a9ad0;
   font-weight: bold;
   padding-top: 2px;
   white-space: pre;
@@ -176,7 +176,7 @@ h1 { font-size: 2.2rem; font-weight: normal; margin-bottom: 8px; padding-bottom:
   font-family: 'Share Tech Mono', 'Courier New', monospace;
   font-size: 14px;
   line-height: 1.65;
-  color: #cdd6f4;
+  color: #f0f0f5;
   resize: none;
   overflow: hidden;
   min-height: 23px;
@@ -1167,9 +1167,9 @@ window.replDemo = function() {
 writeLine("", "");
 writeLine('     <span class="line-banner">\u221E  UniLogic</span>', "");
 writeLine('     <span class="line-banner">One Language for Everything</span>', "");
-writeLine('     <span style="color:#585b70;">type </span><span class="prompt-color">help</span><span style="color:#585b70;"> for commands</span>', "");
+writeLine('     <span style="color:#8888a0;">type </span><span class="prompt-color">help</span><span style="color:#8888a0;"> for commands</span>', "");
 writeLine("", "");
-writeLine('     <span style="color:#585b70;font-style:italic;">Tip: define functions first, then call them on a new line.</span>', "");
+writeLine('     <span style="color:#8888a0;font-style:italic;">Tip: define functions first, then call them on a new line.</span>', "");
 writeLine("", "");
 
 field.focus();
