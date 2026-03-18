@@ -4,6 +4,41 @@ Everything currently implemented in the UniLogic toolchain.
 
 ---
 
+## Recent Additions (March 2026)
+
+### Language Changes
+- `cast(x, type)` replaces `change(x)->type` as the casting syntax
+- `exit(int code)` added as a built-in function — terminates from anywhere in the call stack
+- `main()` with no return type is valid — compiler inserts `return 0` automatically
+- `@norm N` can appear inside function bodies as a statement, not just at file level
+- Error handling model: Result types (`int|error`), `?` propagation operator, exit codes, explicit `exit()`, void/none
+
+### Compiler
+- Match statement implemented across all 4 targets (C: if/else chain, LLVM: switch, Python: match/case, JS: switch/case)
+- Normalization pass with 4 levels and per-file `@norm N` override
+- `ul.ps1` and `ul.bat` wrapper scripts for Windows (auto-detect Python)
+
+### VS Code Extension
+- Autocomplete: keywords, functions, types, scope-aware variables, foreign imports
+- Signature help: parameter highlighting on `(` and `,` with nested call support
+- Dependency graph: D3.js force-directed visualization with DR conflict highlighting
+- Explain Structure / Explain Execution: AI-powered walkthroughs with line highlighting
+- Status bar: rotating tips visible only when .ul file is active
+
+### Website
+- Browser REPL: full JS port of lexer/parser/evaluator, works offline
+- DR Conflict Checker: 19 intra-file rules + cross-file mismatch detection
+- Runtime Tutorial: 15-section paginated walkthrough with 5 animated memory model widgets
+- Feature Comparison: UL vs Python vs C vs JavaScript across 11 features
+- Error Handling page: 4 models documented with comparison table
+- Learning & Resources: educational pages on memory safety, platform dependence, deployment
+- Features & Functionality: factual list of everything in the toolchain
+- Bytecode spec (`bytecode-spec.md`): register-based VM, 32-bit fixed-width instructions, tiered ISA, block metadata, load-time rewriting
+- CHANGELOG reorganized
+- Project Manager GUI download (Windows x86-64)
+
+---
+
 ## Compiler (XPile)
 
 ### Lexer
@@ -35,7 +70,7 @@ Everything currently implemented in the UniLogic toolchain.
 - Function call argument validation
 - Type inheritance chain validation (parent must exist)
 - Field access resolution through inherited type hierarchy
-- Built-in functions exempt from declaration: `absval`, `size`, `change`, `memmove`, `memcopy`, `memset`, `memtake`, `memgive`
+- Built-in functions exempt from declaration: `absval`, `size`, `cast`, `exit`, `memmove`, `memcopy`, `memset`, `memtake`, `memgive`
 
 ### Normalization (optional)
 - Level 0: none
@@ -105,7 +140,7 @@ Everything currently implemented in the UniLogic toolchain.
 - Persistent scope across inputs (variables and functions survive between entries)
 - Multi-line input: detects open blocks (`function`, `if`, `while`, `for`, `match`) and reads continuation lines until `end` closes them
 - Commands: `help`, `exit`/`quit`, `functions` (list with signatures), `vars` (list with values), `clear` (reset state)
-- Built-in functions: `absval`, `size`, `change`
+- Built-in functions: `absval`, `size`, `cast`, `exit`
 - Control flow signals: `ReturnValue`, `BreakSignal`, `ContinueSignal` as exceptions
 - Integer division uses C-style truncation toward zero
 - Print formatting: booleans as `0`/`1`, floats as `%f`, strings and ints as-is

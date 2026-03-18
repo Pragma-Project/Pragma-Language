@@ -108,26 +108,65 @@ p { margin-bottom: 14px; color: #2a2a2a; }
 
 <h1>Features &amp; Functionality</h1>
 
-<p class="intro-text">UniLogic's core features span memory safety, runtime configuration, compilation, and deployment. Together they form the full system that lets you write once and target any platform, any memory model, and any safety level.</p>
+<p class="intro-text">Everything currently implemented in the UniLogic toolchain. Factual list &mdash; what exists and what it does.</p>
 
-<div class="card-grid">
-  <a href="safety.html" class="card">
-    <h3>Memory Safety</h3>
-    <p>Mathematically-proven memory safety via MemProof. Formal verification with SMT solvers, digital signing, and functional correctness contracts. No lifetime annotations, no runtime overhead.</p>
-  </a>
-  <a href="dynamic-runtime.html" class="card">
-    <h3>Dynamic Runtime</h3>
-    <p>Per-file runtime configuration. Memory model, safety level, type system, integer width, and concurrency &mdash; declared at the top of each file, enforced by the compiler. Conflicts between files detected at compile time.</p>
-  </a>
-  <a href="translation.html" class="card">
-    <h3>Translation / XPile</h3>
-    <p>The compilation engine. Converts UL source to C, Python, JavaScript, or LLVM IR. Round-trip capable &mdash; style profiles control how target code maps back to UL syntax.</p>
-  </a>
-  <a href="deployment-targets.html" class="card">
-    <h3>Deployment Targets</h3>
-    <p>What platforms and languages the compiler can emit to. Native binaries via C/LLVM, portable scripts via Python, browser apps via JavaScript.</p>
-  </a>
-</div>
+<h2 style="margin-top:24px;">Compiler (XPile)</h2>
+<table>
+  <tr><th>Feature</th><th>Details</th></tr>
+  <tr><td>Targets</td><td>C99, Python 3, JavaScript (ES6), LLVM IR</td></tr>
+  <tr><td>Type system</td><td>int (8/16/32/64, signed/unsigned), float, double, string, bool, none, complex, array, list, map</td></tr>
+  <tr><td>User types</td><td>Structs with fields, single inheritance via <code>inherits</code></td></tr>
+  <tr><td>Control flow</td><td>if/else, while, for each, match/default, escape (break), continue</td></tr>
+  <tr><td>Error handling</td><td>Result types (<code>int|error</code>), <code>?</code> propagation, <code>exit(code)</code>, exit codes via main return</td></tr>
+  <tr><td>Casting</td><td><code>cast(x, type)</code> replaces C-style casts</td></tr>
+  <tr><td>FFI</td><td><code>import "lib" function name(...)</code> with variadic support</td></tr>
+  <tr><td>Normalization</td><td>4 levels (0&ndash;3): compound expansion, call flattening, boolean splitting, array expansion. Per-file via <code>@norm N</code></td></tr>
+  <tr><td>Memory builtins</td><td>memtake, memgive, memcopy, memmove, memset, address, deref</td></tr>
+  <tr><td>DR settings</td><td>memory, safety, types, int_width, concurrency &mdash; per-file, compiler-enforced, conflict detection</td></tr>
+  <tr><td>Semantic checker</td><td>Scope chains, forward calls, type inheritance validation, field access resolution</td></tr>
+</table>
+
+<h2>VS Code Extension</h2>
+<table>
+  <tr><th>Feature</th><th>Details</th></tr>
+  <tr><td>Syntax highlighting</td><td>TextMate grammar for all UL keywords, types, operators, literals, comments</td></tr>
+  <tr><td>Diagnostics</td><td>Inline errors from lexer, parser, and semantic checker on every save</td></tr>
+  <tr><td>Hover</td><td>Keyword glossary (56 entries), function signatures, type definitions, variable types</td></tr>
+  <tr><td>Go-to-definition</td><td>Jump to function, type, or variable declaration. Cross-file workspace search</td></tr>
+  <tr><td>Autocomplete</td><td>Keywords, functions, types, scope-aware variables, foreign imports</td></tr>
+  <tr><td>Signature help</td><td>Parameter highlighting on <code>(</code> and <code>,</code> with nested call support</td></tr>
+  <tr><td>Explain Structure</td><td>AI-powered walkthrough of file structure with line highlighting</td></tr>
+  <tr><td>Explain Execution</td><td>AI-powered execution flow walkthrough</td></tr>
+  <tr><td>Dependency graph</td><td>D3.js force-directed graph of cross-file function calls with DR conflict highlighting</td></tr>
+  <tr><td>Status bar</td><td>Rotating tips, visible only when .ul file is active</td></tr>
+</table>
+
+<h2>Project Manager GUI</h2>
+<table>
+  <tr><th>Feature</th><th>Details</th></tr>
+  <tr><td>New project</td><td>Create project with standard directory layout</td></tr>
+  <tr><td>DR configurator</td><td>Interactive setting of 5 DR directives</td></tr>
+  <tr><td>Build</td><td>Compile with target selection (C, Python, JS, LLVM IR)</td></tr>
+  <tr><td>DR conflict checker</td><td>Validate DR consistency across all project files</td></tr>
+  <tr><td>Project tree</td><td>File browser showing functions and types per file</td></tr>
+  <tr><td>Download</td><td><a href="UniLogic_Project_Manager.exe" style="color:#1a3a7a;">Windows x86-64 binary</a></td></tr>
+</table>
+
+<h2>REPL</h2>
+<table>
+  <tr><th>Feature</th><th>Details</th></tr>
+  <tr><td>Terminal REPL</td><td>Tree-walking interpreter via <code>ul</code> command. Multi-line input, persistent scope, function registration</td></tr>
+  <tr><td>Browser REPL</td><td>Full JS port of lexer/parser/evaluator. Zero dependencies, works offline. <a href="repl.html" style="color:#1a3a7a;">Try it</a></td></tr>
+  <tr><td>Commands</td><td>help, vars, functions, clear, exit/quit</td></tr>
+</table>
+
+<h2>Website Tools</h2>
+<table>
+  <tr><th>Feature</th><th>Details</th></tr>
+  <tr><td>DR Conflict Checker</td><td>Browser-based. Two-column UI, 19 intra-file rules + cross-file mismatch detection. <a href="dr-checker.html" style="color:#1a3a7a;">Use it</a></td></tr>
+  <tr><td>Runtime Tutorial</td><td>15-section paginated walkthrough with 5 animated memory model widgets. <a href="runtime-intro.html" style="color:#1a3a7a;">Start</a></td></tr>
+  <tr><td>Feature Comparison</td><td>UL vs Python vs C vs JavaScript across 11 developer features. <a href="comparison.html" style="color:#1a3a7a;">View</a></td></tr>
+</table>
 
 </main>
 
