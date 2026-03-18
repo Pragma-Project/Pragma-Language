@@ -67,15 +67,15 @@ a:hover { border-bottom-color: #000; }
 
 <h2>Compiler</h2>
 <table>
-  <tr><td>ul file.run</td><td>compile file.run to binary</td></tr>
-  <tr><td>ul file.run --run</td><td>compile and immediately run</td></tr>
-  <tr><td>ul file.run --emit-c</td><td>also save generated C file</td></tr>
-  <tr><td>ul file.run --emit-py</td><td>also save generated Python file</td></tr>
-  <tr><td>ul file.run --emit-js</td><td>also save generated JavaScript file</td></tr>
-  <tr><td>ul file.run --emit-java</td><td>also save generated Java file</td></tr>
-  <tr><td>ul file.run --ast</td><td>print AST (debug)</td></tr>
-  <tr><td>ul file.run --tokens</td><td>print token stream (debug)</td></tr>
-  <tr><td>ul file.run --debug</td><td>emit debug symbols (DWARF/PDB) into the compiled binary — stack traces include file names and line numbers; use --debug-stripped for production builds with no debug info</td></tr>
+  <tr><td>ul file.ul</td><td>compile file.ul to binary</td></tr>
+  <tr><td>ul file.ul --run</td><td>compile and immediately run</td></tr>
+  <tr><td>ul file.ul --emit-c</td><td>also save generated C file</td></tr>
+  <tr><td>ul file.ul --emit-py</td><td>also save generated Python file</td></tr>
+  <tr><td>ul file.ul --emit-js</td><td>also save generated JavaScript file</td></tr>
+  <tr><td>ul file.ul --emit-java</td><td>also save generated Java file</td></tr>
+  <tr><td>ul file.ul --ast</td><td>print AST (debug)</td></tr>
+  <tr><td>ul file.ul --tokens</td><td>print token stream (debug)</td></tr>
+  <tr><td>ul file.ul --debug</td><td>emit debug symbols (DWARF/PDB) into the compiled binary — stack traces include file names and line numbers; use --debug-stripped for production builds with no debug info</td></tr>
 </table>
 
 <h2>Transpiler — to UniLogic</h2>
@@ -84,7 +84,7 @@ a:hover { border-bottom-color: #000; }
   <tr><td>xpile input.py</td><td>transpile Python source to UL</td></tr>
   <tr><td>xpile input.js</td><td>transpile JavaScript source to UL</td></tr>
   <tr><td>xpile input.java</td><td>transpile Java source to UL</td></tr>
-  <tr><td>xpile input.c -o out.run</td><td>write output to file (works with any source language)</td></tr>
+  <tr><td>xpile input.c -o out.ul</td><td>write output to file (works with any source language)</td></tr>
   <tr><td>xpile --c input.c</td><td>explicit C flag (inferred from .c by default)</td></tr>
   <tr><td>xpile --py input.py</td><td>explicit Python flag</td></tr>
   <tr><td>xpile --js input.js</td><td>explicit JavaScript flag</td></tr>

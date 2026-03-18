@@ -518,7 +518,7 @@ println!(<span class="str">"{}"</span>, p);
 
 <p>Full formal verification. The source is run through the eight-stage MemProof pipeline — safe subset enforcement, SSA IR construction, abstract interpretation, separation logic and shape analysis, verification condition generation, SMT solving via CVC5, LFSC proof witnesses, and certificate publication. Every proof obligation is discharged by the solver and confirmed by an independent kernel. The result is a <strong>proof certificate</strong> — a machine-checkable record that this program, at this exact version of the code, is proven memory safe for all possible valid inputs. This is the mode for deployment, certification, and anywhere a guarantee stronger than testing is required.</p>
 
-<pre>ul program.run <span class="cm">--memproof       // MemProof build + certificate</span></pre>
+<pre>ul program.ul <span class="cm">--memproof       // MemProof build + certificate</span></pre>
 
 <div class="warn">
   <strong>Slower to build, stronger to ship.</strong>
@@ -538,7 +538,7 @@ println!(<span class="str">"{}"</span>, p);
   <tr><td>Bounds checker</td><td>Every array access checked against its declared size at runtime</td></tr>
 </table>
 
-<pre>ul program.run <span class="cm">--fullsafety    // MemResistant build</span></pre>
+<pre>ul program.ul <span class="cm">--fullsafety    // MemResistant build</span></pre>
 
 <div class="note">
   <strong>Use MemResistant during development.</strong>
@@ -590,10 +590,10 @@ println!(<span class="str">"{}"</span>, p);
 </div>
 
 <pre><span class="cm">// One-time: prove, publish, certify</span>
-ul certify program.run
+ul certify program.ul
 
 <span class="cm">// Anyone, anytime: verify against the on-chain record</span>
-ul verify  program.run</pre>
+ul verify  program.ul</pre>
 
 <div class="warn">
   <strong><code>ul certify</code> and <code>ul verify</code> are in development.</strong>
