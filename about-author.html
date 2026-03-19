@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About the Author</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.85;
+  color: #1a1a1a;
+  background: #f8f5f0;
+}
+
+.inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 48px 140px;
+}
+
+.back {
+  position: fixed;
+  top: 20px;
+  left: 28px;
+  z-index: 100;
+  display: inline-block;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #666;
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #e8e3db;
+  transition: all 0.15s;
+}
+.back:hover { color: #111; background: #d8d2c8; border-color: #999; }
+
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #1a1a1a;
+  margin-bottom: 48px;
+  letter-spacing: -0.01em;
+}
+
+p { margin-bottom: 18px; color: #2a2a2a; }
+
+.email-reveal {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 6px 16px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #e8e3db;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.email-reveal:hover { color: #111; background: #d8d2c8; border-color: #999; }
+
+#email-addr {
+  display: none;
+  margin-top: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+}
+
+</style>
+</head>
+<body>
+
+<a href="javascript:history.back()" class="back">&larr; back</a>
+
+<div class="inner">
+
+<h1>About the Author</h1>
+
+<p>I enjoy thinking about things, spending hundreds of dollars a month on tokens, optimizing things when there's no need to optimize, and learning about concepts that nobody cares about. My entire adult life has been attempts at one thing after another, across continents, cities, nations, states, cultures, businesses, domains, subject areas, whatever. I'm a true jack of all trades and not a master of one of them. Most of my professional career was junior level in energy markets that are traded similar to anything else like bonds or stocks.</p>
+
+<p>The game angle of always trying to score points similar to the network security angle of trying every last thing to get a win are exactly the types of things I enjoy spending my time thinking about. This project is pretty much the same thing, but LLM's have made energy drinks and 34-hour days a possibility that's beneficial.</p>
+
+<p>I just put this page here to quench any desire to know who the heck tried this. If you have ideas, I'm always open to listen. No matter when this gets read and what state this project is in, you can almost guarantee I'll be pursuing one or likely multiple endeavors. Shoot me an email.</p>
+
+<button class="email-reveal" onclick="document.getElementById('email-addr').style.display='block';this.style.display='none';">Click to show email</button>
+<div id="email-addr"><a href="mailto:albazzaztariq@gmail.com" style="color:#1a3a7a;">albazzaztariq@gmail.com</a></div>
+
+</div>
+
+</body>
+</html>
