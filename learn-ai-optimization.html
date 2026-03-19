@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
 <style>
 
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes flash { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; }
 body { font-family: 'Georgia', serif; font-size: 16px; line-height: 1.7; color: #1a1a1a; background: #fafaf8; display: flex; height: 100vh; }
@@ -108,6 +110,14 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
           <span id="ca-a2" style="color:#ccc;font-size:18px;transition:color 0.3s;">&rarr;</span>
           <div id="ca3" onclick="cStage(3)" style="padding:10px 14px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.3s;min-width:70px;opacity:0.3;"><div style="color:#f38ba8;font-weight:700;font-size:14px;">binary</div><div style="color:#a6adc8;font-size:10px;">8.4 KB</div></div>
           <div id="ca-cpu" style="margin-left:6px;padding:6px 10px;border-radius:4px;background:#0a1f5e;border:1px solid #7ab3e0;color:#7ab3e0;font-size:10px;text-align:center;opacity:0;transition:opacity 0.3s;">CPU<br>direct</div>
+          <div id="ca-exe" style="margin-left:8px;opacity:0;transform:scale(0);transition:all 0.3s ease-out;display:flex;flex-direction:column;align-items:center;">
+            <div style="position:relative;width:36px;height:44px;">
+              <div style="width:36px;height:44px;background:#2a2040;border:2px solid #a6e3a1;border-radius:3px 8px 3px 3px;"></div>
+              <div style="position:absolute;top:0;right:0;width:10px;height:10px;background:#1e1e2e;border-left:2px solid #a6e3a1;border-bottom:2px solid #a6e3a1;border-radius:0 0 0 2px;"></div>
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#a6e3a1;font-size:8px;font-weight:700;font-family:'Share Tech Mono',monospace;">EXE</div>
+            </div>
+            <div style="color:#a6e3a1;font-size:9px;font-family:'Share Tech Mono',monospace;margin-top:2px;">program.exe</div>
+          </div>
         </div>
         <div id="c-progress" style="margin:8px 0;height:6px;border-radius:3px;background:#1e1e2e;overflow:hidden;"><div id="c-prog-bar" style="height:100%;width:0%;border-radius:3px;transition:width 0.3s;background:#7ab3e0;"></div></div>
         <div id="c-prog-label" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#555;min-height:16px;"></div>
@@ -139,16 +149,19 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
         </div>
         <div style="background:#1e1e2e;border-radius:6px;padding:10px 12px;border:1px solid #313244;">
           <div style="color:#f9e2af;font-weight:700;font-size:12px;margin-bottom:6px;">JAVASCRIPT &mdash; JIT Compiled</div>
-          <div id="js-phase" style="color:#a6adc8;font-size:10px;min-height:50px;line-height:1.5;">
-            <span style="color:#585b70;">Phase 1:</span> Ignition interprets<br>
-            <span style="color:#585b70;">Phase 2:</span> TurboFan compiles hot paths
-          </div>
+          <div id="js-source" style="color:#585b70;font-size:10px;margin-bottom:4px;">script.js</div>
+          <div id="js-bytecode" style="color:#585b70;font-size:10px;line-height:1.5;min-height:50px;margin-bottom:6px;"></div>
           <div style="display:flex;align-items:center;gap:6px;">
             <div id="js-gear" style="font-size:16px;color:#585b70;">&#9881;</div>
             <span id="js-status" style="color:#a6adc8;font-size:10px;">Click Run JS</span>
           </div>
+          <div id="js-hot" style="display:none;margin-top:4px;padding:3px 8px;border-radius:3px;background:#3a2800;border:1px solid #f9e2af;color:#f9e2af;font-size:10px;font-weight:700;text-align:center;"></div>
           <div id="js-timer" style="color:#a6e3a1;font-size:12px;font-weight:700;margin-top:4px;"></div>
-          <button onclick="jsRun()" id="js-run-btn" style="margin-top:6px;font-size:10px;padding:4px 12px;border:1px solid #f9e2af;border-radius:3px;background:#1e1e2e;color:#f9e2af;cursor:pointer;font-family:'Share Tech Mono',monospace;">Run JS</button>
+          <div id="js-note" style="color:#585b70;font-size:9px;margin-top:2px;"></div>
+          <div style="margin-top:6px;display:flex;gap:6px;">
+            <button onclick="jsRun()" id="js-run-btn" style="font-size:10px;padding:4px 12px;border:1px solid #f9e2af;border-radius:3px;background:#1e1e2e;color:#f9e2af;cursor:pointer;font-family:'Share Tech Mono',monospace;">Run JS</button>
+            <button onclick="jsRunAgain()" id="js-run-again-btn" style="display:none;font-size:10px;padding:4px 12px;border:1px solid #a6e3a1;border-radius:3px;background:#1e1e2e;color:#a6e3a1;cursor:pointer;font-family:'Share Tech Mono',monospace;">Run again</button>
+          </div>
         </div>
       </div>
       <div id="speed-bars" style="display:none;margin:8px 0;font-family:'Share Tech Mono',monospace;font-size:11px;">
@@ -678,7 +691,7 @@ window.cCompile=function(){
     {delay:0,fn:function(){cStage(0);document.getElementById('c-prog-label').textContent='XPile transpiling...';document.getElementById('c-prog-bar').style.width='25%';document.getElementById('c-prog-bar').style.background='#7ab3e0';}},
     {delay:800,fn:function(){cStage(1);document.getElementById('c-prog-label').textContent='gcc compiling...';document.getElementById('c-prog-bar').style.width='50%';document.getElementById('c-prog-bar').style.background='#a6e3a1';}},
     {delay:1400,fn:function(){cStage(2);document.getElementById('c-prog-label').textContent='linking...';document.getElementById('c-prog-bar').style.width='75%';document.getElementById('c-prog-bar').style.background='#fab387';}},
-    {delay:1700,fn:function(){cStage(3);document.getElementById('c-prog-bar').style.width='100%';document.getElementById('c-prog-bar').style.background='#f38ba8';document.getElementById('c-prog-label').textContent='';document.getElementById('ca-cpu').style.opacity='1';}},
+    {delay:1700,fn:function(){cStage(3);document.getElementById('c-prog-bar').style.width='100%';document.getElementById('c-prog-bar').style.background='#f38ba8';document.getElementById('c-prog-label').textContent='';document.getElementById('ca-cpu').style.opacity='1';setTimeout(function(){var exe=document.getElementById('ca-exe');if(exe){exe.style.opacity='1';exe.style.transform='scale(1)';}},300);}},
     {delay:2100,fn:function(){document.getElementById('c-terminal').style.display='block';var out=document.getElementById('c-term-out');out.textContent='';setTimeout(function(){out.textContent='5';document.getElementById('c-speed').style.display='block';document.getElementById('c-compile-btn').textContent='Compile';cRunning=false;},400);}}
   ];
   steps.forEach(function(s){setTimeout(s.fn,s.delay);});
@@ -692,6 +705,7 @@ window.cReset=function(){
   document.getElementById('c-terminal').style.display='none';
   document.getElementById('c-speed').style.display='none';
   document.getElementById('ca-cpu').style.opacity='0';
+  var exe=document.getElementById('ca-exe');if(exe){exe.style.opacity='0';exe.style.transform='scale(0)';}
   document.getElementById('c-compile-btn').textContent='Compile';
 };
 
@@ -715,23 +729,67 @@ window.pyRun=function(){
   }
   next();
 };
-var jsRunCount=0;
+var jsIgnitionOps=['LdaNamedProperty a0, [0]','Star r0','LdaNamedProperty a1, [0]','Star r1','Add r0, r1','Return'];
+var jsPhase=0;
 window.jsRun=function(){
-  jsRunCount++;
-  var phase=document.getElementById('js-phase');
+  if(jsPhase>0)return;jsPhase=1;
+  var bc=document.getElementById('js-bytecode');
   var gear=document.getElementById('js-gear');
   var status=document.getElementById('js-status');
   var timer=document.getElementById('js-timer');
-  if(jsRunCount===1){
-    phase.innerHTML='<span style="color:#f9e2af;font-weight:700;">Phase 1: Ignition interpreting...</span>';
-    gear.style.color='#f9e2af';status.textContent='Interpreting. Collecting type feedback.';
-    setTimeout(function(){timer.textContent='run #1 — 1.8ms';document.getElementById('speed-bars').style.display='block';},800);
-  } else {
-    phase.innerHTML='<span style="color:#a6e3a1;font-weight:700;">HOT PATH DETECTED</span><br><span style="color:#a6e3a1;">TurboFan compiling to native code...</span>';
-    gear.style.color='#a6e3a1';status.textContent='JIT compiled — machine instructions';
-    var t=Math.max(0.3,(1.8-jsRunCount*0.3)).toFixed(1);
-    setTimeout(function(){timer.textContent='run #'+jsRunCount+' — '+t+'ms';},500);
+  var note=document.getElementById('js-note');
+  var src=document.getElementById('js-source');
+  src.innerHTML='<span style="color:#f9e2af;">script.js</span>';
+  bc.innerHTML='';
+  gear.style.color='#f9e2af';
+  gear.style.animation='spin 2s linear infinite';
+  status.textContent='V8 Ignition interpreting bytecode...';
+  var i=0;
+  function nextOp(){
+    if(i<jsIgnitionOps.length){
+      var prev=bc.querySelector('.js-active');if(prev){prev.style.color='#585b70';prev.style.fontWeight='normal';}
+      var line=document.createElement('div');line.textContent=jsIgnitionOps[i];line.className='js-active';line.style.color='#f9e2af';line.style.fontWeight='700';
+      bc.appendChild(line);i++;setTimeout(nextOp,400);
+    } else {
+      gear.style.animation='';gear.style.color='#585b70';
+      status.textContent='Interpreted. Type info collected.';
+      timer.textContent='run #1 — 1.8ms';
+      note.textContent='Collecting type information...';
+      document.getElementById('js-run-btn').style.display='none';
+      document.getElementById('js-run-again-btn').style.display='inline-block';
+      document.getElementById('speed-bars').style.display='block';
+    }
   }
+  nextOp();
+};
+window.jsRunAgain=function(){
+  if(jsPhase<1)return;jsPhase=2;
+  var hot=document.getElementById('js-hot');
+  var gear=document.getElementById('js-gear');
+  var status=document.getElementById('js-status');
+  var timer=document.getElementById('js-timer');
+  var note=document.getElementById('js-note');
+  var bc=document.getElementById('js-bytecode');
+  // Flash HOT PATH DETECTED
+  hot.style.display='block';
+  hot.textContent='HOT PATH DETECTED';
+  hot.style.animation='flash 0.5s ease 3';
+  gear.style.color='#a6e3a1';
+  gear.style.animation='spin 0.5s linear infinite';
+  status.textContent='TurboFan JIT compiling...';
+  setTimeout(function(){
+    bc.innerHTML='<div style="color:#a6e3a1;font-weight:700;">TurboFan JIT</div><div style="color:#585b70;margin-top:2px;">Compiling to native code...</div>';
+    setTimeout(function(){
+      bc.innerHTML='<div style="color:#a6e3a1;font-weight:700;">TurboFan JIT</div><div style="color:#a6e3a1;margin-top:2px;">native_code &#10003;</div>';
+      gear.style.animation='';
+      status.textContent='JIT compiled — machine instructions';
+      timer.textContent='run #2 — 0.8ms';
+      note.textContent='JIT compiled. Subsequent runs are faster.';
+      hot.textContent='OPTIMIZED';
+      hot.style.background='#0a2e0a';hot.style.borderColor='#a6e3a1';hot.style.color='#a6e3a1';
+      document.getElementById('js-run-again-btn').style.display='none';
+    },800);
+  },600);
 };
 
 // ══════ CPU diagram (Section 8) ══════
