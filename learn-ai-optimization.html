@@ -88,9 +88,30 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
     <div class="section" data-title="From Code to Operations: LLVM">
       <div class="step-label">Section 4 of 20</div>
       <h1>From Code to Operations: LLVM</h1>
-      <p>LLVM is the first layer at which your code is no longer code anymore &mdash; it's operations. The logic you wrote, the if/else branches, the function calls &mdash; these are reduced to a flat sequence of low-level instructions: load a value from memory, add two numbers, compare, branch. The structure and intent of your program is largely gone.</p>
-      <p>LLVM takes the compiler's output (called Intermediate Representation, or IR) and transforms it through dozens of optimization passes: removing dead code, inlining small functions, unrolling loops, reordering instructions for better CPU utilization. It then emits machine code for the specific CPU you're targeting.</p>
-      <p>This is where most performance is won or lost. The code you write is a suggestion. What LLVM produces after optimization is what actually runs. Understanding this layer helps you write code that optimizes well rather than code that fights the optimizer.</p>
+      <p>LLVM is where your code stops being code and becomes operations. Logic is gone &mdash; just loads, adds, compares, branches. Click "Compile" to see the transformation.</p>
+      <div id="llvm-repl" style="margin:10px 0;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; font-family:'Share Tech Mono',monospace; font-size:11px;">
+          <div>
+            <div style="color:#7ab3e0;font-size:10px;text-transform:uppercase;margin-bottom:4px;font-weight:500;">UL Source</div>
+            <div id="llvm-src" style="background:#1e1e2e;border-radius:4px;padding:8px;color:#cdd6f4;min-height:100px;line-height:1.5;font-size:11px;border:1px solid #313244;"></div>
+          </div>
+          <div>
+            <div style="color:#a6e3a1;font-size:10px;text-transform:uppercase;margin-bottom:4px;font-weight:500;">LLVM IR</div>
+            <div id="llvm-ir" style="background:#1e1e2e;border-radius:4px;padding:8px;color:#585b70;min-height:100px;line-height:1.5;font-size:11px;border:1px solid #313244;"></div>
+          </div>
+          <div>
+            <div style="color:#fab387;font-size:10px;text-transform:uppercase;margin-bottom:4px;font-weight:500;">Optimized &rarr; x86</div>
+            <div id="llvm-opt" style="background:#1e1e2e;border-radius:4px;padding:8px;color:#585b70;min-height:100px;line-height:1.5;font-size:11px;border:1px solid #313244;"></div>
+          </div>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          <button onclick="llvmCompile()" style="font-size:11px;padding:5px 14px;border:1px solid #7ab3e0;border-radius:4px;background:#1e1e2e;color:#7ab3e0;cursor:pointer;font-family:'Share Tech Mono',monospace;">Compile</button>
+          <button onclick="llvmLoad(0)" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Simple add</button>
+          <button onclick="llvmLoad(1)" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Loop</button>
+          <button onclick="llvmLoad(2)" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Conditional</button>
+          <span id="llvm-pass" style="font-size:10px;color:#585b70;margin-left:auto;"></span>
+        </div>
+      </div>
     </div>
 
     <div class="section" data-title="Inside the CPU">
@@ -135,38 +156,30 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
     <div class="section" data-title="SIMD & Vector Registers">
       <div class="step-label">Section 8 of 20</div>
       <h1>SIMD &amp; Vector Registers</h1>
-      <p><strong>SIMD</strong> (Single Instruction, Multiple Data) lets one instruction operate on multiple values simultaneously. Instead of adding two numbers, you add 4, 8, or 16 numbers in a single operation using wide vector registers.</p>
-      <div style="display:flex; gap:16px; margin:10px 0; flex-wrap:wrap;">
-        <div style="flex:1;min-width:140px;">
-          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">Scalar (1 at a time)</div>
-          <div style="display:flex;gap:3px;" id="scalar-demo">
-            <div style="width:24px;height:24px;border-radius:3px;background:#B5D4F4;border:1px solid #378ADD;font-size:9px;display:flex;align-items:center;justify-content:center;color:#0C447C;">f1</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f2</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f3</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f4</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f5</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f6</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f7</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f8</div>
+      <p><strong>SIMD</strong> &mdash; one instruction, multiple data. Click Run to see scalar vs vector processing side by side.</p>
+      <div id="simd-widget" style="margin:10px 0;">
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+          <div style="flex:1;min-width:160px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">Scalar &mdash; one at a time</div>
+            <div style="display:flex;gap:3px;" id="simd-scalar"></div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#7ab3e0;margin-top:6px;">Cycles: <span id="simd-scalar-cycles">0</span></div>
           </div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#aaa;margin-top:3px;">8 operations needed</div>
+          <div style="flex:1;min-width:160px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;" id="simd-label">AVX2 &mdash; 8 at once</div>
+            <div style="display:flex;gap:3px;" id="simd-vector"></div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#a6e3a1;margin-top:6px;">Cycles: <span id="simd-vector-cycles">0</span></div>
+          </div>
         </div>
-        <div style="flex:1;min-width:140px;">
-          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">AVX2 (8 at once)</div>
-          <div style="display:flex;gap:3px;">
-            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f1</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f2</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f3</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f4</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f5</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f6</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f7</div>
-            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f8</div>
-          </div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#aaa;margin-top:3px;">1 operation needed</div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          <button onclick="simdRun()" id="simd-run-btn" style="font-size:11px;padding:5px 14px;border:1px solid #7ab3e0;border-radius:4px;background:#1e1e2e;color:#7ab3e0;cursor:pointer;font-family:'Share Tech Mono',monospace;">Run</button>
+          <button onclick="simdReset()" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Reset</button>
+          <span style="font-size:10px;color:#585b70;">|</span>
+          <button onclick="simdWidth(4,'SSE')" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">SSE (4)</button>
+          <button onclick="simdWidth(8,'AVX2')" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">AVX2 (8)</button>
+          <button onclick="simdWidth(16,'AVX-512')" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">AVX-512 (16)</button>
+          <span id="simd-speedup" style="font-size:11px;color:#a6e3a1;font-family:'Share Tech Mono',monospace;margin-left:auto;"></span>
         </div>
       </div>
-      <p>Neural net inference is mostly matrix multiplication. SIMD turns N sequential operations into N/8 or N/16 vector operations. The compiler auto-vectorizes some loops, but memory layout (contiguous, aligned data) is the developer's responsibility.</p>
     </div>
 
     <div class="section" data-title="Cache: Hits, Misses, Layout">
@@ -377,6 +390,140 @@ document.addEventListener("keydown", function(e) {
 });
 
 goTo(0);
+
+// ══════ LLVM REPL widget ══════
+var llvmExamples = [
+  { name:"Simple add",
+    src:'function add(int a, int b) returns int\n  return a + b\nend function',
+    ir:'define i32 @add(i32 %a.arg, i32 %b.arg) {\nentry:\n  %a.addr = alloca i32\n  store i32 %a.arg, i32* %a.addr\n  %b.addr = alloca i32\n  store i32 %b.arg, i32* %b.addr\n  %t0 = load i32, i32* %a.addr\n  %t1 = load i32, i32* %b.addr\n  %t2 = add i32 %t0, %t1\n  ret i32 %t2\n}',
+    passes:['mem2reg','instcombine','inline'],
+    asm:'add_func:\n    lea eax, [rdi + rsi]\n    ret'},
+  { name:"Loop",
+    src:'function sum(int n) returns int\n  int total = 0\n  int i = 0\n  while i < n\n    total += i\n    i++\n  end while\n  return total\nend function',
+    ir:'define i32 @sum(i32 %n.arg) {\nentry:\n  br label %while.cond\nwhile.cond:\n  %total = phi i32 [0, %entry], [%t3, %while.body]\n  %i = phi i32 [0, %entry], [%t4, %while.body]\n  %cmp = icmp slt i32 %i, %n.arg\n  br i1 %cmp, label %while.body, label %while.end\nwhile.body:\n  %t3 = add i32 %total, %i\n  %t4 = add i32 %i, 1\n  br label %while.cond\nwhile.end:\n  ret i32 %total\n}',
+    passes:['mem2reg','loop-simplify','indvars','loop-reduce'],
+    asm:'sum_func:\n    xor eax, eax\n    test edi, edi\n    jle .done\n.loop:\n    add eax, ecx\n    inc ecx\n    cmp ecx, edi\n    jl .loop\n.done:\n    ret'},
+  { name:"Conditional",
+    src:'function max(int a, int b) returns int\n  if a > b\n    return a\n  end if\n  return b\nend function',
+    ir:'define i32 @max(i32 %a.arg, i32 %b.arg) {\nentry:\n  %cmp = icmp sgt i32 %a.arg, %b.arg\n  br i1 %cmp, label %if.then, label %if.end\nif.then:\n  ret i32 %a.arg\nif.end:\n  ret i32 %b.arg\n}',
+    passes:['simplifycfg','instcombine'],
+    asm:'max_func:\n    cmp edi, esi\n    cmovge eax, edi\n    cmovl eax, esi\n    ret'}
+];
+var llvmCurrent = 0;
+function llvmLoad(idx) {
+  llvmCurrent = idx;
+  var e = llvmExamples[idx];
+  var srcEl = document.getElementById('llvm-src');
+  var irEl = document.getElementById('llvm-ir');
+  var optEl = document.getElementById('llvm-opt');
+  var passEl = document.getElementById('llvm-pass');
+  if(!srcEl) return;
+  srcEl.textContent = e.src;
+  srcEl.style.color = '#cdd6f4';
+  irEl.textContent = '';
+  irEl.style.color = '#585b70';
+  optEl.textContent = '';
+  optEl.style.color = '#585b70';
+  passEl.textContent = '';
+}
+function llvmCompile() {
+  var e = llvmExamples[llvmCurrent];
+  var irEl = document.getElementById('llvm-ir');
+  var optEl = document.getElementById('llvm-opt');
+  var passEl = document.getElementById('llvm-pass');
+  if(!irEl) return;
+  // Animate IR lines appearing
+  var irLines = e.ir.split('\n');
+  var irIdx = 0;
+  irEl.textContent = '';
+  irEl.style.color = '#a6e3a1';
+  function showIR() {
+    if(irIdx < irLines.length) {
+      irEl.textContent += (irIdx > 0 ? '\n' : '') + irLines[irIdx];
+      irIdx++;
+      setTimeout(showIR, 80);
+    } else {
+      // Show passes then assembly
+      var pi = 0;
+      function showPass() {
+        if(pi < e.passes.length) {
+          passEl.textContent = '\u2192 ' + e.passes[pi] + ' pass';
+          passEl.style.color = '#fab387';
+          pi++;
+          setTimeout(showPass, 500);
+        } else {
+          passEl.textContent = '\u2713 optimized';
+          passEl.style.color = '#a6e3a1';
+          optEl.style.color = '#fab387';
+          optEl.textContent = e.asm;
+        }
+      }
+      setTimeout(showPass, 300);
+    }
+  }
+  showIR();
+}
+if(document.getElementById('llvm-src')) llvmLoad(0);
+
+// ══════ SIMD widget ══════
+var simdN = 8;
+var simdName = 'AVX2';
+function simdBuildBoxes() {
+  var sc = document.getElementById('simd-scalar');
+  var vc = document.getElementById('simd-vector');
+  if(!sc||!vc) return;
+  sc.innerHTML = ''; vc.innerHTML = '';
+  for(var i=0;i<simdN;i++){
+    sc.innerHTML += '<div id="sb'+i+'" style="width:24px;height:24px;border-radius:3px;background:#1e1e2e;border:1px solid #313244;font-size:9px;display:flex;align-items:center;justify-content:center;color:#585b70;transition:background 0.15s;">f'+(i+1)+'</div>';
+    vc.innerHTML += '<div id="vb'+i+'" style="width:24px;height:24px;border-radius:3px;background:#1e1e2e;border:1px solid #313244;font-size:9px;display:flex;align-items:center;justify-content:center;color:#585b70;transition:background 0.15s;">f'+(i+1)+'</div>';
+  }
+  document.getElementById('simd-scalar-cycles').textContent = '0';
+  document.getElementById('simd-vector-cycles').textContent = '0';
+  document.getElementById('simd-speedup').textContent = '';
+}
+var simdTimer = null;
+function simdRun() {
+  if(simdTimer) return;
+  simdBuildBoxes();
+  var si = 0, vi = 0, sc = 0, vc = 0;
+  document.getElementById('simd-run-btn').textContent = 'Running...';
+  simdTimer = setInterval(function(){
+    // Scalar: one per tick
+    if(si < simdN) {
+      var b = document.getElementById('sb'+si);
+      if(b){b.style.background='#B5D4F4';b.style.borderColor='#378ADD';b.style.color='#0C447C';}
+      si++; sc++;
+      document.getElementById('simd-scalar-cycles').textContent = sc;
+    }
+    // Vector: all at once on first tick
+    if(vi === 0) {
+      for(var j=0;j<simdN;j++){
+        var b = document.getElementById('vb'+j);
+        if(b){b.style.background='#C0DD97';b.style.borderColor='#3B6D11';b.style.color='#173404';}
+      }
+      vi = simdN; vc = 1;
+      document.getElementById('simd-vector-cycles').textContent = vc;
+    }
+    if(si >= simdN) {
+      clearInterval(simdTimer); simdTimer = null;
+      document.getElementById('simd-run-btn').textContent = 'Run';
+      document.getElementById('simd-speedup').textContent = simdN + 'x speedup';
+    }
+  }, 200);
+}
+function simdReset() {
+  if(simdTimer){clearInterval(simdTimer);simdTimer=null;}
+  document.getElementById('simd-run-btn').textContent = 'Run';
+  simdBuildBoxes();
+}
+function simdWidth(n, name) {
+  if(simdTimer){clearInterval(simdTimer);simdTimer=null;}
+  simdN = n; simdName = name;
+  document.getElementById('simd-label').textContent = name + ' \u2014 ' + n + ' at once';
+  document.getElementById('simd-run-btn').textContent = 'Run';
+  simdBuildBoxes();
+}
+if(document.getElementById('simd-scalar')) simdBuildBoxes();
 
 // Pipeline widget
 var pipeData = [
