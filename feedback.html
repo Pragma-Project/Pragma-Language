@@ -136,50 +136,13 @@ textarea { min-height: 80px; resize: vertical; }
 <!-- ═══════════════════════════════════════════ -->
 <h2 id="form">Share Your Feedback</h2>
 
-<form id="feedback-form" action="https://formspree.io/f/placeholder" method="POST">
-  <!-- TODO: replace with real Formspree form ID after creating account at formspree.io -->
+<p>Feedback is submitted as a GitHub Issue. Click the button below &mdash; GitHub opens with a pre-filled template. Fill in what matters, what's missing, and what's noise, then submit. No account needed beyond GitHub.</p>
 
-  <label for="matters">What on this list matters most to your work?</label>
-  <textarea id="matters" name="matters" placeholder="Which features would you actually use?"></textarea>
+<a href="https://github.com/albazzaztariq/UniLogic/issues/new?template=ai_feedback.md&title=AI%2FML+Feedback&labels=feedback,ai-ml" target="_blank" class="submit-btn" style="display:inline-block; text-decoration:none; margin-top:12px;">Submit Feedback via GitHub &rarr;</a>
 
-  <label for="missing">What's missing that would make UL useful for your workload?</label>
-  <textarea id="missing" name="missing" placeholder="Features, integrations, runtime behaviors..."></textarea>
-
-  <label for="noise">What on this list is noise &mdash; things that sound good but aren't actually useful in practice?</label>
-  <textarea id="noise" name="noise" placeholder="Be honest. This helps prioritize."></textarea>
-
-  <label for="current">What are you currently using for AI/ML work?</label>
-  <input type="text" id="current" name="current_tools" placeholder="PyTorch, JAX, TensorFlow, C++/CUDA, etc.">
-
-  <label for="email">Email (optional)</label>
-  <input type="email" id="email" name="email" placeholder="Only if you want a response">
-
-  <button type="submit" class="submit-btn">Submit Feedback</button>
-</form>
-
-<div id="form-thanks">Thank you. Your feedback has been submitted.</div>
+<p style="margin-top:16px; font-size:0.88rem; color:#888;">Prefer email? <button onclick="document.getElementById('fb-email').style.display='inline';this.style.display='none';" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:3px 10px;border:1px solid #ccc;border-radius:3px;background:#fff;color:#666;cursor:pointer;">Click</button> <span id="fb-email" style="display:none;"><a href="mailto:albazzaztariq@gmail.com" style="color:#1a3a7a;">albazzaztariq@gmail.com</a></span></p>
 
 </main>
-
-<script>
-document.getElementById('feedback-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  var form = e.target;
-  fetch(form.action, {
-    method: 'POST',
-    body: new FormData(form),
-    headers: { 'Accept': 'application/json' }
-  }).then(function(r) {
-    if (r.ok) {
-      form.style.display = 'none';
-      document.getElementById('form-thanks').style.display = 'block';
-    }
-  }).catch(function() {
-    form.style.display = 'none';
-    document.getElementById('form-thanks').style.display = 'block';
-  });
-});
-</script>
 
 </body>
 </html>
