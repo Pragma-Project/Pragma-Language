@@ -108,65 +108,98 @@ p { margin-bottom: 14px; color: #2a2a2a; }
 
 <h1>Features &amp; Functionality</h1>
 
-<p class="intro-text">Everything currently implemented in the UniLogic toolchain. Factual list &mdash; what exists and what it does.</p>
+<p class="intro-text">Everything currently implemented in the UniLogic toolchain.</p>
 
-<h2 style="margin-top:24px;">Compiler (XPile)</h2>
-<table>
-  <tr><th>Feature</th><th>Details</th></tr>
-  <tr><td>Targets</td><td>C99, Python 3, JavaScript (ES6), LLVM IR</td></tr>
-  <tr><td>Type system</td><td>int (8/16/32/64, signed/unsigned), float, double, string, bool, none, complex, array, list, map</td></tr>
-  <tr><td>User types</td><td>Structs with fields, single inheritance via <code>inherits</code></td></tr>
-  <tr><td>Control flow</td><td>if/else, while, for each, match/default, escape (break), continue</td></tr>
-  <tr><td>Error handling</td><td>Result types (<code>int|error</code>), <code>?</code> propagation, <code>exit(code)</code>, exit codes via main return</td></tr>
-  <tr><td>Casting</td><td><code>cast(x, type)</code> replaces C-style casts</td></tr>
-  <tr><td>FFI</td><td><code>import "lib" function name(...)</code> with variadic support</td></tr>
-  <tr><td>Normalization</td><td>4 levels (0&ndash;3): compound expansion, call flattening, boolean splitting, array expansion. Per-file via <code>@norm N</code></td></tr>
-  <tr><td>Memory builtins</td><td>memtake, memgive, memcopy, memmove, memset, address, deref</td></tr>
-  <tr><td>DR settings</td><td>memory, safety, types, int_width, concurrency &mdash; per-file, compiler-enforced, conflict detection</td></tr>
-  <tr><td>Semantic checker</td><td>Scope chains, forward calls, type inheritance validation, field access resolution</td></tr>
-</table>
+<!-- ════ COMPILER ════ -->
+<div style="background:#f5f3fb; border:1px solid #d8cff0; border-left:4px solid #2d1b69; border-radius:0 6px 6px 0; padding:24px 28px; margin:24px 0;">
+<h2 style="margin-top:0; border:none; padding:0; color:#2d1b69;">Compiler (XPile)</h2>
 
-<h2>VS Code Extension</h2>
-<table>
-  <tr><th>Feature</th><th>Details</th></tr>
-  <tr><td>Syntax highlighting</td><td>TextMate grammar for all UL keywords, types, operators, literals, comments</td></tr>
-  <tr><td>Diagnostics</td><td>Inline errors from lexer, parser, and semantic checker on every save</td></tr>
-  <tr><td>Hover</td><td>Keyword glossary (56 entries), function signatures, type definitions, variable types</td></tr>
-  <tr><td>Go-to-definition</td><td>Jump to function, type, or variable declaration. Cross-file workspace search</td></tr>
-  <tr><td>Autocomplete</td><td>Keywords, functions, types, scope-aware variables, foreign imports</td></tr>
-  <tr><td>Signature help</td><td>Parameter highlighting on <code>(</code> and <code>,</code> with nested call support</td></tr>
-  <tr><td>Explain Structure</td><td>AI-powered walkthrough of file structure with line highlighting</td></tr>
-  <tr><td>Explain Execution</td><td>AI-powered execution flow walkthrough</td></tr>
-  <tr><td>Dependency graph</td><td>D3.js force-directed graph of cross-file function calls with DR conflict highlighting</td></tr>
-  <tr><td>Status bar</td><td>Rotating tips, visible only when .ul file is active</td></tr>
-</table>
+<h3 style="margin-top:16px;">Compilation Targets</h3>
+<ul style="margin:8px 0 16px 20px; color:#2a2a2a;">
+  <li>C99 &mdash; native binaries via gcc/clang</li>
+  <li>Python 3 &mdash; portable scripts with dataclass types</li>
+  <li>JavaScript (ES6) &mdash; browser and Node.js</li>
+  <li>LLVM IR &mdash; native binaries via LLVM toolchain</li>
+</ul>
 
-<h2>Project Manager GUI</h2>
-<table>
-  <tr><th>Feature</th><th>Details</th></tr>
-  <tr><td>New project</td><td>Create project with standard directory layout</td></tr>
-  <tr><td>DR configurator</td><td>Interactive setting of 5 DR directives</td></tr>
-  <tr><td>Build</td><td>Compile with target selection (C, Python, JS, LLVM IR)</td></tr>
-  <tr><td>DR conflict checker</td><td>Validate DR consistency across all project files</td></tr>
-  <tr><td>Project tree</td><td>File browser showing functions and types per file</td></tr>
-  <tr><td>Download</td><td><a href="UniLogic_Project_Manager.exe" style="color:#1a3a7a;">Windows x86-64 binary</a></td></tr>
-</table>
+<h3>Language Features</h3>
+<ul style="margin:8px 0 16px 20px; color:#2a2a2a;">
+  <li><strong>Types:</strong> int (8/16/32/64, signed/unsigned), float, double, string, bool, none, complex, array, list, map</li>
+  <li><strong>User types:</strong> structs with fields, single inheritance via <code>inherits</code></li>
+  <li><strong>Control flow:</strong> if/else, while, for each, match/default, escape (break), continue</li>
+  <li><strong>Error handling:</strong> Result types (<code>int|error</code>), <code>?</code> propagation, <code>exit(code)</code>, exit codes</li>
+  <li><strong>Casting:</strong> <code>cast(x, type)</code></li>
+  <li><strong>FFI:</strong> <code>import "lib" function name(...)</code> with variadic support</li>
+</ul>
 
-<h2>REPL</h2>
-<table>
-  <tr><th>Feature</th><th>Details</th></tr>
-  <tr><td>Terminal REPL</td><td>Tree-walking interpreter via <code>ul</code> command. Multi-line input, persistent scope, function registration</td></tr>
-  <tr><td>Browser REPL</td><td>Full JS port of lexer/parser/evaluator. Zero dependencies, works offline. <a href="repl.html" style="color:#1a3a7a;">Try it</a></td></tr>
-  <tr><td>Commands</td><td>help, vars, functions, clear, exit/quit</td></tr>
-</table>
+<h3>Compiler Infrastructure</h3>
+<ul style="margin:8px 0 0 20px; color:#2a2a2a;">
+  <li><strong>Normalization:</strong> 4 levels (0&ndash;3) &mdash; compound expansion, call flattening, boolean splitting, array expansion. Per-file via <code>@norm N</code></li>
+  <li><strong>Memory builtins:</strong> memtake, memgive, memcopy, memmove, memset, address, deref</li>
+  <li><strong>DR settings:</strong> memory, safety, types, int_width, concurrency &mdash; per-file, compiler-enforced, cross-file conflict detection</li>
+  <li><strong>Semantic checker:</strong> scope chains, forward calls, type inheritance validation, field access resolution</li>
+</ul>
+</div>
 
-<h2>Website Tools</h2>
-<table>
-  <tr><th>Feature</th><th>Details</th></tr>
-  <tr><td>DR Conflict Checker</td><td>Browser-based. Two-column UI, 19 intra-file rules + cross-file mismatch detection. <a href="dr-checker.html" style="color:#1a3a7a;">Use it</a></td></tr>
-  <tr><td>Runtime Tutorial</td><td>15-section paginated walkthrough with 5 animated memory model widgets. <a href="runtime-intro.html" style="color:#1a3a7a;">Start</a></td></tr>
-  <tr><td>Feature Comparison</td><td>UL vs Python vs C vs JavaScript across 11 developer features. <a href="comparison.html" style="color:#1a3a7a;">View</a></td></tr>
-</table>
+<!-- ════ VS CODE ════ -->
+<div style="background:#f5f3fb; border:1px solid #d8cff0; border-left:4px solid #7ab3e0; border-radius:0 6px 6px 0; padding:24px 28px; margin:24px 0;">
+<h2 style="margin-top:0; border:none; padding:0; color:#2d1b69;">VS Code Extension</h2>
+
+<h3 style="margin-top:16px;">Editor Features</h3>
+<ul style="margin:8px 0 16px 20px; color:#2a2a2a;">
+  <li><strong>Syntax highlighting</strong> &mdash; TextMate grammar for all keywords, types, operators, literals, comments</li>
+  <li><strong>Diagnostics</strong> &mdash; inline errors from lexer, parser, and semantic checker on every save</li>
+  <li><strong>Hover</strong> &mdash; keyword glossary (56 entries), function signatures, type definitions, variable types</li>
+  <li><strong>Go-to-definition</strong> &mdash; jump to function, type, or variable declaration; cross-file workspace search</li>
+  <li><strong>Autocomplete</strong> &mdash; keywords, functions, types, scope-aware variables, foreign imports</li>
+  <li><strong>Signature help</strong> &mdash; parameter highlighting on <code>(</code> and <code>,</code> with nested call support</li>
+</ul>
+
+<h3>AI Features</h3>
+<ul style="margin:8px 0 16px 20px; color:#2a2a2a;">
+  <li><strong>Explain Structure</strong> &mdash; AI-powered walkthrough of file structure with line highlighting</li>
+  <li><strong>Explain Execution</strong> &mdash; AI-powered execution flow walkthrough</li>
+</ul>
+
+<h3>Visualization</h3>
+<ul style="margin:8px 0 0 20px; color:#2a2a2a;">
+  <li><strong>Dependency graph</strong> &mdash; D3.js force-directed graph of cross-file function calls with DR conflict highlighting</li>
+  <li><strong>Status bar</strong> &mdash; rotating tips, visible only when a .ul file is active</li>
+</ul>
+</div>
+
+<!-- ════ PROJECT MANAGER ════ -->
+<div style="background:#f5f3fb; border:1px solid #d8cff0; border-left:4px solid #a6e3a1; border-radius:0 6px 6px 0; padding:24px 28px; margin:24px 0;">
+<h2 style="margin-top:0; border:none; padding:0; color:#2d1b69;">Project Manager GUI</h2>
+<ul style="margin:8px 0 12px 20px; color:#2a2a2a;">
+  <li><strong>New project</strong> &mdash; create project with standard directory layout</li>
+  <li><strong>DR configurator</strong> &mdash; interactive setting of 5 DR directives</li>
+  <li><strong>Build</strong> &mdash; compile with target selection (C, Python, JS, LLVM IR)</li>
+  <li><strong>DR conflict checker</strong> &mdash; validate DR consistency across all project files</li>
+  <li><strong>Project tree</strong> &mdash; file browser showing functions and types per file</li>
+</ul>
+<p style="margin:0;"><a href="UniLogic_Project_Manager.exe" download style="display:inline-block; padding:6px 18px; background:#1e1e2e; color:#7ab3e0; border:1px solid #313244; border-radius:4px; text-decoration:none; font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:0.06em;">Download &mdash; Windows x86-64</a></p>
+</div>
+
+<!-- ════ REPL ════ -->
+<div style="background:#f5f3fb; border:1px solid #d8cff0; border-left:4px solid #fab387; border-radius:0 6px 6px 0; padding:24px 28px; margin:24px 0;">
+<h2 style="margin-top:0; border:none; padding:0; color:#2d1b69;">REPL</h2>
+<ul style="margin:8px 0 0 20px; color:#2a2a2a;">
+  <li><strong>Terminal REPL</strong> &mdash; tree-walking interpreter via <code>ul</code> command. Multi-line input, persistent scope, function registration</li>
+  <li><strong>Browser REPL</strong> &mdash; full JS port of lexer/parser/evaluator. Zero dependencies, works offline. <a href="repl.html" style="color:#1a3a7a;">Try it &rarr;</a></li>
+  <li><strong>Commands:</strong> help, vars, functions, clear, exit/quit</li>
+</ul>
+</div>
+
+<!-- ════ WEBSITE TOOLS ════ -->
+<div style="background:#f5f3fb; border:1px solid #d8cff0; border-left:4px solid #f38ba8; border-radius:0 6px 6px 0; padding:24px 28px; margin:24px 0;">
+<h2 style="margin-top:0; border:none; padding:0; color:#2d1b69;">Website Tools</h2>
+<ul style="margin:8px 0 0 20px; color:#2a2a2a;">
+  <li><strong>DR Conflict Checker</strong> &mdash; browser-based, two-column UI, 19 intra-file rules + cross-file mismatch detection. <a href="dr-checker.html" style="color:#1a3a7a;">Use it &rarr;</a></li>
+  <li><strong>Runtime Tutorial</strong> &mdash; 15-section paginated walkthrough with 5 animated memory model widgets. <a href="runtime-intro.html" style="color:#1a3a7a;">Start &rarr;</a></li>
+  <li><strong>Feature Comparison</strong> &mdash; UL vs Python vs C vs JavaScript across 11 developer features. <a href="comparison.html" style="color:#1a3a7a;">View &rarr;</a></li>
+</ul>
+</div>
 
 </main>
 
