@@ -664,7 +664,7 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
   <a href="#match">Match</a>
   <a href="#iterate">Iterate</a>
   <a href="#loop-control">Loop Control</a>
-  <a href="#teleport">teleport / portal</a>
+  <a href="#teleport">goto / portal</a>
 
   <div class="nav-section">Code</div>
   <a href="#functions">Functions</a>
@@ -750,20 +750,18 @@ body.theme-default .mods-section-title { color: #1a1a1a; border-bottom-color: #b
   <a href="#ann-platform">@platform</a>
 
   <div class="nav-section">Safety</div>
-  <a href="#ann-nullable">@nullable</a>
-
-  <div class="nav-section">Types</div>
-  <a href="#ann-data">@data</a>
-  <a href="#ann-sealed">@sealed</a>
-  <a href="#ann-singleton">@singleton</a>
   <a href="#ann-alias">@alias</a>
 
-  <div class="nav-section">Functions</div>
-  <a href="#ann-inline">@callembed</a>
-  <a href="#ann-extends">@extends</a>
-  <a href="#ann-operator">@operator</a>
-  <a href="#ann-receiver">@receiver</a>
-  <a href="#ann-delegate">@delegate</a>
+  <div class="nav-section" style="margin-top:20px;padding-top:8px;border-top:1px solid #313244;color:#45475a;font-size:9px;">Advanced &mdash; enterprise / framework</div>
+  <a href="#ann-nullable">@allownull</a>
+  <a href="#ann-data">@byvalue</a>
+  <a href="#ann-sealed">@locked</a>
+  <a href="#ann-singleton">@onlyone</a>
+  <a href="#ann-inline">@embedcall</a>
+  <a href="#ann-extends">@expands</a>
+  <a href="#ann-operator">@symbol</a>
+  <a href="#ann-receiver">@inscope</a>
+  <a href="#ann-delegate">@copymethods</a>
 </nav>
 
 <!-- ══════════════════════════════════════════
@@ -963,14 +961,19 @@ wc_remove(<span class="str">&quot;key&quot;</span>)   <span class="cm">// delete
 
 <hr>
 
-<h2 id="teleport" class="anchor-target">teleport / portal</h2>
-<p><code>portal</code> declares a label. <code>teleport</code> jumps to it unconditionally. Both must be in the same function scope.</p>
+<h2 id="teleport" class="anchor-target">goto / portal</h2>
+<p><code>portal</code> declares a named jump point. <code>goto</code> jumps to it unconditionally. Both must be in the same function. Use sparingly &mdash; loops and functions cover most cases where goto might seem tempting.</p>
 <pre><span class="kw">portal</span> retry
 
-<span class="cm">// ... code that may need to restart ...</span>
+attempts <span class="op">=</span> attempts <span class="op">+</span> <span class="num">1</span>
+
+<span class="kw">if</span> attempts <span class="op">&gt;</span> <span class="num">3</span>
+  <span class="kw">print</span> <span class="str">"too many attempts"</span>
+  <span class="fn">exit</span>(<span class="num">1</span>)
+<span class="kw">end if</span>
 
 <span class="kw">if</span> failed
-  <span class="kw">teleport</span> retry
+  <span class="kw">goto</span> retry
 <span class="kw">end if</span></pre>
 
 <hr>
@@ -1090,6 +1093,23 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><td><code>t in s</code></td><td>True if t is a substring of s.</td><td>All</td></tr>
 </table>
 
+<h3>Membership and Slicing</h3>
+<pre><span class="kw">if</span> <span class="str">"banana"</span> <span class="kw">in</span> fruits
+  <span class="kw">print</span> <span class="str">"found"</span>
+<span class="kw">end if</span>
+
+<span class="kw">if</span> <span class="str">"world"</span> <span class="kw">in</span> <span class="str">"hello world"</span>
+  <span class="kw">print</span> <span class="str">"substring found"</span>
+<span class="kw">end if</span>
+
+<span class="ty">string</span> greeting <span class="op">=</span> <span class="str">"Hello World"</span>
+<span class="ty">string</span> hello <span class="op">=</span> greeting[<span class="num">0</span>:<span class="num">5</span>]     <span class="cm">// "Hello"</span>
+<span class="ty">string</span> world <span class="op">=</span> greeting[<span class="num">6</span>:<span class="num">11</span>]    <span class="cm">// "World"</span>
+
+<span class="ty">array</span> <span class="ty">int</span> nums <span class="op">=</span> [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>]
+<span class="ty">array</span> <span class="ty">int</span> middle <span class="op">=</span> nums[<span class="num">1</span>:<span class="num">4</span>]     <span class="cm">// [20, 30, 40]</span></pre>
+<p>The <code>in</code> keyword tests membership. Works on arrays, lists, and strings. For arrays and lists it searches for the value. For strings it searches for a substring. <code>[i:j]</code> returns elements from index i up to but not including j.</p>
+
 <hr>
 
 <h2 id="stdlib-collections" class="anchor-target">Standard Library — Collections</h2>
@@ -1099,7 +1119,7 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
   <tr><td><code>list.append(x)</code></td><td>Add x to end of list.</td><td>All</td></tr>
   <tr><td><code>list.remove(x)</code></td><td>Remove first occurrence of x.</td><td>All</td></tr>
-  <tr><td><code>list.pop()</code></td><td>Remove and return last element.</td><td>All</td></tr>
+  <tr><td><code>list.drop()</code></td><td>Remove and return last element.</td><td>All</td></tr>
   <tr><td><code>list.pop(i)</code></td><td>Remove and return element at index i.</td><td>All</td></tr>
   <tr><td><code>list.insert(i, x)</code></td><td>Insert x at index i.</td><td>All</td></tr>
   <tr><td><code>list.length</code></td><td>Number of elements. Property.</td><td>All</td></tr>
@@ -1184,10 +1204,10 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><td><code>Thread t = Thread.new(fn)</code></td><td>Create thread running function fn.</td><td>C, Python</td></tr>
   <tr><td><code>t.start()</code></td><td>Start thread.</td><td>C, Python</td></tr>
   <tr><td><code>t.join()</code></td><td>Wait for thread to finish.</td><td>C, Python</td></tr>
-  <tr><td><code>Mutex m = Mutex.new()</code></td><td>Create mutex.</td><td>C, Python</td></tr>
-  <tr><td><code>m.lock()</code></td><td>Acquire mutex. Blocks until available.</td><td>C, Python</td></tr>
-  <tr><td><code>m.unlock()</code></td><td>Release mutex.</td><td>C, Python</td></tr>
-  <tr><td><code>m.try_lock()</code></td><td>Attempt to acquire. Returns bool.</td><td>C, Python</td></tr>
+  <tr><td><code>lock l = lock.new()</code></td><td>Create a lock. Previously called Mutex in other languages. A lock prevents multiple threads from accessing shared data simultaneously.</td><td>C, Python</td></tr>
+  <tr><td><code>l.lock()</code></td><td>Acquire &mdash; blocks until available.</td><td>C, Python</td></tr>
+  <tr><td><code>l.unlock()</code></td><td>Release.</td><td>C, Python</td></tr>
+  <tr><td><code>l.try_lock()</code></td><td>Attempt to acquire, returns bool.</td><td>C, Python</td></tr>
 </table>
 
 <h3>Parallel (concurrency: parallel)</h3>
@@ -1222,8 +1242,8 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
   <tr><td><code>abort()</code></td><td>Terminate program immediately with non-zero exit code.</td><td>All</td></tr>
   <tr><td><code>exit(code)</code></td><td>Exit program with given return code.</td><td>All</td></tr>
-  <tr><td><code>args()</code></td><td>Returns <code>string[]</code> of command line arguments.</td><td>C, Python only</td></tr>
-  <tr><td><code>env(name)</code></td><td>Returns value of environment variable. Returns <code>Option(string)</code>.</td><td>C, Python only</td></tr>
+  <tr><td><code>userinput()</code></td><td>Returns <code>array string</code> of command line arguments.</td><td>C, Python only</td></tr>
+  <tr><td><code>vault(name)</code></td><td>Read environment variable. Returns <code>string|error</code>.</td><td>C, Python only</td></tr>
   <tr><td><code>time()</code></td><td>Returns current Unix timestamp as int64.</td><td>All</td></tr>
   <tr><td><code>clock()</code></td><td>High-resolution timer for benchmarking. Returns int64 nanoseconds.</td><td>All</td></tr>
   <tr><td><code>sleep(ms)</code></td><td>Sleep for ms milliseconds.</td><td>All</td></tr>
@@ -1234,9 +1254,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <h2 id="stdlib-random" class="anchor-target">Standard Library — Random</h2>
 <table>
   <tr><th>Function / Property</th><th>Description</th><th>Target</th></tr>
-  <tr><td><code>rand()</code></td><td>Returns random float between 0.0 and 1.0.</td><td>All</td></tr>
-  <tr><td><code>rand_int(lo, hi)</code></td><td>Returns random int between lo and hi inclusive.</td><td>All</td></tr>
-  <tr><td><code>rand_seed(n)</code></td><td>Set random seed for reproducibility.</td><td>All</td></tr>
+  <tr><td><code>random()</code></td><td>Returns random float between 0.0 and 1.0.</td><td>All</td></tr>
+  <tr><td><code>random_int(lo, hi)</code></td><td>Returns random int between lo and hi inclusive.</td><td>All</td></tr>
+  <tr><td><code>random_seed(n)</code></td><td>Set random seed for reproducibility. Computers generate predictable sequences of numbers that appear random. The seed is the starting point. Same seed = same sequence &mdash; useful for reproducible experiments and debugging.</td><td>All</td></tr>
 </table>
 
 <hr>
@@ -1282,10 +1302,10 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
 <hr>
 
 <h2 id="killswitch" class="anchor-target">killswitch</h2>
-<p>A runtime assertion that terminates the program immediately if the condition is false. Active when <code>safety: checked</code>. Compiled out entirely when <code>safety: unchecked</code> — zero overhead in production builds.</p>
-<pre><span class="kw">killswitch</span> index <span class="op">&lt;</span> length          <span class="cm">// terminates if index >= length</span>
-<span class="kw">killswitch</span> ptr <span class="op">!=</span> <span class="kw">null</span>             <span class="cm">// terminates if ptr is null</span>
-<span class="kw">killswitch</span> result <span class="op">==</span> <span class="kw">ok</span>            <span class="cm">// terminates if result is not ok</span></pre>
+<p>A runtime assertion. If the condition is false and <code>safety = checked</code> is set, the program terminates immediately with an error message showing which condition failed and at which line. When <code>safety = unchecked</code>, killswitch compiles to nothing &mdash; zero overhead in production builds.</p>
+<pre><span class="kw">killswitch</span> index <span class="op">&lt;</span> length
+<span class="kw">killswitch</span> ptr <span class="op">!=</span> <span class="kw">empty</span>
+<span class="kw">killswitch</span> result <span class="op">==</span> <span class="kw">ok</span></pre>
 
 <hr>
 
@@ -1441,12 +1461,12 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <div class="mods-section-title">Safety</div>
   <div class="mods-grid">
     <div class="mods-card wide" id="ann-nullable">
-      <div class="mods-card-name">@nullable</div>
-      <div class="mods-card-desc">Marks a field or parameter as explicitly nullable. Without this modifier, the compiler assumes non-null and enforces it. Absence of @nullable is the non-null contract.</div>
+      <div class="mods-card-name">@allownull</div>
+      <div class="mods-card-desc">Marks a field or parameter as explicitly nullable. Without this modifier, the compiler assumes non-null and enforces it. Absence of @allownull is the non-null contract.</div>
       <pre><span class="kw">type</span> <span class="ty">Session</span>
   <span class="kw">string</span>            token
-  <span class="ann">@nullable</span> <span class="kw">string</span>  user
-  <span class="ann">@nullable</span> <span class="kw">int</span>     expiresAt
+  <span class="ann">@allownull</span> <span class="kw">string</span>  user
+  <span class="ann">@allownull</span> <span class="kw">int</span>     expiresAt
 <span class="kw">end type</span></pre>
     </div>
   </div>
@@ -1457,9 +1477,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <div class="mods-grid">
 
     <div class="mods-card" id="ann-data">
-      <div class="mods-card-name">@data</div>
-      <div class="mods-card-desc">Generates structural equality, hashing, and a copy() method. Two instances are equal if all fields match by value. Without @data, equality is by reference.</div>
-      <pre><span class="ann">@data</span>
+      <div class="mods-card-name">@byvalue</div>
+      <div class="mods-card-desc">By default, two variables of the same type are only considered equal if they are the exact same object in memory &mdash; even if all their fields contain identical values. @byvalue changes this so two instances are equal if all their fields match. Similar to how 5 == 5 is always true for integers &mdash; @byvalue gives your custom types the same behavior.</div>
+      <pre><span class="ann">@byvalue</span>
 <span class="kw">type</span> <span class="ty">Point</span>
   <span class="kw">int</span> x, y
 <span class="kw">end type</span>
@@ -1469,9 +1489,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
     </div>
 
     <div class="mods-card" id="ann-sealed">
-      <div class="mods-card-name">@sealed</div>
+      <div class="mods-card-name">@locked</div>
       <div class="mods-card-desc">Prevents a type from being extended outside the module it is declared in. The compiler knows every possible subtype, enabling exhaustive match checks.</div>
-      <pre><span class="ann">@sealed</span>
+      <pre><span class="ann">@locked</span>
 <span class="kw">type</span> <span class="ty">Shape</span>
   <span class="kw">string</span> kind
 <span class="kw">end type</span>
@@ -1482,9 +1502,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
     </div>
 
     <div class="mods-card" id="ann-singleton">
-      <div class="mods-card-name">@singleton</div>
+      <div class="mods-card-name">@onlyone</div>
       <div class="mods-card-desc">Exactly one instance ever exists. The runtime creates it on first access. No constructor is callable externally.</div>
-      <pre><span class="ann">@singleton</span>
+      <pre><span class="ann">@onlyone</span>
 <span class="kw">type</span> <span class="ty">AppConfig</span>
   <span class="kw">string</span> env
   <span class="kw">int</span>    maxConnections
@@ -1512,9 +1532,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
   <div class="mods-grid">
 
     <div class="mods-card" id="ann-inline">
-      <div class="mods-card-name">@callembed</div>
+      <div class="mods-card-name">@embedcall</div>
       <div class="mods-card-desc">Substitutes the function body at every call site at compile time. No call overhead. Enforced — the compiler will not ignore it.</div>
-      <pre><span class="ann">@callembed</span>
+      <pre><span class="ann">@embedcall</span>
 <span class="kw">function</span> <span class="fn">clamp</span>(<span class="kw">int</span> v, <span class="kw">int</span> lo, <span class="kw">int</span> hi)
   <span class="kw">if</span> v <span class="op">&lt;</span> lo
     <span class="kw">return</span> lo
@@ -1527,9 +1547,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
     </div>
 
     <div class="mods-card" id="ann-extends">
-      <div class="mods-card-name">@extends</div>
+      <div class="mods-card-name">@expands</div>
       <div class="mods-card-desc">Makes a free function callable as a method on the named type. The type itself is not modified — resolved entirely by the compiler at the call site.</div>
-      <pre><span class="ann">@extends</span>(<span class="ty">string</span>)
+      <pre><span class="ann">@expands</span>(<span class="ty">string</span>)
 <span class="kw">function</span> <span class="fn">truncate</span>(<span class="kw">string</span> s, <span class="kw">int</span> max)
   <span class="kw">if</span> s.length <span class="op">&lt;=</span> max
     <span class="kw">return</span> s
@@ -1541,9 +1561,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
     </div>
 
     <div class="mods-card" id="ann-operator">
-      <div class="mods-card-name">@operator</div>
+      <div class="mods-card-name">@symbol</div>
       <div class="mods-card-desc">Maps a named function to an operator symbol for a type. Supported: <code>+  -  *  /  %  ==  !=  &lt;  &gt;  &lt;=  &gt;=</code>.</div>
-      <pre><span class="ann">@operator</span>(<span class="op">+</span>)
+      <pre><span class="ann">@symbol</span>(<span class="op">+</span>)
 <span class="kw">function</span> <span class="fn">add</span>(<span class="ty">Vector2</span> a, <span class="ty">Vector2</span> b)
   <span class="kw">return</span> <span class="fn">Vector2</span>(a.x <span class="op">+</span> b.x, a.y <span class="op">+</span> b.y)
 <span class="kw">end function</span>
@@ -1552,9 +1572,9 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
     </div>
 
     <div class="mods-card" id="ann-receiver">
-      <div class="mods-card-name">@receiver</div>
+      <div class="mods-card-name">@inscope</div>
       <div class="mods-card-desc">The function executes in the context of the named type — its fields are in scope without qualification. Foundation for DSL builders.</div>
-      <pre><span class="ann">@receiver</span>(<span class="ty">QueryBuilder</span>)
+      <pre><span class="ann">@inscope</span>(<span class="ty">QueryBuilder</span>)
 <span class="kw">function</span> <span class="fn">build_query</span>()
   <span class="fn">from</span>(<span class="str">"users"</span>)
   <span class="fn">where</span>(active <span class="op">=</span> <span class="kw">true</span>)
@@ -1563,10 +1583,10 @@ Player p <span class="op">=</span> <span class="kw">new</span> Player[<span clas
     </div>
 
     <div class="mods-card wide" id="ann-delegate">
-      <div class="mods-card-name">@delegate</div>
+      <div class="mods-card-name">@copymethods</div>
       <div class="mods-card-desc">Forwards all interface calls on a type to a named field of that interface type. The compiler generates every forwarding method — no boilerplate required.</div>
       <pre><span class="kw">type</span> <span class="ty">TimestampedLogger</span>
-  <span class="ann">@delegate</span> <span class="ty">Logger</span> inner    <span class="cm">// log() forwarded to inner.log() automatically</span>
+  <span class="ann">@copymethods</span> <span class="ty">Logger</span> inner    <span class="cm">// log() forwarded to inner.log() automatically</span>
   <span class="kw">string</span>           format
 <span class="kw">end type</span></pre>
     </div>
@@ -1700,13 +1720,13 @@ a.free()                               <span class="cm">// entire arena released
 <p>Operate at the individual bit level. Use <code>uint</code> types for bit manipulation — applying these to signed integers flips the sign bit and produces negative results.</p>
 
 <table>
-  <tr><th>UL</th><th>C</th><th>Meaning</th></tr>
-  <tr><td>both1</td><td>&amp;</td><td>Bitwise AND — output bit is 1 only if both input bits are 1</td></tr>
-  <tr><td>both0</td><td>~(a|b)</td><td>Bitwise NOR — output bit is 1 only if both input bits are 0</td></tr>
-  <tr><td>either1</td><td>|</td><td>Bitwise OR — output bit is 1 if either input bit is 1</td></tr>
-  <tr><td>delta</td><td>^</td><td>Bitwise XOR — output bit is 1 if the bits differ</td></tr>
-  <tr><td>bitflip x</td><td>~x</td><td>Bitwise NOT — inverts every bit</td></tr>
-  <tr><td>negate x</td><td>-x</td><td>Arithmetic negation</td></tr>
+  <tr><th>UL (primary)</th><th>UL (alias)</th><th>C</th><th>Meaning</th></tr>
+  <tr><td>diff</td><td>delta</td><td>^</td><td>Bitwise XOR &mdash; bits that differ</td></tr>
+  <tr><td>both1</td><td>band</td><td>&amp;</td><td>Bitwise AND &mdash; both bits must be 1</td></tr>
+  <tr><td>either1</td><td>bor</td><td>|</td><td>Bitwise OR &mdash; either bit is 1</td></tr>
+  <tr><td>both0</td><td>&mdash;</td><td>~(a|b)</td><td>Bitwise NOR &mdash; both bits must be 0</td></tr>
+  <tr><td>bitflip</td><td>bnot</td><td>~</td><td>Bitwise NOT &mdash; invert all bits</td></tr>
+  <tr><td>negate</td><td>&mdash;</td><td>-</td><td>Arithmetic negation</td></tr>
   <tr><td>x left n</td><td>x &lt;&lt; n</td><td>Left shift — multiply by 2ⁿ</td></tr>
   <tr><td>x right n</td><td>x &gt;&gt; n</td><td>Right shift — divide by 2ⁿ (logical on uint)</td></tr>
   <tr><td>left=</td><td>&lt;&lt;=</td><td>Left shift assign</td></tr>
@@ -1832,7 +1852,7 @@ flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <
   <tr><td><code>!=</code></td><td><code>!=</code></td><td>Identical. Also accepts <code>not</code> as an alternative (<code>x not y</code>).</td></tr>
   <tr><td><code>x &amp; y</code></td><td><code>x both1 y</code></td><td>Bitwise AND</td></tr>
   <tr><td><code>x | y</code></td><td><code>x either1 y</code></td><td>Bitwise OR</td></tr>
-  <tr><td><code>x ^ y</code></td><td><code>x delta y</code></td><td>Bitwise XOR</td></tr>
+  <tr><td><code>x ^ y</code></td><td><code>x diff y</code></td><td>Bitwise XOR</td></tr>
   <tr><td><code>~x</code></td><td><code>bitflip x</code></td><td>Bitwise NOT — invert all bits</td></tr>
   <tr><td><code>-x</code></td><td><code>negate x</code></td><td>Arithmetic negation</td></tr>
   <tr><td><code>x &lt;&lt; n</code></td><td><code>x left n</code></td><td>Left shift</td></tr>

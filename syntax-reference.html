@@ -1166,7 +1166,7 @@ x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// 
   <tr><td>both1</td><td>&amp;</td><td>Bitwise AND — output bit is 1 only if both input bits are 1</td></tr>
   <tr><td>both0</td><td>~(a|b)</td><td>Bitwise NOR — output bit is 1 only if both input bits are 0</td></tr>
   <tr><td>either1</td><td>|</td><td>Bitwise OR — output bit is 1 if either input bit is 1</td></tr>
-  <tr><td>delta</td><td>^</td><td>Bitwise XOR — output bit is 1 if the bits differ</td></tr>
+  <tr><td>diff</td><td>^</td><td>Bitwise XOR — output bit is 1 if the bits differ</td></tr>
   <tr><td>bitflip x</td><td>~x</td><td>Bitwise NOT — inverts every bit</td></tr>
   <tr><td>negate x</td><td>-x</td><td>Arithmetic negation</td></tr>
   <tr><td>x left n</td><td>x &lt;&lt; n</td><td>Left shift — multiply by 2ⁿ</td></tr>
@@ -1178,7 +1178,7 @@ x <span class="op">%</span> <span class="num">2</span>      <span class="cm">// 
 <pre><span class="ty">uint32</span> flags <span class="op">=</span> <span class="num">0</span>
 flags <span class="op">=</span> flags <span class="kw">either1</span> <span class="num">4</span>      <span class="cm">// set bit 2</span>
 flags <span class="op">=</span> flags <span class="kw">both1</span> <span class="num">0xFF</span>     <span class="cm">// mask to low byte</span>
-flags <span class="op">=</span> flags <span class="kw">delta</span> <span class="num">1</span>         <span class="cm">// toggle bit 0</span>
+flags <span class="op">=</span> flags <span class="kw">diff</span> <span class="num">1</span>         <span class="cm">// toggle bit 0</span>
 flags <span class="op">=</span> flags <span class="kw">left</span> <span class="num">2</span>          <span class="cm">// shift left 2 positions</span>
 flags <span class="op">=</span> flags <span class="kw">right</span> <span class="num">1</span>         <span class="cm">// shift right 1 position</span>
 flags <span class="op">=</span> <span class="kw">bitflip</span> flags          <span class="cm">// invert all bits</span></pre>
@@ -1342,7 +1342,7 @@ p.value <span class="op">=</span> <span class="num">3.14</span>             <spa
   <tr><td><code>!=</code></td><td><code>!=</code></td><td>Identical. Also accepts <code>not</code> as an alternative (<code>x not y</code>).</td></tr>
   <tr><td><code>x &amp; y</code></td><td><code>x both1 y</code></td><td>Bitwise AND</td></tr>
   <tr><td><code>x | y</code></td><td><code>x either1 y</code></td><td>Bitwise OR</td></tr>
-  <tr><td><code>x ^ y</code></td><td><code>x delta y</code></td><td>Bitwise XOR</td></tr>
+  <tr><td><code>x ^ y</code></td><td><code>x diff y</code></td><td>Bitwise XOR</td></tr>
   <tr><td><code>~x</code></td><td><code>bitflip x</code></td><td>Bitwise NOT — invert all bits</td></tr>
   <tr><td><code>-x</code></td><td><code>-x</code> or <code>negate x</code></td><td>Arithmetic negation — both accepted</td></tr>
   <tr><td><code>x &lt;&lt; n</code></td><td><code>x left n</code></td><td>Left shift</td></tr>

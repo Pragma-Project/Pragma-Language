@@ -35,7 +35,7 @@ Line comments: `//` to end of line. No block comments.
 - Types: `int`, `integer`, `float`, `double`, `string`, `bool`, `none`, `complex`, `int8`, `int16`, `int32`, `int64`, `uint8`, `uint16`, `uint32`, `uint64`, `array`, `list`, `map`, `arena`, `file`
 - Result: `ok`, `error`, `some`
 
-**Reserved (in lexer, not implemented):** `iterate`, `teleport`, `portal`, `killswitch`, `equals`, `both1`, `both0`, `either1`, `delta`, `bitflip`, `negate`, `change`, `constant`
+**Reserved (in lexer, not implemented):** `iterate`, `goto`, `portal`, `killswitch`, `equals`, `both1`, `both0`, `either1`, `delta`, `bitflip`, `negate`, `change`, `constant`
 
 ### 1.5 Operators
 
@@ -442,6 +442,16 @@ Architecture-specific. The block is emitted verbatim into the target output. Onl
 | `memcopy` | `memcopy(<none> dst, <none> src, int n)` | Copy bytes (no overlap) |
 | `memmove` | `memmove(<none> dst, <none> src, int n)` | Copy bytes (overlap safe) |
 | `memset` | `memset(<none> ptr, int val, int n)` | Fill bytes |
+| `time` | `time() returns int` | Unix timestamp in seconds |
+| `clock` | `clock() returns int` | Nanoseconds, for benchmarking |
+| `sleep` | `sleep(int ms)` | Sleep for ms milliseconds |
+| `random` | `random() returns float` | Random float 0.0 to 1.0 |
+| `random_int` | `random_int(int lo, int hi) returns int` | Random int between lo and hi inclusive |
+| `random_seed` | `random_seed(int n)` | Set seed for reproducible results |
+| `userinput` | `userinput() returns array string` | Command line arguments |
+| `vault` | `vault(string name) returns string\|error` | Read environment variable |
+| `abort` | `abort()` | Terminate immediately, non-zero exit |
+| `killswitch` | `killswitch condition` | Runtime assertion (compiled out when safety=unchecked) |
 
 ---
 

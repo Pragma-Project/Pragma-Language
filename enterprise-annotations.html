@@ -163,9 +163,9 @@ hr {
   <div class="ann-grid">
 
     <div class="ann-card">
-      <div class="ann-name">@data</div>
+      <div class="ann-name">@byvalue</div>
       <div class="ann-desc">Generates structural equality, hashing, and a copy() method. Fields are compared by value, not by reference.</div>
-      <pre><span class="ann">@data</span>
+      <pre><span class="ann">@byvalue</span>
 <span class="kw">type</span> <span class="ty">Point</span>
   <span class="kw">int</span> x, y
 <span class="kw">end type</span>
@@ -176,9 +176,9 @@ a <span class="op">=</span> b                    <span class="cm">// structural 
     </div>
 
     <div class="ann-card">
-      <div class="ann-name">@sealed</div>
+      <div class="ann-name">@locked</div>
       <div class="ann-desc">Closes the type hierarchy. Only types declared in the same module may extend this type — the compiler knows every possible subtype.</div>
-      <pre><span class="ann">@sealed</span>
+      <pre><span class="ann">@locked</span>
 <span class="kw">type</span> <span class="ty">Shape</span>
   <span class="kw">string</span> kind
 <span class="kw">end type</span>
@@ -193,9 +193,9 @@ a <span class="op">=</span> b                    <span class="cm">// structural 
     </div>
 
     <div class="ann-card">
-      <div class="ann-name">@singleton</div>
+      <div class="ann-name">@onlyone</div>
       <div class="ann-desc">Exactly one instance ever exists. The runtime creates it on first access and reuses it everywhere. No constructor is callable externally.</div>
-      <pre><span class="ann">@singleton</span>
+      <pre><span class="ann">@onlyone</span>
 <span class="kw">type</span> <span class="ty">AppConfig</span>
   <span class="kw">string</span> env
   <span class="kw">int</span>    maxConnections
@@ -225,9 +225,9 @@ a <span class="op">=</span> b                    <span class="cm">// structural 
   <div class="ann-grid">
 
     <div class="ann-card">
-      <div class="ann-name">@callembed</div>
+      <div class="ann-name">@embedcall</div>
       <div class="ann-desc">The function body is substituted at every call site at compile time. No call overhead. Required when passing lambdas to avoid allocation.</div>
-      <pre><span class="ann">@callembed</span>
+      <pre><span class="ann">@embedcall</span>
 <span class="kw">function</span> <span class="fn">clamp</span>(<span class="kw">int</span> v, <span class="kw">int</span> lo, <span class="kw">int</span> hi)
   <span class="kw">if</span> v <span class="op">&lt;</span> lo
     <span class="kw">return</span> lo
@@ -243,9 +243,9 @@ a <span class="op">=</span> b                    <span class="cm">// structural 
     </div>
 
     <div class="ann-card">
-      <div class="ann-name">@extends</div>
+      <div class="ann-name">@expands</div>
       <div class="ann-desc">Makes a free function callable as if it were a method on the named type. Does not modify the type — purely syntactic resolution.</div>
-      <pre><span class="ann">@extends</span>(<span class="ty">string</span>)
+      <pre><span class="ann">@expands</span>(<span class="ty">string</span>)
 <span class="kw">function</span> <span class="fn">truncate</span>(<span class="kw">string</span> s, <span class="kw">int</span> max)
   <span class="kw">if</span> s.length <span class="op">&lt;=</span> max
     <span class="kw">return</span> s
@@ -257,9 +257,9 @@ a <span class="op">=</span> b                    <span class="cm">// structural 
     </div>
 
     <div class="ann-card">
-      <div class="ann-name">@operator</div>
+      <div class="ann-name">@symbol</div>
       <div class="ann-desc">Maps a named function to an arithmetic or comparison operator for a given type. The function must take the type as its first argument.</div>
-      <pre><span class="ann">@operator</span>(<span class="op">+</span>)
+      <pre><span class="ann">@symbol</span>(<span class="op">+</span>)
 <span class="kw">function</span> <span class="fn">add</span>(<span class="ty">Vector2</span> a, <span class="ty">Vector2</span> b)
   <span class="kw">return</span> <span class="fn">Vector2</span>(a.x <span class="op">+</span> b.x, a.y <span class="op">+</span> b.y)
 <span class="kw">end function</span>
@@ -269,9 +269,9 @@ a <span class="op">=</span> b                    <span class="cm">// structural 
     </div>
 
     <div class="ann-card">
-      <div class="ann-name">@receiver</div>
+      <div class="ann-name">@inscope</div>
       <div class="ann-desc">The function runs in the context of the named type — its fields are directly in scope without qualification. Foundation for DSL builders.</div>
-      <pre><span class="ann">@receiver</span>(<span class="ty">QueryBuilder</span>)
+      <pre><span class="ann">@inscope</span>(<span class="ty">QueryBuilder</span>)
 <span class="kw">function</span> <span class="fn">build_query</span>()
   <span class="fn">from</span>(<span class="str">"users"</span>)         <span class="cm">// QueryBuilder.from</span>
   <span class="fn">where</span>(active <span class="op">=</span> <span class="kw">true</span>) <span class="cm">// QueryBuilder.where</span>
@@ -288,15 +288,15 @@ a <span class="op">=</span> b                    <span class="cm">// structural 
   <div class="ann-grid">
 
     <div class="ann-card">
-      <div class="ann-name">@nullable</div>
+      <div class="ann-name">@allownull</div>
       <div class="ann-desc">Marks a field or parameter as explicitly nullable. Without this annotation, the compiler assumes non-null and enforces it.</div>
       <pre><span class="kw">type</span> <span class="ty">Session</span>
   <span class="kw">string</span>            token
-  <span class="ann">@nullable</span> <span class="kw">string</span>  user
-  <span class="ann">@nullable</span> <span class="kw">int</span>     expiresAt
+  <span class="ann">@allownull</span> <span class="kw">string</span>  user
+  <span class="ann">@allownull</span> <span class="kw">int</span>     expiresAt
 <span class="kw">end type</span>
 
-<span class="kw">function</span> <span class="fn">greet</span>(<span class="ann">@nullable</span> <span class="kw">string</span> name)
+<span class="kw">function</span> <span class="fn">greet</span>(<span class="ann">@allownull</span> <span class="kw">string</span> name)
   <span class="kw">if</span> name <span class="op">=</span> <span class="kw">empty</span>
     <span class="kw">return</span> <span class="str">"Hello, guest"</span>
   <span class="kw">end if</span>
@@ -327,14 +327,14 @@ a <span class="op">=</span> b                    <span class="cm">// structural 
   <div class="ann-grid">
 
     <div class="ann-card wide">
-      <div class="ann-name">@delegate</div>
+      <div class="ann-name">@copymethods</div>
       <div class="ann-desc">Implements a type's interface by forwarding all calls to a named field. Composition without boilerplate — the compiler generates every forwarding call.</div>
       <pre><span class="kw">type</span> <span class="ty">Logger</span>
   <span class="kw">function</span> <span class="fn">log</span>(<span class="kw">string</span> msg)
 <span class="kw">end type</span>
 
 <span class="kw">type</span> <span class="ty">TimestampedLogger</span>
-  <span class="ann">@delegate</span> <span class="ty">Logger</span> inner    <span class="cm">// log() forwarded to inner.log() automatically</span>
+  <span class="ann">@copymethods</span> <span class="ty">Logger</span> inner    <span class="cm">// log() forwarded to inner.log() automatically</span>
   <span class="kw">string</span>           format
 <span class="kw">end type</span></pre>
     </div>
