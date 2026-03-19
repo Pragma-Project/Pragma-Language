@@ -90,39 +90,41 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
       <h1>What Compilation Means</h1>
       <p>If you've only used Python or JavaScript, you've never compiled anything. You write code, hit run, and it works. What's happening underneath is that an interpreter reads your code line by line and executes it on the fly. This is convenient but slow &mdash; the interpreter does work every time your program runs.</p>
       <p><strong>Compilation</strong> is different. A compiler reads your entire program once, translates it into something the CPU can execute directly, and produces a file you can run forever without the compiler. That file is a <strong>binary</strong> &mdash; native machine instructions. No interpreter needed. This is what C, C++, Rust, and Go do.</p>
+      <p>This performance gap is why performance-critical code eventually gets rewritten in C or C++. Python libraries like NumPy, PyTorch, and TensorFlow are all C/C++ underneath &mdash; Python is just the interface. When interpretation becomes the bottleneck, compilation is the answer.</p>
       <p>UL can do both. Compile to C or LLVM for native binaries. Compile to Python or JavaScript for interpreted targets. The next three pages show what each path looks like.</p>
     </div>
 
     <div class="section" data-title="How C Compiles">
       <div class="step-label">Section 5 of 23</div>
       <h1>How C Compiles</h1>
-      <p>When you compile C code (or UL targeting C), the process is: source → preprocessor → compiler → assembler → linker → binary. Click through to see each stage.</p>
-      <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:12px 0;font-family:'Share Tech Mono',monospace;font-size:12px;">
-        <div style="padding:10px 14px;border-radius:5px;background:#1e1e2e;color:#1a3a7a;border:1.5px solid #1a3a7a;text-align:center;font-weight:700;"><strong style="color:#cdd6f4;">.ul</strong><br>source</div>
-        <span style="color:#888;font-size:16px;">&rarr;</span>
-        <div style="padding:10px 14px;border-radius:5px;background:#1e1e2e;color:#2d7a3a;border:1.5px solid #2d7a3a;text-align:center;font-weight:700;"><strong style="color:#cdd6f4;">.c</strong><br>XPile</div>
-        <span style="color:#888;font-size:16px;">&rarr;</span>
-        <div style="padding:10px 14px;border-radius:5px;background:#1e1e2e;color:#b05a20;border:1.5px solid #b05a20;text-align:center;font-weight:700;"><strong style="color:#cdd6f4;">.o</strong><br>gcc/clang</div>
-        <span style="color:#888;font-size:16px;">&rarr;</span>
-        <div style="padding:10px 14px;border-radius:5px;background:#1e1e2e;color:#7c4dcc;border:1.5px solid #7c4dcc;text-align:center;font-weight:700;"><strong style="color:#cdd6f4;">binary</strong><br>linked</div>
+      <p>When you compile C code (or UL targeting C), the process has stages. Click each one:</p>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0;font-family:'Share Tech Mono',monospace;font-size:13px;">
+        <div onclick="cStage(0)" id="cs0" style="padding:12px 18px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.2s;"><div style="color:#7ab3e0;font-weight:700;font-size:15px;">.ul</div><div style="color:#cdd6f4;font-size:11px;">source</div></div>
+        <span style="color:#1a1a1a;font-size:20px;font-weight:700;">&rarr;</span>
+        <div onclick="cStage(1)" id="cs1" style="padding:12px 18px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.2s;"><div style="color:#a6e3a1;font-weight:700;font-size:15px;">.c</div><div style="color:#cdd6f4;font-size:11px;">XPile</div></div>
+        <span style="color:#1a1a1a;font-size:20px;font-weight:700;">&rarr;</span>
+        <div onclick="cStage(2)" id="cs2" style="padding:12px 18px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.2s;"><div style="color:#fab387;font-weight:700;font-size:15px;">.o</div><div style="color:#cdd6f4;font-size:11px;">gcc/clang</div></div>
+        <span style="color:#1a1a1a;font-size:20px;font-weight:700;">&rarr;</span>
+        <div onclick="cStage(3)" id="cs3" style="padding:12px 18px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.2s;"><div style="color:#f38ba8;font-weight:700;font-size:15px;">binary</div><div style="color:#cdd6f4;font-size:11px;">linked</div></div>
       </div>
-      <p>The result is a standalone executable. No Python, no Node, no JVM &mdash; just the binary and the OS. This is why compiled programs run 10&ndash;100x faster than interpreted ones.</p>
+      <div id="c-stage-info" style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#333;min-height:20px;padding:6px 0;">Click a stage above to see what happens there.</div>
     </div>
 
     <div class="section" data-title="How Python & JS Run">
       <div class="step-label">Section 6 of 23</div>
       <h1>How Python &amp; JS Run</h1>
       <p><strong>Python:</strong> Your code is compiled to <strong>bytecode</strong> &mdash; a compact set of instructions for the Python virtual machine (CPython). This happens automatically when you hit run. The bytecode is then interpreted instruction by instruction. You can actually see these opcodes with <code>dis.dis(func)</code> in Python.</p>
-      <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:8px 0;font-family:'Share Tech Mono',monospace;font-size:12px;">
-        <div style="padding:8px 12px;border-radius:5px;background:#1e1e2e;color:#cdd6f4;border:1.5px solid #1a3a7a;">source.py</div>
-        <span style="color:#888;">&rarr;</span>
-        <div style="padding:8px 12px;border-radius:5px;background:#1e1e2e;color:#cdd6f4;border:1.5px solid #2d7a3a;">bytecode (.pyc)</div>
-        <span style="color:#888;">&rarr;</span>
-        <div style="padding:8px 12px;border-radius:5px;background:#1e1e2e;color:#cdd6f4;border:1.5px solid #b05a20;">CPython VM</div>
-        <span style="color:#888;">&rarr;</span>
-        <div style="padding:8px 12px;border-radius:5px;background:#1e1e2e;color:#cdd6f4;border:1.5px solid #7c4dcc;">output</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0;font-family:'Share Tech Mono',monospace;font-size:13px;">
+        <div onclick="pyStage(0)" id="py0" style="padding:10px 16px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.2s;"><span style="color:#7ab3e0;font-weight:700;">source.py</span></div>
+        <span style="color:#1a1a1a;font-size:20px;font-weight:700;">&rarr;</span>
+        <div onclick="pyStage(1)" id="py1" style="padding:10px 16px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.2s;"><span style="color:#a6e3a1;font-weight:700;">bytecode (.pyc)</span></div>
+        <span style="color:#1a1a1a;font-size:20px;font-weight:700;">&rarr;</span>
+        <div onclick="pyStage(2)" id="py2" style="padding:10px 16px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.2s;"><span style="color:#fab387;font-weight:700;">CPython VM</span></div>
+        <span style="color:#1a1a1a;font-size:20px;font-weight:700;">&rarr;</span>
+        <div onclick="pyStage(3)" id="py3" style="padding:10px 16px;border-radius:6px;background:#1e1e2e;border:2px solid #555;text-align:center;cursor:pointer;transition:all 0.2s;"><span style="color:#f38ba8;font-weight:700;">output</span></div>
       </div>
-      <p><strong>JavaScript:</strong> Browser engines (V8, SpiderMonkey) parse your code into an AST, generate bytecode, interpret it, and then JIT-compile hot functions to native code on the fly. You never see any of this &mdash; it just runs.</p>
+      <div id="py-stage-info" style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#333;min-height:20px;padding:6px 0;">Click a stage above to see what happens there.</div>
+      <p><strong>JavaScript:</strong> V8/SpiderMonkey parse → AST → bytecode → interpret → JIT-compile hot functions to native code on the fly. Same idea, but with a JIT layer that C and Python lack.</p>
       <p>The next page shows what happens when UL compiles to LLVM IR &mdash; the layer where your code stops being code and becomes raw operations.</p>
     </div>
 
@@ -575,6 +577,38 @@ function llvmCompile() {
 }
 window.llvmLoad = llvmLoad;
 window.llvmCompile = llvmCompile;
+
+// ══════ C compilation pipeline (Section 5) ══════
+var cDescs = [
+  'Your .ul source file. Human-readable code with functions, types, and logic.',
+  'XPile translates UL to C99 source — stdio.h, stdint.h, structs, printf. This is real C code you could edit by hand.',
+  'gcc or clang compiles the C source to an object file — machine code for your specific CPU, but not yet runnable.',
+  'The linker combines object files with system libraries and produces a standalone executable. No interpreter needed. This runs directly on the OS.'
+];
+var cColors = ['#7ab3e0','#a6e3a1','#fab387','#f38ba8'];
+window.cStage = function(idx) {
+  for (var i = 0; i < 4; i++) {
+    var el = document.getElementById('cs' + i);
+    if (el) el.style.borderColor = (i <= idx) ? cColors[i] : '#555';
+  }
+  document.getElementById('c-stage-info').textContent = cDescs[idx];
+};
+
+// ══════ Python pipeline (Section 6) ══════
+var pyDescs = [
+  'Your Python source file. Text that the interpreter will read.',
+  'Python compiles source to bytecode — compact opcodes like LOAD_FAST, BINARY_ADD, RETURN_VALUE. Stored in .pyc files. You can see them with dis.dis().',
+  'The CPython virtual machine reads bytecode instructions one at a time and executes them. This is why Python is 10-100x slower than compiled code — every instruction goes through the interpreter loop.',
+  'Your program\'s output. The entire process happens every time you run the script (bytecode is cached in __pycache__ but still interpreted).'
+];
+var pyColors = ['#7ab3e0','#a6e3a1','#fab387','#f38ba8'];
+window.pyStage = function(idx) {
+  for (var i = 0; i < 4; i++) {
+    var el = document.getElementById('py' + i);
+    if (el) el.style.borderColor = (i <= idx) ? pyColors[i] : '#555';
+  }
+  document.getElementById('py-stage-info').textContent = pyDescs[idx];
+};
 if(document.getElementById('llvm-src')) llvmLoad(0);
 
 // ══════ SIMD widget ══════
