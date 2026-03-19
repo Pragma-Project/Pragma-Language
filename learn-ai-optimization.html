@@ -106,13 +106,22 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
     <div class="section" data-title="How Instructions Flow">
       <div class="step-label">Section 6 of 20</div>
       <h1>How Instructions Flow</h1>
-      <p>The CPU processes each instruction through a pipeline of stages. Modern CPUs overlap these stages so multiple instructions are in-flight simultaneously:</p>
-      <p><strong>Fetch</strong> &mdash; read the next instruction from memory (ideally from L1 instruction cache).</p>
-      <p><strong>Decode</strong> &mdash; figure out what the instruction does, which registers it needs, what operation to perform.</p>
-      <p><strong>Execute</strong> &mdash; the ALU/FPU performs the operation.</p>
-      <p><strong>Memory access</strong> &mdash; if the instruction loads from or stores to memory, this happens here.</p>
-      <p><strong>Writeback</strong> &mdash; the result is written to the destination register.</p>
-      <p>A modern CPU pipeline is 15&ndash;20 stages deep. When everything flows smoothly, one instruction completes per clock cycle (or more, with superscalar execution). When something disrupts the pipeline &mdash; a branch misprediction, a cache miss &mdash; the CPU stalls and the pipeline drains. This is where performance cliffs come from.</p>
+      <p>The CPU processes each instruction through a pipeline. Click each stage:</p>
+      <div id="pipeline-widget" style="margin:12px 0;">
+        <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;" id="pipe-stages">
+          <div class="pipe-stage" onclick="pipeClick(0)" style="flex:1;min-width:80px;text-align:center;padding:10px 6px;border-radius:6px;background:#1e1e2e;color:#585b70;border:1.5px solid #313244;cursor:pointer;transition:all 0.3s;font-family:'Share Tech Mono',monospace;font-size:11px;"><strong>Fetch</strong><br><span class="pipe-desc" style="font-size:10px;"></span></div>
+          <span style="color:#585b70;">&rarr;</span>
+          <div class="pipe-stage" onclick="pipeClick(1)" style="flex:1;min-width:80px;text-align:center;padding:10px 6px;border-radius:6px;background:#1e1e2e;color:#585b70;border:1.5px solid #313244;cursor:pointer;transition:all 0.3s;font-family:'Share Tech Mono',monospace;font-size:11px;"><strong>Decode</strong><br><span class="pipe-desc"></span></div>
+          <span style="color:#585b70;">&rarr;</span>
+          <div class="pipe-stage" onclick="pipeClick(2)" style="flex:1;min-width:80px;text-align:center;padding:10px 6px;border-radius:6px;background:#1e1e2e;color:#585b70;border:1.5px solid #313244;cursor:pointer;transition:all 0.3s;font-family:'Share Tech Mono',monospace;font-size:11px;"><strong>Execute</strong><br><span class="pipe-desc"></span></div>
+          <span style="color:#585b70;">&rarr;</span>
+          <div class="pipe-stage" onclick="pipeClick(3)" style="flex:1;min-width:80px;text-align:center;padding:10px 6px;border-radius:6px;background:#1e1e2e;color:#585b70;border:1.5px solid #313244;cursor:pointer;transition:all 0.3s;font-family:'Share Tech Mono',monospace;font-size:11px;"><strong>Memory</strong><br><span class="pipe-desc"></span></div>
+          <span style="color:#585b70;">&rarr;</span>
+          <div class="pipe-stage" onclick="pipeClick(4)" style="flex:1;min-width:80px;text-align:center;padding:10px 6px;border-radius:6px;background:#1e1e2e;color:#585b70;border:1.5px solid #313244;cursor:pointer;transition:all 0.3s;font-family:'Share Tech Mono',monospace;font-size:11px;"><strong>Write</strong><br><span class="pipe-desc"></span></div>
+        </div>
+        <div id="pipe-info" style="margin-top:8px;font-size:13px;color:#555;min-height:20px;font-family:'Share Tech Mono',monospace;">Click a stage to see what happens there.</div>
+      </div>
+      <p style="margin-top:8px;">A modern pipeline is 15&ndash;20 stages deep. When a branch misprediction or cache miss occurs, the pipeline stalls and drains. This is where performance cliffs come from.</p>
     </div>
 
     <div class="section" data-title="Branch Prediction">
@@ -127,16 +136,52 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
       <div class="step-label">Section 8 of 20</div>
       <h1>SIMD &amp; Vector Registers</h1>
       <p><strong>SIMD</strong> (Single Instruction, Multiple Data) lets one instruction operate on multiple values simultaneously. Instead of adding two numbers, you add 4, 8, or 16 numbers in a single operation using wide vector registers.</p>
-      <p><strong>SSE</strong> &mdash; 128-bit registers. Process 4 floats or 2 doubles at once.</p>
-      <p><strong>AVX/AVX2</strong> &mdash; 256-bit registers. Process 8 floats or 4 doubles at once.</p>
-      <p><strong>AVX-512</strong> &mdash; 512-bit registers. Process 16 floats or 8 doubles at once.</p>
-      <p>This is the hardware foundation of vectorized computation. Neural network inference is almost entirely matrix multiplication &mdash; thousands of multiply-accumulate operations on arrays of floats. SIMD turns what would be N sequential operations into N/8 or N/16 vector operations. The compiler can auto-vectorize some loops, but getting the memory layout right (contiguous, aligned data) is the developer's responsibility.</p>
+      <div style="display:flex; gap:16px; margin:10px 0; flex-wrap:wrap;">
+        <div style="flex:1;min-width:140px;">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">Scalar (1 at a time)</div>
+          <div style="display:flex;gap:3px;" id="scalar-demo">
+            <div style="width:24px;height:24px;border-radius:3px;background:#B5D4F4;border:1px solid #378ADD;font-size:9px;display:flex;align-items:center;justify-content:center;color:#0C447C;">f1</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f2</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f3</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f4</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f5</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f6</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f7</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#eee;border:1px solid #ccc;font-size:9px;display:flex;align-items:center;justify-content:center;color:#999;">f8</div>
+          </div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#aaa;margin-top:3px;">8 operations needed</div>
+        </div>
+        <div style="flex:1;min-width:140px;">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">AVX2 (8 at once)</div>
+          <div style="display:flex;gap:3px;">
+            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f1</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f2</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f3</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f4</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f5</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f6</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f7</div>
+            <div style="width:24px;height:24px;border-radius:3px;background:#C0DD97;border:1px solid #3B6D11;font-size:9px;display:flex;align-items:center;justify-content:center;color:#173404;">f8</div>
+          </div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#aaa;margin-top:3px;">1 operation needed</div>
+        </div>
+      </div>
+      <p>Neural net inference is mostly matrix multiplication. SIMD turns N sequential operations into N/8 or N/16 vector operations. The compiler auto-vectorizes some loops, but memory layout (contiguous, aligned data) is the developer's responsibility.</p>
     </div>
 
     <div class="section" data-title="Cache: Hits, Misses, Layout">
       <div class="step-label">Section 9 of 20</div>
       <h1>Cache: Hits, Misses, and Memory Layout</h1>
-      <p>When the CPU needs data, it checks L1 first (~1 cycle), then L2 (~4&ndash;10 cycles), then L3 (~20&ndash;40 cycles), then RAM (~100&ndash;300 cycles). A cache miss at L1 that hits RAM costs 100&ndash;300x more than a cache hit. In tight loops, cache misses dominate execution time.</p>
+      <div style="display:flex; align-items:center; gap:6px; margin:10px 0; font-family:'Share Tech Mono',monospace; font-size:11px; flex-wrap:wrap;">
+        <div style="padding:8px 12px;border-radius:4px;background:#C0DD97;border:1px solid #3B6D11;color:#173404;text-align:center;"><strong>L1</strong><br>~1 cycle<br>32KB</div>
+        <span style="color:#aaa;">&rarr;</span>
+        <div style="padding:8px 12px;border-radius:4px;background:#B5D4F4;border:1px solid #378ADD;color:#0C447C;text-align:center;"><strong>L2</strong><br>~4-10 cy<br>256KB</div>
+        <span style="color:#aaa;">&rarr;</span>
+        <div style="padding:8px 12px;border-radius:4px;background:#FAEEDA;border:1px solid #BA7517;color:#633806;text-align:center;"><strong>L3</strong><br>~20-40 cy<br>8-32MB</div>
+        <span style="color:#aaa;">&rarr;</span>
+        <div style="padding:8px 12px;border-radius:4px;background:#F7C1C1;border:1px solid #E24B4A;color:#A32D2D;text-align:center;"><strong>RAM</strong><br>~100-300 cy<br>16-64GB</div>
+      </div>
+      <p>Each step away from the CPU is ~10x slower. A cache miss at L1 that hits RAM costs 100&ndash;300x more than a hit. In tight loops, cache misses dominate execution time.</p>
       <p>Data is loaded in <strong>cache lines</strong> &mdash; 64 bytes at a time. If you access one element of an array, the next 15 elements come free (assuming 4-byte floats). This is why iterating an array sequentially is fast and iterating a linked list is slow &mdash; arrays have spatial locality, linked lists don't.</p>
       <p><strong>Memory layout matters.</strong> A struct-of-arrays (SoA) layout where all X values are contiguous, then all Y values, then all Z values, vectorizes perfectly. An array-of-structs (AoS) where each point has X,Y,Z interleaved wastes cache lines loading Y and Z when you only need X. For AI workloads processing millions of tensors, this difference is the difference between saturating memory bandwidth and wasting 60% of it.</p>
     </div>
@@ -152,9 +197,31 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
     <div class="section" data-title="Quantization">
       <div class="step-label">Section 11 of 20</div>
       <h1>Quantization</h1>
-      <p>Neural network weights and activations are typically stored as 32-bit floating-point numbers (FP32). Quantization reduces this precision &mdash; to FP16 (half precision), BF16 (brain float), INT8, or even INT4 &mdash; trading accuracy for speed and memory savings.</p>
-      <p><strong>Why it works:</strong> neural networks are inherently tolerant of approximation. The difference between a weight of 0.73291016 and 0.73 is irrelevant to the model's output in most cases. Reducing precision by half means twice as many values fit in cache, twice as many can be processed per SIMD instruction, and memory bandwidth requirements are halved.</p>
-      <p><strong>In practice:</strong> INT8 quantization can provide 2&ndash;4x speedup with less than 1% accuracy loss for most inference workloads. The challenge is calibrating the quantization parameters &mdash; figuring out the right scale and zero-point for each layer so the reduced precision doesn't distort the output. In UL, quantization is a type-level declaration, not a per-tensor function call.</p>
+      <p>Neural network weights are typically FP32. Quantization reduces precision &mdash; FP16, BF16, INT8, INT4 &mdash; trading accuracy for speed. Neural nets tolerate approximation: 0.73291016 vs 0.73 is irrelevant to output.</p>
+      <div style="display:flex; gap:12px; margin:10px 0; font-family:'Share Tech Mono',monospace; font-size:11px; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">FP32 (32 bits)</div>
+          <div style="display:flex;gap:1px;">
+            <div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div><div style="width:6px;height:18px;background:#B5D4F4;border-radius:1px;"></div>
+          </div>
+          <div style="font-size:10px;color:#aaa;margin-top:2px;">8 per AVX register</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">FP16 (16 bits)</div>
+          <div style="display:flex;gap:1px;">
+            <div style="width:6px;height:18px;background:#C0DD97;border-radius:1px;"></div><div style="width:6px;height:18px;background:#C0DD97;border-radius:1px;"></div><div style="width:6px;height:18px;background:#C0DD97;border-radius:1px;"></div><div style="width:6px;height:18px;background:#C0DD97;border-radius:1px;"></div><div style="width:6px;height:18px;background:#C0DD97;border-radius:1px;"></div><div style="width:6px;height:18px;background:#C0DD97;border-radius:1px;"></div><div style="width:6px;height:18px;background:#C0DD97;border-radius:1px;"></div><div style="width:6px;height:18px;background:#C0DD97;border-radius:1px;"></div>
+          </div>
+          <div style="font-size:10px;color:#aaa;margin-top:2px;">16 per AVX register</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">INT8 (8 bits)</div>
+          <div style="display:flex;gap:1px;">
+            <div style="width:6px;height:18px;background:#FAEEDA;border-radius:1px;"></div><div style="width:6px;height:18px;background:#FAEEDA;border-radius:1px;"></div><div style="width:6px;height:18px;background:#FAEEDA;border-radius:1px;"></div><div style="width:6px;height:18px;background:#FAEEDA;border-radius:1px;"></div>
+          </div>
+          <div style="font-size:10px;color:#aaa;margin-top:2px;">32 per AVX register</div>
+        </div>
+      </div>
+      <p>INT8 quantization: 2&ndash;4x speedup, &lt;1% accuracy loss for most inference. In UL, quantization is a type-level declaration, not a per-tensor function call.</p>
     </div>
 
     <div class="section" data-title="Mixed Precision & FMA">
@@ -178,7 +245,26 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
       <h1>Sparsity &amp; Kernel Fusion</h1>
       <p><strong>Sparsity</strong> exploits the fact that many neural network tensors are mostly zeros (sometimes 80&ndash;95% zeros after pruning). Instead of multiplying by zero thousands of times, skip those operations entirely. NVIDIA's Ampere and Hopper GPUs have hardware support for 2:4 structured sparsity &mdash; for every 4 elements, at least 2 must be zero, and the hardware skips them automatically.</p>
       <p>In Python/C, exploiting sparsity requires converting dense tensors to sparse formats (CSR, COO), using sparse-specific library functions, and managing the conversion overhead. In UL, sparsity is a type-level construct &mdash; declare a tensor as sparse and the compiler handles format selection and operation dispatch.</p>
-      <p><strong>Kernel fusion</strong> combines multiple GPU operations into a single kernel launch. Without fusion, each operation (matmul, bias add, ReLU activation) launches a separate GPU kernel with its own memory read/write cycle. Fused kernels read input once, perform all operations, and write output once &mdash; eliminating intermediate memory traffic. Libraries like PyTorch's <code>torch.compile</code> do this automatically now, but the fused kernel quality depends heavily on the compiler's ability to analyze the operation graph.</p>
+      <p><strong>Kernel fusion</strong> combines multiple GPU operations into one kernel launch:</p>
+      <div style="display:flex; gap:16px; margin:8px 0; font-family:'Share Tech Mono',monospace; font-size:10px; flex-wrap:wrap;">
+        <div style="flex:1;min-width:140px;">
+          <div style="color:#E24B4A;font-weight:500;margin-bottom:4px;">WITHOUT FUSION</div>
+          <div style="background:#1e1e2e;border-radius:4px;padding:8px;color:#cdd6f4;line-height:1.6;">
+            <span style="color:#F7C1C1;">read</span> &rarr; matmul &rarr; <span style="color:#F7C1C1;">write</span><br>
+            <span style="color:#F7C1C1;">read</span> &rarr; bias &rarr; <span style="color:#F7C1C1;">write</span><br>
+            <span style="color:#F7C1C1;">read</span> &rarr; relu &rarr; <span style="color:#F7C1C1;">write</span>
+          </div>
+          <div style="color:#aaa;margin-top:2px;">6 memory ops</div>
+        </div>
+        <div style="flex:1;min-width:140px;">
+          <div style="color:#3B6D11;font-weight:500;margin-bottom:4px;">WITH FUSION</div>
+          <div style="background:#1e1e2e;border-radius:4px;padding:8px;color:#cdd6f4;line-height:1.6;">
+            <span style="color:#C0DD97;">read</span> &rarr; matmul &rarr; bias &rarr; relu &rarr; <span style="color:#C0DD97;">write</span>
+          </div>
+          <div style="color:#aaa;margin-top:2px;">2 memory ops</div>
+        </div>
+      </div>
+      <p>PyTorch's <code>torch.compile</code> does this now, but fused kernel quality depends on the compiler's ability to analyze the operation graph.</p>
     </div>
 
     <div class="section" data-title="Memory: NUMA & Allocation">
@@ -291,6 +377,31 @@ document.addEventListener("keydown", function(e) {
 });
 
 goTo(0);
+
+// Pipeline widget
+var pipeData = [
+  "Fetch: Read the next instruction from L1 instruction cache into the CPU.",
+  "Decode: Determine the operation, source registers, and destination register.",
+  "Execute: The ALU or FPU performs the arithmetic or logic operation.",
+  "Memory: Load from or store to data cache (L1/L2). Cache miss = stall here.",
+  "Writeback: Write the result to the destination register. Instruction complete."
+];
+window.pipeClick = function(idx) {
+  var stages = document.querySelectorAll("#pipe-stages .pipe-stage");
+  stages.forEach(function(s, i) {
+    if (i <= idx) {
+      s.style.background = "#0a1f5e";
+      s.style.color = "#7ab3e0";
+      s.style.borderColor = "#7ab3e0";
+    } else {
+      s.style.background = "#1e1e2e";
+      s.style.color = "#585b70";
+      s.style.borderColor = "#313244";
+    }
+  });
+  var info = document.getElementById("pipe-info");
+  if (info) info.textContent = pipeData[idx];
+};
 })();
 </script>
 
