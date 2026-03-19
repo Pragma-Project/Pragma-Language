@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic MemProof — Formal Specifications</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #000;
+  background: #fff;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 64px 40px 120px;
+}
+
+h1 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 4px;
+  border: none;
+}
+
+.doc-meta {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: #000;
+}
+
+.doc-status {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 40px;
+  color: #000;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #000;
+  margin: 32px 0;
+}
+
+hr.thick {
+  border-top: 2px solid #000;
+}
+
+h2 {
+  font-size: 1.15rem;
+  font-weight: bold;
+  margin-top: 40px;
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 28px;
+  margin-bottom: 8px;
+}
+
+p {
+  margin-bottom: 14px;
+}
+
+ul, ol {
+  margin: 12px 0 14px 28px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+pre, code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+}
+
+pre {
+  background: none;
+  border: none;
+  white-space: pre;
+  margin: 16px 0 16px 28px;
+  line-height: 1.5;
+}
+
+code {
+  background: none;
+}
+
+.block-math {
+  margin: 20px 0 20px 28px;
+  font-size: 1rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 0.95rem;
+}
+
+th {
+  border: 1px solid #000;
+  padding: 6px 12px;
+  text-align: left;
+  font-weight: bold;
+  background: #fff;
+}
+
+td {
+  border: 1px solid #000;
+  padding: 6px 12px;
+}
+
+.diagram-placeholder {
+  border: 1px solid #000;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Floating back button */
+.back-btn {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  background: #fff;
+  border: 1px solid #000;
+  padding: 6px 16px;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #000;
+  z-index: 100;
+}
+
+.back-btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+.inference-rule {
+  margin: 16px 0 16px 28px;
+  display: inline-block;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+
+<a href="safety.html" class="back-btn">← Back</a>
+
+<h1>UniLogic MemProof — Formal Specifications</h1>
+<p class="doc-meta">Version 0.1</p>
+
+<hr class="thick">
+
+<p style="background:#f5f5f0; border-left:3px solid #888; padding:12px 16px; margin-bottom:20px;"><strong>Industry context.</strong> The formal methods described in this document &mdash; Hoare logic, weakest precondition calculus, SMT-based discharge, abstract interpretation &mdash; are the same techniques used across safety-critical industries. Airbus uses Frama-C and SPARK/Ada for flight control software under DO-178C. Automotive manufacturers apply these methods under ISO 26262 and MISRA-C. NASA, the FDA (for medical device software), and defense contractors rely on the same mathematical foundations to prove that software cannot fail in ways testing alone cannot rule out. MemProof applies these established methods to UL.</p>
+
+<h2>1. Goals and Scope</h2>
+
+<p>MemProof is UniLogic's static formal verification layer. Its purpose is to prove, prior to deployment, that a UL program is memory safe &mdash; meaning the program cannot, for any valid input within its declared input contracts, exhibit:</p>
+
+<ul>
+  <li>Buffer overflows or out-of-bounds array access</li>
+  <li>Null pointer dereferences</li>
+  <li>Integer overflow (for types where overflow is undefined)</li>
+  <li>Use-after-free</li>
+  <li>Invalid pointer arithmetic</li>
+</ul>
+
+<p>MemProof operates on the UL AST before code generation. It does not verify the generated C — it verifies the UL source against UL's formal semantics. This distinction matters: a bug in UL's C codegen cannot produce a false positive MemProof certificate.</p>
+
+<p>MemProof produces one of three outcomes:</p>
+
+<ul>
+  <li><strong>PROVED</strong> — a formal proof certificate is issued, published to IPFS, and recorded on chain.</li>
+  <li><strong>UNKNOWN — ANNOTATABLE</strong> — verification failed due to insufficient invariant information; the developer can supply annotations to resolve.</li>
+  <li><strong>UNKNOWN — STRUCTURAL</strong> — verification failed due to a language feature MemProof cannot handle automatically; requires manual review or program restructuring.</li>
+</ul>
+
+<p>For safety-critical deployment, UNKNOWN is treated as UNSAFE. The program does not ship.</p>
+
+<hr>
+
+<h2>2. Memory Model</h2>
+
+<h3>2.1 Formal Definition</h3>
+
+<p>UniLogic's memory model is adapted from CompCert's block-offset model. Memory is not modelled as a flat address space. Instead:</p>
+
+<p>A <strong>block</strong> \(b\) is an abstract allocation unit with a unique identifier \(b \in \mathsf{Block}\). Each block has a size \(|b| \in \mathbb{N}\).</p>
+
+<p>Memory is a partial function:</p>
+
+<p class="block-math">\[ M : (\mathsf{Block} \times \mathsf{Offset}) \to \mathsf{Value} \cup \{\bot\} \]</p>
+
+<p>where \(\mathsf{Offset} \in \mathbb{Z}\), \(\mathsf{Value}\) is the set of all typed values (integers, booleans, pointers), and \(\bot\) denotes an unallocated or inaccessible cell.</p>
+
+<p>A <strong>pointer</strong> in this model is a pair \((b, \delta)\) where \(b\) is a block identifier and \(\delta \in \mathbb{Z}\) is an offset into that block. A pointer is <strong>valid</strong> iff \(0 \leq \delta < |b|\).</p>
+
+<p>This gives precise definitions of:</p>
+
+<ul>
+  <li><strong>Null pointer:</strong> the distinguished pair \((\mathsf{null\_block},\, 0)\) where \(\mathsf{null\_block}\) is reserved and never allocated.</li>
+  <li><strong>Out-of-bounds access:</strong> any access at \((b, \delta)\) where \(\delta < 0\) or \(\delta \geq |b|\).</li>
+  <li><strong>Dangling pointer:</strong> a pointer \((b, \delta)\) where \(b\) has been freed; \(M(b, \cdot) = \bot\).</li>
+</ul>
+
+<h3>2.2 Memory Operations</h3>
+
+<p>Four primitive operations define the memory model:</p>
+
+<pre>alloc(M, n)       → (M', b)    allocate n bytes; return updated memory and fresh block b
+free(M, b)        → M'         deallocate block b; M'(b, ·) = ⊥
+load(M, b, δ)     → v          read value at (b, δ); defined only if M(b, δ) ≠ ⊥
+store(M, b, δ, v) → M'         write value v at (b, δ)</pre>
+
+<p><strong>Preconditions (as proof obligations):</strong></p>
+
+<ul>
+  <li>\(\mathsf{load}(M, b, \delta)\) requires \(M(b, \delta) \neq \bot\) and \(0 \leq \delta < |b|\)</li>
+  <li>\(\mathsf{store}(M, b, \delta, v)\) requires the same plus write permission</li>
+  <li>\(\mathsf{free}(M, b)\) requires \(b\) was previously allocated and not yet freed</li>
+</ul>
+
+<p>These preconditions become the verification conditions (VCs) that MemProof must prove hold for all valid executions.</p>
+
+<h3>2.3 Permission Model</h3>
+
+<p>Each cell \((b, \delta)\) carries a permission tag from the lattice:</p>
+
+<p class="block-math">\[ \mathsf{None} \sqsubseteq \mathsf{Read} \sqsubseteq \mathsf{ReadWrite} \]</p>
+
+<p>\(\mathsf{None}\) — cell is unallocated or freed. \(\mathsf{Read}\) — cell may be loaded but not stored. \(\mathsf{ReadWrite}\) — cell may be loaded and stored. Permissions are tracked through the abstract interpretation pass and used by the separation logic heap predicates.</p>
+
+<hr>
+
+<h2>3. Separation Logic</h2>
+
+<p>Separation logic extends Hoare logic with predicates that reason about disjoint regions of the heap. This makes it possible to state and verify properties about pointer-heavy code without global aliasing analysis.</p>
+
+<h3>3.1 Heap Predicates</h3>
+
+<p><strong>emp</strong> — the heap is empty (no allocated cells).</p>
+
+<p><strong>Points-to predicate:</strong></p>
+
+<p class="block-math">\[ (b, \delta) \mapsto v \]</p>
+
+<p>Asserts that cell \((b, \delta)\) is allocated, has permission ReadWrite, and contains value \(v\).</p>
+
+<p><strong>Array predicate:</strong></p>
+
+<p class="block-math">\[ \mathsf{array}(b, \delta, n, \mathit{vs}) \]</p>
+
+<p>Asserts that the \(n\) cells \((b, \delta), (b, \delta{+}1), \ldots, (b, \delta{+}n{-}1)\) are allocated and contain values \(\mathit{vs}[0], \ldots, \mathit{vs}[n{-}1]\). Defined inductively:</p>
+
+<p class="block-math">\[
+\mathsf{array}(b, \delta, 0, []) \;\equiv\; \mathsf{emp}
+\]</p>
+
+<p class="block-math">\[
+\mathsf{array}(b, \delta, n, v{::}\mathit{vs}) \;\equiv\; (b, \delta) \mapsto v \;\ast\; \mathsf{array}(b, \delta{+}1, n{-}1, \mathit{vs})
+\]</p>
+
+<h3>3.2 Separating Conjunction</h3>
+
+<p>The key operator in separation logic is <strong>separating conjunction</strong> \(P \ast Q\):</p>
+
+<p class="block-math">\[ (M, h) \models P \ast Q \;\iff\; \exists\, h_1, h_2.\; h = h_1 \uplus h_2 \;\wedge\; (M, h_1) \models P \;\wedge\; (M, h_2) \models Q \]</p>
+
+<p>where \(\uplus\) denotes disjoint union of heap segments. \(P \ast Q\) asserts that \(P\) and \(Q\) hold on <strong>disjoint parts</strong> of the heap. This eliminates the aliasing problem: if \(P\) describes a buffer and \(Q\) describes a pointer, and they are joined by \(\ast\), they provably do not overlap.</p>
+
+<h3>3.3 Magic Wand</h3>
+
+<p>The <strong>magic wand</strong> (separating implication) \(P \mathrel{-\!\!\ast} Q\):</p>
+
+<p class="block-math">\[ (M, h) \models P \mathrel{-\!\!\ast} Q \;\iff\; \forall h'.\; h \uplus h' \text{ defined} \;\Rightarrow\; (M, h') \models P \;\Rightarrow\; (M, h \uplus h') \models Q \]</p>
+
+<p>Used primarily in function postconditions to describe what is returned to the caller's heap context.</p>
+
+<h3>3.4 Hoare Triples</h3>
+
+<p>A Hoare triple in separation logic:</p>
+
+<p class="block-math">\[ \{P\}\; C\; \{Q\} \]</p>
+
+<p>asserts: if \(C\) executes in a heap satisfying \(P\), and \(C\) terminates, then the resulting heap satisfies \(Q\). For an array access \(x = \mathtt{arr}[i]\):</p>
+
+<p class="block-math">\[ \{\,\mathsf{array}(b, 0, n, \mathit{vs}) \ast i \mapsto k \ast 0 \leq k < n\,\} \;\; x = \mathtt{arr}[i] \;\; \{\,\mathsf{array}(b, 0, n, \mathit{vs}) \ast i \mapsto k \ast x = \mathit{vs}[k]\,\} \]</p>
+
+<p>The precondition \(0 \leq k < n\) is the bounds check. MemProof must prove this holds.</p>
+
+<h3>3.5 The Frame Rule</h3>
+
+<p>The frame rule is what makes separation logic compositional:</p>
+
+<p class="block-math">\[
+\frac{\{P\}\; C\; \{Q\}}{\{P \ast R\}\; C\; \{Q \ast R\}} \quad \bigl(\mathsf{modifies}(C) \cap \mathsf{fv}(R) = \emptyset\bigr)
+\]</p>
+
+<p>If \(C\) is verified with pre \(P\) and post \(Q\), it can be lifted to any context \(R\) that \(C\) does not modify. This allows local reasoning: verify each function in isolation, compose globally.</p>
+
+<h3>3.6 Key Inference Rules Used by VCG</h3>
+
+<p><strong>Load:</strong></p>
+<p class="block-math">\[ \{(b, \delta) \mapsto v \ast R\} \;\; x = \mathsf{load}(b, \delta) \;\; \{(b, \delta) \mapsto v \ast x = v \ast R\} \]</p>
+
+<p><strong>Store:</strong></p>
+<p class="block-math">\[ \{(b, \delta) \mapsto \_ \ast R\} \;\; \mathsf{store}(b, \delta, v) \;\; \{(b, \delta) \mapsto v \ast R\} \]</p>
+
+<p><strong>Alloc:</strong></p>
+<p class="block-math">\[ \{\mathsf{emp}\} \;\; b = \mathsf{alloc}(n) \;\; \{\mathsf{block}(b, 0, n)\} \]</p>
+
+<p><strong>Free:</strong></p>
+<p class="block-math">\[ \{\mathsf{block}(b, 0, n)\} \;\; \mathsf{free}(b) \;\; \{\mathsf{emp}\} \]</p>
+
+<hr>
+
+<h2>4. Shape Analysis</h2>
+
+<p>Separation logic alone cannot automatically reason about unbounded heap structures (linked lists, trees, dynamic arrays). Shape analysis provides inductive predicate definitions that describe the shape of such structures, enabling automated reasoning.</p>
+
+<h3>4.1 Inductive Predicates</h3>
+
+<p>A singly-linked list rooted at pointer \(p\) with values \(\mathit{vs}\):</p>
+
+<p class="block-math">\[
+\mathsf{list}(p, \mathit{vs}) \;\equiv\; (p = \mathsf{null} \wedge \mathit{vs} = []) \;\vee\; \exists\, v, q, \mathit{vs}'.\; p \mapsto \{v, q\} \ast \mathsf{list}(q, \mathit{vs}') \wedge \mathit{vs} = v :: \mathit{vs}'
+\]</p>
+
+<p>An array of length \(n\) at block \(b\):</p>
+
+<p class="block-math">\[ \mathsf{arr}(b, n, \mathit{vs}) \;\equiv\; \mathsf{array}(b, 0, n, \mathit{vs}) \wedge |\mathit{vs}| = n \]</p>
+
+<h3>4.2 Bi-abduction</h3>
+
+<p>Bi-abduction solves: given a program state \(S\) and a required footprint \(F\), find:</p>
+
+<ul>
+  <li><strong>Anti-frame</strong> \(A\) such that \(S \ast A \models F\) (what needs to be added to make the precondition hold)</li>
+  <li><strong>Frame</strong> \(R\) such that \(F \models S \ast R\) (what is left over)</li>
+</ul>
+
+<p>This is used by the VCG to automatically infer function preconditions and postconditions from the function body, without requiring full manual specification.</p>
+
+<h3>4.3 Region-based Heap Abstraction</h3>
+
+<p>For scalability, the heap is abstracted into <strong>regions</strong> — sets of cells treated uniformly. Each region carries a base pointer, a size, a permission tag, and a summary predicate (e.g., <code>array</code> or <code>list</code>). Region merging and splitting rules govern how regions are updated at array accesses, pointer arithmetic, and function calls.</p>
+
+<hr>
+
+<h2>5. Abstract Interpretation</h2>
+
+<p>Abstract interpretation provides a framework for computing sound over-approximations of program behaviour — covering all possible executions without executing the program.</p>
+
+<h3>5.1 Lattice Theory</h3>
+
+<p>An <strong>abstract domain</strong> is a complete lattice \((A, \sqsubseteq, \sqcup, \sqcap, \bot, \top)\) where:</p>
+
+<ul>
+  <li>\(\sqsubseteq\) is the partial order (more precise \(\sqsubseteq\) less precise)</li>
+  <li>\(\sqcup\) is join (least upper bound — union of information)</li>
+  <li>\(\sqcap\) is meet (greatest lower bound — intersection)</li>
+  <li>\(\bot\) is the bottom element (unreachable / no information)</li>
+  <li>\(\top\) is the top element (all possible values / no information retained)</li>
+</ul>
+
+<p>The <strong>concrete domain</strong> \((\wp(\mathsf{State}), \subseteq)\) is the powerset of all possible program states. The abstract domain approximates this.</p>
+
+<h3>5.2 Galois Connection</h3>
+
+<p>The relationship between concrete and abstract domains is formalised as a Galois connection:</p>
+
+<p class="block-math">\[ (\wp(\mathsf{State}),\, \subseteq) \;\underset{\gamma}{\overset{\alpha}{\rightleftharpoons}}\; (A,\, \sqsubseteq) \]</p>
+
+<p>where \(\alpha : \wp(\mathsf{State}) \to A\) is the <strong>abstraction function</strong> and \(\gamma : A \to \wp(\mathsf{State})\) is the <strong>concretisation function</strong>. The Galois connection requires:</p>
+
+<p class="block-math">\[ \forall\, S \in \wp(\mathsf{State}),\, a \in A. \quad \alpha(S) \sqsubseteq a \;\iff\; S \subseteq \gamma(a) \]</p>
+
+<p>This guarantees soundness: any concrete state reachable at a program point is represented by the abstract element at that point.</p>
+
+<h3>5.3 Abstract Domains Used</h3>
+
+<p><strong>Interval domain:</strong> Each variable \(x\) is tracked as \([l, u]\) where \(l \leq x \leq u\). Transfer functions update intervals through arithmetic. Used for bounds checking: if \(i \in [0, n{-}1]\) and the array has length \(n\), access is provably safe.</p>
+
+<p><strong>Octagon domain:</strong> Tracks constraints of the form \(\pm x \pm y \leq c\). More precise than intervals for relational properties (e.g., \(i \leq j \leq n\)). Used when loop variables have relational bounds.</p>
+
+<p><strong>Polyhedra domain:</strong> Tracks linear inequalities over all variables simultaneously. Most precise but most expensive. Used selectively for critical safety regions.</p>
+
+<h3>5.4 Transfer Functions</h3>
+
+<p>Each program statement \(s\) has an abstract transfer function \(F_s^\sharp : A \to A\):</p>
+
+<p class="block-math">\[
+F_{x := e}^\sharp(a) = a[x \mapsto \mathsf{eval}^\sharp(e, a)]
+\]</p>
+<p class="block-math">\[
+F_{\mathsf{guard}(e)}^\sharp(a) = a \sqcap \mathsf{constraints}(e)
+\]</p>
+<p class="block-math">\[
+F_{s_1;\, s_2}^\sharp(a) = F_{s_2}^\sharp(F_{s_1}^\sharp(a))
+\]</p>
+
+<h3>5.5 Widening and Convergence</h3>
+
+<p>For loops, naive iteration may not converge. The <strong>widening operator</strong> \(\nabla : A \times A \to A\) forces convergence:</p>
+
+<p class="block-math">\[
+a_0 = \bot \qquad a_{i+1} = a_i \;\nabla\; F_{\mathsf{loop}}^\sharp(a_i)
+\]</p>
+
+<p>Widening terminates in a finite number of steps by construction. The result over-approximates all loop iterations — it may lose precision (reporting \(i \in [0, \infty)\) instead of \(i \in [0, n]\)) but is always sound.</p>
+
+<p><strong>Narrowing</strong> \(\triangle\) is then applied to recover precision:</p>
+
+<p class="block-math">\[
+b_0 = a_{\mathsf{fixpoint}} \qquad b_{i+1} = b_i \;\triangle\; F_{\mathsf{loop}}^\sharp(b_i)
+\]</p>
+
+<p>Narrowing tightens the over-approximation without losing soundness, recovering the exact bound when possible. For RTOS infinite control loops, widening produces \([0, \infty)\) for the loop counter, but narrowing with the loop guard condition \(i < \mathtt{SENSOR\_RANGE\_MAX}\) recovers \([0, \mathtt{SENSOR\_RANGE\_MAX})\), which is sufficient for bounds checking.</p>
+
+<hr>
+
+<h2>6. Verification Condition Generator (VCG)</h2>
+
+<p>The VCG is the central component of MemProof. It bridges the separation logic specification, the abstract interpretation results, and the SMT solver.</p>
+
+<h3>6.1 IR Construction</h3>
+
+<p>Before VCG, the UL AST is lowered to a <strong>typed SSA IR</strong> (Static Single Assignment). In SSA, each variable is assigned exactly once; control flow joins use \(\phi\)-functions: \(x_3 = \phi(x_1, x_2)\) at merge points; all loop variables have explicit induction structure. SSA simplifies the VCG because each use of a variable traces unambiguously to its definition.</p>
+
+<h3>6.2 Weakest Precondition Calculus</h3>
+
+<p>For a statement \(C\) and postcondition \(Q\), the <strong>weakest precondition</strong> \(\mathsf{wp}(C, Q)\) is the weakest condition such that \(\{\mathsf{wp}(C,Q)\}\; C\; \{Q\}\) holds.</p>
+
+<p class="block-math">\[
+\mathsf{wp}(\mathsf{skip},\, Q) = Q
+\]</p>
+<p class="block-math">\[
+\mathsf{wp}(x := e,\, Q) = Q[x \mapsto e]
+\]</p>
+<p class="block-math">\[
+\mathsf{wp}(s_1;\, s_2,\, Q) = \mathsf{wp}(s_1,\, \mathsf{wp}(s_2,\, Q))
+\]</p>
+<p class="block-math">\[
+\mathsf{wp}(\mathsf{if}\; b\; \mathsf{then}\; s_1\; \mathsf{else}\; s_2,\, Q) = (b \Rightarrow \mathsf{wp}(s_1, Q)) \wedge (\neg b \Rightarrow \mathsf{wp}(s_2, Q))
+\]</p>
+<p class="block-math">\[
+\mathsf{wp}(\mathsf{load}(b, \delta),\, Q) = \mathsf{valid}(b, \delta) \wedge Q[x \mapsto M(b, \delta)]
+\]</p>
+<p class="block-math">\[
+\mathsf{wp}(\mathsf{store}(b, \delta, v),\, Q) = \mathsf{valid}(b, \delta) \wedge \mathsf{writable}(b, \delta) \wedge Q[M \mapsto M[(b,\delta) \mapsto v]]
+\]</p>
+<p class="block-math">\[
+\mathsf{wp}(\mathsf{free}(b),\, Q) = \mathsf{allocated}(b) \wedge Q[M \mapsto M \setminus b]
+\]</p>
+
+<p>For loops, \(\mathsf{wp}\) requires a <strong>loop invariant</strong> \(I\):</p>
+
+<p class="block-math">\[
+\mathsf{wp}(\mathsf{while}\; b\; \mathsf{do}\; s,\, Q) = I \;\wedge\; (I \wedge b \Rightarrow \mathsf{wp}(s, I)) \;\wedge\; (I \wedge \neg b \Rightarrow Q)
+\]</p>
+
+<p>The VCG emits three obligations per loop: (1) \(I\) holds on entry; (2) \(I\) is maintained by the loop body; (3) \(\neg b \wedge I \Rightarrow Q\).</p>
+
+<h3>6.3 Memory Safety VCs</h3>
+
+<table>
+  <tr><th>Operation</th><th>VC emitted</th></tr>
+  <tr><td><code>arr[i]</code></td><td>\(0 \leq i \wedge i < \mathsf{arr\_len}\)</td></tr>
+  <tr><td><code>deref(p)</code></td><td>\(p \neq \mathsf{null} \wedge \mathsf{allocated}(p.\mathsf{block})\)</td></tr>
+  <tr><td><code>x + y</code> (bounded type)</td><td>\(x + y \leq \mathsf{TYPE\_MAX} \wedge x + y \geq \mathsf{TYPE\_MIN}\)</td></tr>
+  <tr><td><code>free(p)</code></td><td>\(\mathsf{allocated}(p.\mathsf{block}) \wedge \neg\mathsf{freed}(p.\mathsf{block})\)</td></tr>
+  <tr><td><code>p + k</code> (pointer arithmetic)</td><td>\(0 \leq p.\mathsf{offset} + k < |p.\mathsf{block}|\)</td></tr>
+</table>
+
+<h3>6.4 VC Annotation with Abstract State</h3>
+
+<p>Before emitting a VC to the SMT solver, the VCG enriches it with the abstract state computed by abstract interpretation at that program point. A raw VC:</p>
+
+<p class="block-math">\[ 0 \leq i \wedge i < \mathsf{arr\_len} \]</p>
+
+<p>becomes, after enrichment:</p>
+
+<pre>Hypothesis (from abstract interpretation):  i ∈ [0, n-1]
+Hypothesis (from abstract interpretation):  arr_len = n
+VC:  0 ≤ i ∧ i &lt; arr_len</pre>
+
+<p>The SMT solver can discharge this immediately from the hypotheses — the abstract interpretation result provides the numeric evidence, the SMT solver confirms the arithmetic.</p>
+
+<hr>
+
+<h2>7. SMT Encoding and Solving</h2>
+
+<h3>7.1 Theories Used</h3>
+
+<p>MemProof uses the following SMT theories (all supported by CVC5):</p>
+
+<ul>
+  <li><strong>QF_LIA</strong> — Quantifier-free linear integer arithmetic. Used for bounds checks, index bounds, overflow checks.</li>
+  <li><strong>QF_BV</strong> — Bitvectors. Used for exact overflow checking on fixed-width integers (<code>int8</code>, <code>int32</code>, <code>uint64</code>, etc.)</li>
+  <li><strong>QF_AX</strong> — Theory of arrays. Used for array read/write reasoning.</li>
+  <li><strong>SL</strong> — CVC5's native separation logic theory. Used for heap predicate reasoning (points-to, separating conjunction). This avoids encoding separation logic into base theories, which is less efficient and less complete.</li>
+</ul>
+
+<h3>7.2 VC Format (SMT-LIB2)</h3>
+
+<pre>(set-logic QF_LIA)
+(declare-const i Int)
+(declare-const arr_len Int)
+(assert (&gt;= i 0))          ; hypothesis from abstract interpretation
+(assert (&lt; i arr_len))     ; hypothesis from abstract interpretation
+(assert (= arr_len 10))    ; hypothesis from constant propagation
+; VC negation: try to find a counterexample
+(assert (not (and (&gt;= i 0) (&lt; i arr_len))))
+(check-sat)
+; Expected: unsat — no counterexample exists → VC proved</pre>
+
+<p>If the solver returns <code>unsat</code>, the VC is proved. If <code>sat</code>, the solver produces a counterexample — a concrete input violating the property — which is reported to the developer as a bug. If <code>unknown</code>, the VC is unresolved and the outcome is UNKNOWN-STRUCTURAL.</p>
+
+<h3>7.3 CVC5 Native Separation Logic</h3>
+
+<p>For heap VCs, CVC5's SL theory is used directly:</p>
+
+<pre>(set-logic QF_BVLIA_SL)
+(declare-heap (Int Int))
+(assert (sep (pto p v) (pto q w)))
+; p and q are disjoint heap locations
+(assert (not (= p q)))
+(check-sat)
+; Expected: unsat — separating conjunction guarantees disjointness</pre>
+
+<h3>7.4 Proof Witnesses (LFSC)</h3>
+
+<p>When CVC5 returns <code>unsat</code>, it produces an unsatisfiability proof in <strong>LFSC (Logical Framework with Side Conditions)</strong> format. This is the proof witness: a formal proof term that can be checked by the LFSC kernel independently of CVC5. The kernel is approximately 5,000 lines of auditable code. It has been itself formally verified. Its sole function is: given a proof term, confirm it is valid. It has no heuristics.</p>
+
+<p>The proof witness for each VC is collected and bundled into the overall MemProof certificate:</p>
+
+<pre>{
+  "program_hash":   "&lt;sha256 of UL source&gt;",
+  "verifier_cid":   "&lt;IPFS CID of MemProof version used&gt;",
+  "memory_model":   "block-offset-v1",
+  "vcs": [
+    {
+      "location":     "main.ul:42",
+      "kind":         "array_bounds",
+      "status":       "proved",
+      "witness_hash": "&lt;sha256 of LFSC proof witness&gt;"
+    }
+  ],
+  "outcome":        "PROVED",
+  "timestamp":      "&lt;ISO 8601&gt;",
+  "assumptions":    [],
+  "annotations_used": []
+}</pre>
+
+<p>Proof witnesses are stored on IPFS (referenced by hash). The blockchain records only the certificate JSON. Anyone can retrieve the witnesses from IPFS and check them against the LFSC kernel.</p>
+
+<hr>
+
+<h2>8. Soundness</h2>
+
+<h3>8.1 Soundness Theorem</h3>
+
+<p>MemProof is <strong>sound</strong> if: whenever it returns PROVED, the program is genuinely memory safe. Formally:</p>
+
+<p class="block-math">\[
+\forall\, \mathit{prog},\, \mathit{cert}.\quad \mathsf{MemProof}(\mathit{prog}) = \mathsf{Proved}(\mathit{cert}) \;\Rightarrow\; \forall\, i \in \mathsf{valid\_inputs}(\mathit{prog}).\;\; \mathsf{exec}(\mathit{prog},\, i) \text{ does not exhibit a memory safety violation}
+\]</p>
+
+<p>Soundness does <em>not</em> require completeness — MemProof may return UNKNOWN on some safe programs. It only requires that PROVED means genuinely safe.</p>
+
+<h3>8.2 Coq Formalization Strategy</h3>
+
+<p>To formally verify MemProof's soundness, the core components are implemented directly in Coq:</p>
+
+<ol>
+  <li><strong>Memory model</strong> — formalised as a Coq inductive type with operations and permission invariants proved as lemmas.</li>
+  <li><strong>Separation logic</strong> — the assertion language, satisfaction relation, and inference rules formalised. Soundness of each rule proved as a Coq theorem.</li>
+  <li><strong>Abstract interpretation framework</strong> — the Galois connection, transfer functions, widening/narrowing proved to be sound over-approximations.</li>
+  <li><strong>VCG</strong> — proved to generate only valid VCs: if the VCG emits \(\{P\}\; C\; \{Q\}\), then \(\{P\}\; C\; \{Q\}\) holds in the semantics.</li>
+  <li><strong>SMT encoding</strong> — proved that the SMT-LIB2 encoding of each VC is equisatisfiable with the semantic VC.</li>
+</ol>
+
+<p>The top-level soundness theorem in Coq:</p>
+
+<pre>Theorem memproof_sound :
+  forall prog : ULProgram,
+  forall cert : Certificate,
+  memproof prog = Proved cert ->
+  memory_safe prog.</pre>
+
+<p>The Coq source is extracted to OCaml via <code>Extraction</code>. The extracted OCaml is what <code>pragma.py</code> calls as a subprocess. The Coq source is published on IPFS — its CID is recorded in every certificate, forming the auditable chain of trust.</p>
+
+<hr>
+
+<h2>9. UniLogic Safe Subset</h2>
+
+<p>Inspired by MISRA-C, the <code>@safe</code> decorator on a UL module or function enforces a restricted subset that makes verification tractable:</p>
+
+<table>
+  <tr><th>Restriction</th><th>Reason</th></tr>
+  <tr><td>No dynamic allocation without static analysis proof of safety</td><td>Prevents unbounded heap growth; simplifies shape analysis</td></tr>
+  <tr><td>No unbounded recursion</td><td>Prevents non-termination; loops must have loop variants</td></tr>
+  <tr><td>All loops must have a statically visible bound or <code>@invariant</code> annotation</td><td>Required for abstract interpretation convergence</td></tr>
+  <tr><td>No function pointers in safety regions</td><td>Prevents indirect call analysis failures</td></tr>
+  <tr><td>Integer types must be explicit width (<code>int32</code>, <code>uint8</code>, not bare <code>int</code>)</td><td>Required for exact overflow checking via bitvectors</td></tr>
+  <tr><td>No type punning via union in safe regions</td><td>Eliminates aliasing ambiguity</td></tr>
+  <tr><td>Pointer arithmetic only within declared bounds</td><td>Prevents region escaping</td></tr>
+</table>
+
+<p>Violation of safe subset rules is a <strong>compile error</strong> when <code>@safe</code> is present — not a verification failure. The compiler rejects the program before MemProof runs. This is how Airbus achieves near-complete automatic verification.</p>
+
+<hr>
+
+<h2>10. Blockchain Certificate Model</h2>
+
+<h3>10.1 Storage Split</h3>
+
+<table>
+  <tr><th>Artifact</th><th>Storage</th><th>Why</th></tr>
+  <tr><td>UL source</td><td>IPFS/Arweave</td><td>Content-addressed; permanent if pinned on Arweave</td></tr>
+  <tr><td>MemProof Coq source + proof</td><td>IPFS/Arweave</td><td>Immutable, auditable verifier</td></tr>
+  <tr><td>LFSC proof witnesses</td><td>IPFS</td><td>Large; referenced by hash</td></tr>
+  <tr><td>Certificate JSON</td><td>Blockchain</td><td>Small (&lt; 1KB); permanently on-chain</td></tr>
+</table>
+
+<h3>10.2 Smart Contract Interface</h3>
+
+<pre>mapping(bytes32 programHash =&gt; Certificate cert)</pre>
+
+<p>where <code>Certificate</code> contains: <code>verifierCID</code> — IPFS CID of the MemProof version used; <code>certHash</code> — SHA256 of the certificate JSON; <code>outcome</code> — PROVED / UNKNOWN_ANNOTATABLE / UNKNOWN_STRUCTURAL; <code>blockNumber</code> — when the certificate was recorded.</p>
+
+<h3>10.3 Independent Verification</h3>
+
+<p>Anyone can verify a certificate without trusting any party:</p>
+
+<ol>
+  <li>Retrieve MemProof source from <code>verifierCID</code> on IPFS</li>
+  <li>Check Coq proof with <code>coqc</code> — confirms MemProof is sound</li>
+  <li>Retrieve certificate JSON from chain</li>
+  <li>Retrieve LFSC witnesses from IPFS (referenced in certificate)</li>
+  <li>Run LFSC kernel against witnesses — confirms each VC was proved</li>
+  <li>Confirm <code>program_hash</code> matches the deployed program source</li>
+</ol>
+
+<p>No trust in the UniLogic team, MemProof team, or any oracle is required.</p>
+
+<hr>
+
+<h2>11. Limitations and Known Incompleteness</h2>
+
+<p>MemProof is sound but not complete. Known cases where UNKNOWN is expected:</p>
+
+<ul>
+  <li><strong>Non-linear arithmetic</strong> in array indices (e.g., <code>arr[i * stride + offset]</code> where both <code>i</code> and <code>stride</code> are variables) — QF_NIA is undecidable in general.</li>
+  <li><strong>Complex recursion</strong> with non-trivial termination arguments — requires custom termination proofs.</li>
+  <li><strong>Aliasing through function pointers</strong> — requires points-to analysis that may not converge.</li>
+  <li><strong>External function calls</strong> without declared contracts — MemProof treats them as potentially modifying any memory.</li>
+</ul>
+
+<p>In all UNKNOWN cases, MemProof reports the specific VC that could not be discharged, the program location, and whether developer annotation would resolve it.</p>
+
+</body>
+</html>

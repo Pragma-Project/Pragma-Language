@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic Glossary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  background: #fff;
+  color: #000;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 72px 80px 100px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+h1 {
+  font-size: 1.1rem;
+  font-weight: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  border-bottom: 1px solid #000;
+  padding-bottom: 12px;
+}
+h2 {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin: 40px 0 6px;
+}
+table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+td { padding: 5px 0; vertical-align: top; border-bottom: 1px solid #f2f2f2; }
+td:first-child { width: 42%; color: #000; padding-right: 24px; }
+td:last-child { color: #555; }
+em { font-style: italic; }
+a { color: #000; text-decoration: none; border-bottom: 1px solid #ccc; }
+a:hover { border-bottom-color: #000; }
+.back {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  z-index: 100;
+  font-size: 11px;
+  color: #000;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 4px 12px;
+  border-radius: 3px;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+.back:hover { border-color: #000; }
+</style>
+</head>
+<body>
+
+<a href="javascript:history.back()" class="back">← Back</a>
+<h1>UniLogic Glossary</h1>
+
+<h2>Compiler</h2>
+<table>
+  <tr><td>ul file.ul</td><td>compile file.ul to binary</td></tr>
+  <tr><td>ul file.ul --run</td><td>compile and immediately run</td></tr>
+  <tr><td>ul file.ul --emit-c</td><td>also save generated C file</td></tr>
+  <tr><td>ul file.ul --emit-py</td><td>also save generated Python file</td></tr>
+  <tr><td>ul file.ul --emit-js</td><td>also save generated JavaScript file</td></tr>
+  <tr><td>ul file.ul --emit-java</td><td>also save generated Java file</td></tr>
+  <tr><td>ul file.ul --ast</td><td>print AST (debug)</td></tr>
+  <tr><td>ul file.ul --tokens</td><td>print token stream (debug)</td></tr>
+  <tr><td>ul file.ul --debug</td><td>emit debug symbols (DWARF/PDB) into the compiled binary — stack traces include file names and line numbers; use --debug-stripped for production builds with no debug info</td></tr>
+</table>
+
+<h2>Transpiler — to UniLogic</h2>
+<table>
+  <tr><td>xpile input.c</td><td>transpile C source to UL (prints to stdout)</td></tr>
+  <tr><td>xpile input.py</td><td>transpile Python source to UL</td></tr>
+  <tr><td>xpile input.js</td><td>transpile JavaScript source to UL</td></tr>
+  <tr><td>xpile input.java</td><td>transpile Java source to UL</td></tr>
+  <tr><td>xpile input.c -o out.ul</td><td>write output to file (works with any source language)</td></tr>
+  <tr><td>xpile --c input.c</td><td>explicit C flag (inferred from .c by default)</td></tr>
+  <tr><td>xpile --py input.py</td><td>explicit Python flag</td></tr>
+  <tr><td>xpile --js input.js</td><td>explicit JavaScript flag</td></tr>
+  <tr><td>xpile --java input.java</td><td>explicit Java flag</td></tr>
+</table>
+
+<h2>Types</h2>
+<table>
+  <tr><td>int</td><td>integer (32-bit)</td></tr>
+  <tr><td>int8 / int16 / int32 / int64</td><td>fixed-width signed integers</td></tr>
+  <tr><td>uint</td><td>unsigned integer (32-bit)</td></tr>
+  <tr><td>uint8 / uint16 / uint32 / uint64</td><td>unsigned fixed-width integers</td></tr>
+  <tr><td>double</td><td>64-bit floating point</td></tr>
+  <tr><td>float</td><td>alias for double</td></tr>
+  <tr><td>bool</td><td>true / false</td></tr>
+  <tr><td>string</td><td>character string</td></tr>
+  <tr><td>char</td><td>single character</td></tr>
+  <tr><td>none</td><td>void — no value / void pointer</td></tr>
+  <tr><td>complex</td><td>complex number — two 64-bit floats (real + imaginary). Constructor: complex(3, 4)</td></tr>
+</table>
+
+<h2>Variables</h2>
+<table>
+  <tr><td>int x = 5</td><td>plain variable</td></tr>
+  <tr><td>int x</td><td>declaration, no initializer</td></tr>
+  <tr><td>constant int MAX = 100</td><td>compile-time constant</td></tr>
+  <tr><td>empty</td><td>null literal — equivalent to NULL in C</td></tr>
+</table>
+
+<h2>Collections</h2>
+<table>
+  <tr><td>array int[5] a = [1,2,3,4,5]</td><td>fixed array of int, size 5</td></tr>
+  <tr><td>array int[5][3] grid</td><td>2D array, 5 rows × 3 columns</td></tr>
+  <tr><td>a[i]</td><td>array element access</td></tr>
+  <tr><td>list string[3] names</td><td>dynamic list, capacity 3</td></tr>
+  <tr><td>map [string,int][50] wc</td><td>map from string to int, capacity 50</td></tr>
+  <tr><td>wc["key"]</td><td>map read</td></tr>
+  <tr><td>wc["key"] = val</td><td>map write</td></tr>
+  <tr><td>wc_has("key")</td><td>1 if key exists, 0 otherwise</td></tr>
+  <tr><td>wc_remove("key")</td><td>delete a key</td></tr>
+</table>
+
+<h2>Variant</h2>
+<table>
+  <tr><td>variant TypeName</td><td>Equivalent of C's <em>union</em> type</td></tr>
+</table>
+
+<h2>Pointers</h2>
+<table>
+  <tr><td>int &lt;p&gt; = address(x)</td><td>p is a pointer to x</td></tr>
+  <tr><td>Node &lt;n&gt; = address(obj)</td><td>n is a pointer to obj</td></tr>
+  <tr><td>int &lt;&lt;pp&gt;&gt; = address(&lt;p&gt;)</td><td>pointer to pointer</td></tr>
+  <tr><td>&lt;p&gt;</td><td>the pointer value (used in expressions)</td></tr>
+  <tr><td>address(x)</td><td>address of a plain variable</td></tr>
+  <tr><td>deref(&lt;p&gt;)</td><td>value at the address p holds</td></tr>
+  <tr><td>p[0]</td><td>same as deref — access value through pointer</td></tr>
+  <tr><td>&lt;p&gt; + 5</td><td>pointer arithmetic — p advanced by 5 elements</td></tr>
+</table>
+
+<h2>Memory</h2>
+<table>
+  <tr><td>size(Type)</td><td>size in bytes of Type (like sizeof in C)</td></tr>
+  <tr><td>size(myVar)</td><td>size in bytes of variable's type</td></tr>
+  <tr><td>cast(expr, Type)</td><td>cast expr to Type</td></tr>
+  <tr><td>cast(expr, &lt;Type&gt;)</td><td>cast expr to pointer-to-Type</td></tr>
+  <tr><td>malloc(size(Node))</td><td>allocate heap memory for one Node</td></tr>
+  <tr><td>free(p)</td><td>release heap memory at p</td></tr>
+  <tr><td>realloc(p, newsize)</td><td>resize heap allocation at p</td></tr>
+  <tr><td>mem(&lt;0xDEAD0000&gt;)</td><td>read/write at a raw address</td></tr>
+</table>
+
+<h2>Functions</h2>
+<table>
+  <tr><td>function foo(int x) returns int</td><td>function declaration</td></tr>
+  <tr><td>function foo(Node &lt;n&gt;) returns none</td><td>function taking a pointer param</td></tr>
+  <tr><td>function main() returns int</td><td>entry point</td></tr>
+  <tr><td>return x</td><td>return value</td></tr>
+</table>
+
+<h2>Control Flow</h2>
+<table>
+  <tr><td>if ... end if</td><td>conditional</td></tr>
+  <tr><td>else if ... end if</td><td>chained conditional</td></tr>
+  <tr><td>else ... end if</td><td>fallback branch</td></tr>
+  <tr><td>while ... do ... end do</td><td>loop</td></tr>
+  <tr><td>for int i = 0 while i &lt; n do i++ ... end for</td><td>expressive for loop</td></tr>
+  <tr><td>for i=0, i&lt;n, i++ ... end for</td><td>C-style for loop</td></tr>
+  <tr><td>escape</td><td>break out of loop</td></tr>
+  <tr><td>continue</td><td>continue to next iteration</td></tr>
+  <tr><td>match x ... end match</td><td>no-fall-through dispatch</td></tr>
+  <tr><td>iterate x ... end iterate</td><td>fall-through dispatch (C switch behaviour)</td></tr>
+</table>
+
+<h2>Operators — Logical</h2>
+<table>
+  <tr><td>a and b</td><td>logical AND</td></tr>
+  <tr><td>a or b</td><td>logical OR</td></tr>
+  <tr><td>not x</td><td>logical NOT</td></tr>
+  <tr><td>x not y</td><td>not equal</td></tr>
+  <tr><td>x equals y</td><td>equal</td></tr>
+</table>
+
+<h2>Operators — Bitwise</h2>
+<table>
+  <tr><td>x both1 y</td><td>bitwise AND</td></tr>
+  <tr><td>x either1 y</td><td>bitwise OR</td></tr>
+  <tr><td>x both0 y</td><td>bitwise NOR</td></tr>
+  <tr><td>x diff y</td><td>bitwise XOR</td></tr>
+  <tr><td>bitflip x</td><td>bitwise NOT</td></tr>
+  <tr><td>negate x</td><td>arithmetic negation</td></tr>
+  <tr><td>x left n</td><td>left shift</td></tr>
+  <tr><td>x right n</td><td>right shift</td></tr>
+  <tr><td>left=</td><td>left shift assign</td></tr>
+  <tr><td>right=</td><td>right shift assign</td></tr>
+</table>
+
+<h2>Types — Structs</h2>
+<table>
+  <tr><td>type Name ... end type</td><td>struct declaration</td></tr>
+  <tr><td>type Dog inherits Animal</td><td>struct inheritance</td></tr>
+  <tr><td>new Node["val", 3]</td><td>construct and initialize</td></tr>
+  <tr><td>uint.bits=N fieldname</td><td>bit field — N bits wide</td></tr>
+  <tr><td>pack(TypeName)</td><td>remove struct padding (like __attribute__((packed)))</td></tr>
+</table>
+
+<h2>Enums</h2>
+<table>
+  <tr><td>fixed Priority ... end fixed</td><td>enum declaration</td></tr>
+  <tr><td>Priority.high</td><td>enum value access</td></tr>
+</table>
+
+<h2>Exceptions</h2>
+<table>
+  <tr><td>error ExcType "message"</td><td>throw an exception</td></tr>
+  <tr><td>error ExcType</td><td>throw without a message</td></tr>
+  <tr><td>try ... end try</td><td>exception handling block</td></tr>
+  <tr><td>catch(ExcType e) ... end catch</td><td>catch clause</td></tr>
+  <tr><td>catch(TypeA or TypeB e)</td><td>catch multiple types in one clause</td></tr>
+</table>
+
+</body>
+</html>

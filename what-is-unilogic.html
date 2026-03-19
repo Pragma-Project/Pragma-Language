@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is UniLogic?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.85;
+  color: #1a1a1a;
+  background: #f8f5f0;
+}
+
+.inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 48px 140px;
+}
+
+.back {
+  position: fixed;
+  top: 20px;
+  left: 28px;
+  z-index: 100;
+  display: inline-block;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #666;
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #e8e3db;
+  transition: all 0.15s;
+}
+.back:hover { color: #111; background: #d8d2c8; border-color: #999; }
+
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #1a1a1a;
+  margin-bottom: 48px;
+  letter-spacing: -0.01em;
+}
+
+.body p { margin-bottom: 18px; color: #2a2a2a; }
+.body p strong { color: #1a1a1a; }
+
+.body a { color: #1a3a7a; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 36px 0; }
+
+</style>
+</head>
+<body>
+
+<div class="inner">
+
+<a href="index.html" class="back">&larr; back</a>
+
+<h1>What is UniLogic?</h1>
+
+<div class="body">
+
+  <p><strong>What is this?</strong></p>
+
+  <p>An open-source programming language and research project. UL is a single language that compiles to C, Python, JavaScript, LLVM IR, and WebAssembly from the same source file. It is statically typed by default with an optional dynamic mode, has configurable runtime behavior per file, and treats AI/ML optimization as a first-class language concern rather than a library afterthought.</p>
+
+  <p>The goal is to unify, minimize, and optimize in one language. At the same time, readability and clarity are chosen over cleverness as a philosophy in the syntax. Likewise, choice is a core idea &mdash; you choose from an array of options rather than make hard tradeoff decisions.</p>
+
+  <p>The project is open-source, documented as it develops, and not a product for sale. It's a grassroots research effort exploring whether a single unified language can replace the tradeoffs that currently force developers to choose between performance, portability, safety, and ecosystem access.</p>
+
+  <hr>
+
+  <p><strong>Why does this matter?</strong></p>
+
+  <p>Every programming language makes tradeoff decisions that you inherit when you choose it. Python gives you an enormous ecosystem and fast development but is 10&ndash;100x slower than C, has a GIL that prevents real parallelism, and offers no path to native binaries. C gives you maximum performance and hardware access but has no memory safety, no package ecosystem comparable to pip, and alienates practitioners who aren't systems programmers. JavaScript runs everywhere but has no integer type, no static types without bolting on TypeScript, and no way to write low-level code. Java gives you type safety and threading but locks you into the JVM, GC you can't turn off, and startup times measured in seconds.</p>
+
+  <p>Each of these languages made decisions about memory management, type checking, safety guarantees, and concurrency at design time. Those decisions are fixed. You can escape them in narrow ways &mdash; Rust has <code>unsafe</code>, Python has Cython, JavaScript has WASM &mdash; but the escape hatches are limited, bolted on, and often require learning an entirely separate tool or language.</p>
+
+  <p>UL makes these decisions configurable. Memory model (GC, manual, refcount, arena), safety level (checked or unchecked), type system (static or dynamic), integer width (32, 64, or platform), concurrency model (threaded, parallel, async, cooperative) &mdash; all declared per file at compile time. The compiler enforces that files with conflicting settings don't interact unsafely.</p>
+
+  <hr>
+
+  <p><strong>How does it work?</strong></p>
+
+  <p>The compiler (XPile) translates UL source into any of five targets. Compile to C or LLVM IR for native binaries with full hardware access. Compile to Python and your code runs anywhere a Python interpreter exists, with full access to the Python ecosystem (pip, numpy, pandas &mdash; all callable). Compile to JavaScript and it runs in any browser or Node.js environment. Compile to WebAssembly and it runs on any device with a browser, no install required.</p>
+
+  <p>Each target isn't a watered-down translation. The C output uses <code>stdio.h</code>, <code>stdint.h</code>, structs with inheritance via composition, and maps UL builtins to their C equivalents. The Python output uses dataclasses, native Python match/case, and idiomatic Python patterns. The JS output uses factory functions, strict equality, and <code>console.log</code>. You get the ecosystem of each target language with zero loss and everything gained from writing in a single syntax.</p>
+
+  <p>The standard library has one implementation that works across all runtime configurations. A linked list under GC doesn't need a destructor. Under manual memory it does. Under refcount it needs weak reference support. The standard library handles this &mdash; the developer declares what they want and the compiler selects the correct implementation path.</p>
+
+  <hr>
+
+  <p><strong>Why did this start?</strong></p>
+
+  <p>I ran heavy inference workloads, immediately went down the rabbit hole of optimization, ran into Claude generating code in languages I didn't know and couldn't fix, started building a simple OS kernel and got lost in Linux's <code>/net</code> mess, and realized I needed three things:</p>
+
+  <ol style="margin:10px 0 16px 24px; color:#2a2a2a; line-height:2;">
+    <li>Something that could optimize without inaccessible tooling</li>
+    <li>Something that was a single representation of app space across everything for general purpose computing</li>
+    <li>Something I could read and didn't have the mental gymnastics the gifted and the gatekeepers make a requirement with their code</li>
+  </ol>
+
+  <p>Likewise, I realized that there were quite a few problem areas that could benefit from these: AI being a rapidly growing household staple reality, vibe coders who had never coded a hello world suddenly thrown into spaghetti code in 5 languages, and a growing full-stack developer demographic that wants to build across wherever you execute instead of one isolated space.</p>
+
+  <p>Quite a bit of time is spent on designing, testing and still simultaneously designing, and iterating again and again to get things right. Feedback is genuinely appreciated and encouraged. Features that take time but are not of interest means more time and effort on the things that matter. Feel free to contact me via email.</p>
+
+  <button onclick="document.getElementById('wiu-email').style.display='block';this.style.display='none';" style="display:inline-block;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.06em;padding:6px 16px;border:1px solid #ccc;border-radius:3px;background:#e8e3db;color:#666;cursor:pointer;transition:all 0.15s;">Click to show email</button>
+  <div id="wiu-email" style="display:none;margin-top:8px;font-family:'Share Tech Mono',monospace;font-size:14px;"><a href="mailto:albazzaztariq@gmail.com" style="color:#1a3a7a;">albazzaztariq@gmail.com</a></div>
+
+  <hr>
+
+  <p><strong>AI, ML and the Current Disconnect</strong></p>
+
+  <p>AI needs a language. Python has the tooling (PyTorch, TensorFlow, Hugging Face) but is the wrong language for performance-critical computation. C and CUDA have the speed but alienate ML practitioners and require specialist knowledge to use effectively. The result is that the AI ecosystem is built on Python calling C calling CUDA &mdash; three languages, three build systems, three sets of abstractions leaking into each other.</p>
+
+  <p>The optimizations that matter for AI workloads are currently either clunky library operations or simply unavailable at the language level:</p>
+
+  <ul style="margin:12px 0 18px 24px; color:#2a2a2a; line-height:2;">
+    <li>Mixed precision requires <code>.half()</code> calls scattered manually across an entire codebase</li>
+    <li>Quantization is a post-training library operation, not a type</li>
+    <li>Kernel fusion depends on whether <code>torch.compile</code> happens to recognize the pattern</li>
+    <li>Custom CUDA kernels require writing GPU programs in a separate language</li>
+    <li>Sparsity requires converting tensors to sparse formats and using separate library functions</li>
+    <li>Prefetch requires hardware-specific compiler intrinsics placed manually</li>
+    <li>Memory layout (struct-of-arrays vs array-of-structs) must be managed by hand</li>
+  </ul>
+
+  <p>UL treats these as language-level concerns. Mixed precision is a compile-time setting &mdash; declare it once and the compiler applies FP16 computation with FP32 accumulation. Quantization is a type (<code>int8</code> is first-class, not a library conversion). Sparsity is a type-level construct. Prefetch is a language annotation where the compiler calculates the optimal distance per target architecture. Memory layout is controlled via DR settings. FMA patterns are recognized and fused automatically.</p>
+
+  <hr>
+
+  <p><strong>What else?</strong></p>
+
+  <ul style="margin:12px 0 18px 24px; color:#2a2a2a; line-height:2;">
+    <li>Formal memory safety via SMT solver &mdash; the same mathematics used by Airbus and automotive manufacturers, built into the compiler</li>
+    <li>Error handling with Result types, <code>?</code> propagation, and <code>exit()</code> &mdash; you choose the model per function</li>
+    <li>Match statement with pattern matching across all compilation targets</li>
+    <li>Type inheritance with structs and fields</li>
+    <li>Foreign function interface for calling C libraries directly</li>
+    <li>AST normalization at four levels for code simplification</li>
+    <li>VS Code extension with diagnostics, hover, autocomplete, signature help, go-to-definition, AI-powered code walkthroughs, and dependency graph visualization</li>
+    <li>Interactive browser REPL that runs entirely client-side with zero dependencies</li>
+    <li>DR conflict detection across files at compile time before anything runs</li>
+    <li>Bytecode VM specification (register-based, 32-bit fixed-width, tiered ISA)</li>
+  </ul>
+
+
+</div>
+
+</div>
+
+</body>
+</html>

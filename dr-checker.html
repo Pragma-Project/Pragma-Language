@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic DR Conflict Checker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1a1a1a;
+  background: #fafaf8;
+  display: flex;
+}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+
+nav {
+  position: fixed;
+  top: 0; left: 0;
+  width: 230px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0 40px;
+  z-index: 100;
+  background: #1e1e2e;
+  border-right: 1px solid #313244;
+}
+
+.nav-logo {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0 20px 16px;
+  color: #5b8fc9;
+  border-bottom: 1px solid #313244;
+  margin-bottom: 8px;
+  display: block;
+  text-decoration: none;
+}
+
+.nav-section {
+  margin-top: 14px;
+  padding: 3px 20px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: #585b70;
+}
+
+nav a {
+  display: block;
+  padding: 5px 20px 5px 23px;
+  text-decoration: none;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: #a6adc8;
+  border-left: 3px solid transparent;
+  transition: background 0.12s, color 0.12s;
+}
+
+nav a:hover {
+  background: #313244;
+  color: #cdd6f4;
+  border-left-color: #7ab3e0;
+}
+
+/* ── MAIN ─────────────────────────────────────────────────── */
+
+main {
+  margin-left: 230px;
+  padding: 56px 80px 100px 72px;
+  max-width: 1000px;
+  width: 100%;
+}
+
+h1 { font-size: 2.2rem; font-weight: normal; margin-bottom: 8px; padding-bottom: 14px; color: #1a1a1a; border-bottom: 2px solid #e0d8f0; }
+.subtitle { font-size: 1rem; margin-bottom: 32px; font-style: italic; color: #666; }
+h2 { font-size: 1.5rem; font-weight: normal; margin-top: 48px; margin-bottom: 4px; padding-bottom: 6px; color: #2d1b69; border-bottom: 1px solid #e0d8f0; }
+p { margin-bottom: 14px; color: #2a2a2a; }
+
+code {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  background: #ede8f5;
+  color: #1a3a7a;
+}
+
+/* ── CHECKER LAYOUT ──────────────────────────────────────── */
+
+.checker-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.file-col {
+  background: #f5f3fb;
+  border: 1px solid #d8cff0;
+  border-radius: 6px;
+  padding: 20px 24px;
+}
+
+.file-col h3 {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2d1b69;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0d8f0;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.setting-row label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: #1a3a7a;
+  letter-spacing: 0.04em;
+}
+
+.setting-row select {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 1px solid #d8cff0;
+  border-radius: 3px;
+  background: #fff;
+  color: #1a1a1a;
+  cursor: pointer;
+  min-width: 130px;
+}
+
+.setting-row select:focus {
+  outline: 2px solid #7ab3e0;
+  border-color: #7ab3e0;
+}
+
+/* ── CHECK BUTTON ────────────────────────────────────────── */
+
+.check-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  margin: 24px 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1e1e2e;
+  background: #7ab3e0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.check-btn:hover { background: #a87fd4; }
+
+/* ── RESULTS ─────────────────────────────────────────────── */
+
+#results {
+  min-height: 60px;
+}
+
+.result-ok {
+  background: #e8fbe8;
+  border-left: 4px solid #4caf50;
+  padding: 14px 18px;
+  border-radius: 0 6px 6px 0;
+  margin: 8px 0;
+}
+.result-ok strong {
+  display: block;
+  color: #2e7d32;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.result-error {
+  background: #fdecea;
+  border-left: 4px solid #e53935;
+  padding: 14px 18px;
+  border-radius: 0 6px 6px 0;
+  margin: 8px 0;
+}
+.result-error strong {
+  display: block;
+  color: #c62828;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.result-warn {
+  background: #fff8e8;
+  border-left: 4px solid #f5a623;
+  padding: 14px 18px;
+  border-radius: 0 6px 6px 0;
+  margin: 8px 0;
+}
+.result-warn strong {
+  display: block;
+  color: #c07820;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.result-setting {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: #1a3a7a;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  nav { display: none; }
+  main { margin-left: 0; padding: 20px; }
+  .checker-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="javascript:history.back()" class="nav-logo">&larr; Back</a>
+  <div class="nav-section">DR Settings</div>
+  <a href="#checker">Conflict Checker</a>
+  <a href="#rules">Conflict Rules</a>
+  <div class="nav-section">Reference</div>
+  <a href="dynamic-runtime.html">Dynamic Runtime</a>
+  <a href="safety.html">Safety</a>
+  <a href="language-main.html">Syntax Reference</a>
+  <a href="https://github.com/albazzaztariq/UniLogic" target="_blank">GitHub &nearr;</a>
+</nav>
+
+<main>
+
+<h1>DR Conflict Checker</h1>
+<p class="subtitle">Check whether two files' Dynamic Runtime settings are compatible before linking them.</p>
+
+<p>Each <code>.ul</code> file can declare its own DR configuration. When two files interact (one calls a function in the other), their settings must be compatible. This tool checks a pair of configurations against the full conflict matrix.</p>
+
+<h2 id="checker" style="margin-top:24px;">Check Two Configurations</h2>
+
+<div class="checker-grid">
+  <div class="file-col">
+    <h3>File A</h3>
+    <div class="setting-row"><label>memory</label><select id="a-memory"><option>manual</option><option selected>gc</option><option>refcount</option><option>arena</option></select></div>
+    <div class="setting-row"><label>safety</label><select id="a-safety"><option selected>checked</option><option>unchecked</option></select></div>
+    <div class="setting-row"><label>types</label><select id="a-types"><option selected>strict</option><option>dynamic</option></select></div>
+    <div class="setting-row"><label>int_width</label><select id="a-int_width"><option selected>32</option><option>64</option><option>platform</option></select></div>
+    <div class="setting-row"><label>concurrency</label><select id="a-concurrency"><option selected>threaded</option><option>parallel</option><option>async</option><option>cooperative</option></select></div>
+  </div>
+  <div class="file-col">
+    <h3>File B</h3>
+    <div class="setting-row"><label>memory</label><select id="b-memory"><option selected>manual</option><option>gc</option><option>refcount</option><option>arena</option></select></div>
+    <div class="setting-row"><label>safety</label><select id="b-safety"><option selected>checked</option><option>unchecked</option></select></div>
+    <div class="setting-row"><label>types</label><select id="b-types"><option selected>strict</option><option>dynamic</option></select></div>
+    <div class="setting-row"><label>int_width</label><select id="b-int_width"><option selected>32</option><option>64</option><option>platform</option></select></div>
+    <div class="setting-row"><label>concurrency</label><select id="b-concurrency"><option selected>threaded</option><option>parallel</option><option>async</option><option>cooperative</option></select></div>
+  </div>
+</div>
+
+<button class="check-btn" onclick="checkConflicts()">Check Compatibility</button>
+
+<div id="results"></div>
+
+<h2 id="rules">Conflict Rules</h2>
+
+<p>The checker evaluates <em>within</em> each file (are the file's own settings self-consistent?) and <em>across</em> files (can File A and File B interoperate?). Incompatible means the combination will not compile. Warning means it will compile but may cause runtime issues.</p>
+
+</main>
+
+<script>
+(function() {
+"use strict";
+
+// ── Conflict matrix ─────────────────────────────────────────────────────
+// Each rule: [settingA, valueA, settingB, valueB, severity, explanation]
+// severity: "error" = Incompatible, "warn" = Warning
+
+const RULES = [
+  // Incompatible combinations
+  ["memory", "manual",   "safety", "unchecked", "error",
+   "Manual memory management without safety checks allows use-after-free and double-free bugs with no detection. The compiler rejects this combination."],
+  ["memory", "arena",    "safety", "unchecked", "error",
+   "Arena allocators track ownership at the region level. Disabling safety removes the region boundary checks that prevent cross-arena pointer escapes."],
+
+  // Warnings
+  ["memory", "gc",       "concurrency", "cooperative", "warn",
+   "GC pause-the-world cycles conflict with cooperative scheduling. The GC may stall a coroutine mid-yield, causing unpredictable latency."],
+  ["memory", "manual",   "concurrency", "threaded", "warn",
+   "Manual memory with threads requires the developer to handle all synchronization for allocations and frees. Data races on heap state are likely."],
+  ["memory", "manual",   "concurrency", "parallel", "warn",
+   "Manual memory with parallel execution means multiple threads may free or reallocate the same pointer concurrently."],
+  ["memory", "manual",   "types", "dynamic", "warn",
+   "Dynamic types allocate on the heap at runtime. Manual memory means the developer must track and free every dynamic type value explicitly."],
+  ["memory", "refcount", "concurrency", "threaded", "warn",
+   "Reference counting with threads requires atomic increments and decrements on every pointer copy. This adds overhead and can still leak in reference cycles."],
+  ["memory", "refcount", "concurrency", "parallel", "warn",
+   "Parallel execution with refcounting causes contention on shared reference counts. Performance degrades as core count increases."],
+  ["memory", "refcount", "types", "dynamic", "warn",
+   "Dynamic types with refcounting may create reference cycles (A holds B, B holds A) that are never freed. A cycle collector would be needed."],
+  ["memory", "arena",    "concurrency", "async", "warn",
+   "Async tasks may outlive the arena that allocated their data. If the arena is freed while an async task still holds a reference, the task reads garbage."],
+  ["memory", "arena",    "concurrency", "threaded", "warn",
+   "Arenas are typically single-threaded allocators. Sharing an arena across threads requires external locking or per-thread arenas."],
+  ["memory", "gc",       "concurrency", "threaded", "warn",
+   "GC with threads means stop-the-world pauses affect all threads. Latency-sensitive threads will stall during collection."],
+  ["memory", "gc",       "concurrency", "parallel", "warn",
+   "GC with parallel execution means collection pauses scale with the number of active parallel tasks."],
+  ["memory", "gc",       "safety", "unchecked", "warn",
+   "GC handles deallocation automatically, but unchecked safety disables bounds checking and null checks. Buffer overreads can corrupt GC metadata."],
+  ["memory", "gc",       "types", "dynamic", "warn",
+   "GC with dynamic types increases GC pressure. Every dynamic type operation may allocate, and the GC must trace all dynamic values."],
+  ["safety", "unchecked","types", "dynamic", "warn",
+   "Dynamic types rely on runtime type tags. Unchecked safety means type tag corruption goes undetected, leading to silent misinterpretation of data."],
+  ["safety", "unchecked","concurrency", "threaded", "warn",
+   "Unchecked safety with threads means data races are undetected. No bounds checking on shared buffers, no null-pointer guards on shared state."],
+  ["safety", "unchecked","int_width", "platform", "warn",
+   "Platform-dependent int width with unchecked safety means code may silently overflow on 32-bit platforms while working on 64-bit, with no runtime detection."],
+  ["types",  "dynamic",  "concurrency", "threaded", "warn",
+   "Dynamic types with threads means type tags and values can be read and written concurrently. Without synchronization, a thread may see a stale tag with a new value."],
+];
+
+function getSettings(prefix) {
+  return {
+    memory:      document.getElementById(prefix + "-memory").value,
+    safety:      document.getElementById(prefix + "-safety").value,
+    types:       document.getElementById(prefix + "-types").value,
+    int_width:   document.getElementById(prefix + "-int_width").value,
+    concurrency: document.getElementById(prefix + "-concurrency").value,
+  };
+}
+
+function checkPair(settings) {
+  // Check all rules against a single set of settings (intra-file conflicts)
+  const hits = [];
+  for (const [sA, vA, sB, vB, severity, explanation] of RULES) {
+    if (settings[sA] === vA && settings[sB] === vB) {
+      hits.push({ sA, vA, sB, vB, severity, explanation });
+    }
+  }
+  return hits;
+}
+
+window.checkConflicts = function() {
+  const a = getSettings("a");
+  const b = getSettings("b");
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+
+  const hitsA = checkPair(a);
+  const hitsB = checkPair(b);
+
+  // Cross-file: check if mismatched settings across files cause issues
+  const crossHits = [];
+  // Mismatched memory models
+  if (a.memory !== b.memory) {
+    crossHits.push({ severity: "warn", sA: "memory", vA: a.memory, sB: "memory", vB: b.memory,
+      explanation: `File A uses memory=${a.memory} and File B uses memory=${b.memory}. Linking files with different memory models means one side's deallocation strategy is invisible to the other. A pointer allocated by GC and freed by manual code (or vice versa) will corrupt the heap.` });
+  }
+  if (a.safety !== b.safety) {
+    crossHits.push({ severity: "warn", sA: "safety", vA: a.safety, sB: "safety", vB: b.safety,
+      explanation: `File A uses safety=${a.safety} and File B uses safety=${b.safety}. The checked file assumes all pointers and indices are validated. The unchecked file may pass invalid values that the checked file does not re-validate at the boundary.` });
+  }
+  if (a.int_width !== b.int_width) {
+    crossHits.push({ severity: "warn", sA: "int_width", vA: a.int_width, sB: "int_width", vB: b.int_width,
+      explanation: `File A uses int_width=${a.int_width} and File B uses int_width=${b.int_width}. Passing integers across the boundary may silently truncate values. A 64-bit int passed to a 32-bit function loses the upper 32 bits.` });
+  }
+  if (a.types !== b.types) {
+    crossHits.push({ severity: "warn", sA: "types", vA: a.types, sB: "types", vB: b.types,
+      explanation: `File A uses types=${a.types} and File B uses types=${b.types}. The strict file expects compile-time type guarantees. The dynamic file may pass a value whose runtime type differs from what the strict file assumes.` });
+  }
+  if (a.concurrency !== b.concurrency) {
+    crossHits.push({ severity: "warn", sA: "concurrency", vA: a.concurrency, sB: "concurrency", vB: b.concurrency,
+      explanation: `File A uses concurrency=${a.concurrency} and File B uses concurrency=${b.concurrency}. Different concurrency models expect different synchronization guarantees. Calling a cooperative function from a threaded context (or vice versa) may deadlock or race.` });
+  }
+
+  const allHits = [];
+  for (const h of hitsA) allHits.push({ ...h, source: "File A" });
+  for (const h of hitsB) allHits.push({ ...h, source: "File B" });
+  for (const h of crossHits) allHits.push({ ...h, source: "Cross-file" });
+
+  if (allHits.length === 0) {
+    results.innerHTML = '<div class="result-ok"><strong>Compatible</strong>No conflicts detected. These configurations can interoperate safely.</div>';
+    return;
+  }
+
+  // Sort: errors first, then warnings
+  allHits.sort((a, b) => (a.severity === "error" ? 0 : 1) - (b.severity === "error" ? 0 : 1));
+
+  for (const hit of allHits) {
+    const cls = hit.severity === "error" ? "result-error" : "result-warn";
+    const label = hit.severity === "error" ? "Incompatible" : "Warning";
+    const settingLine = `<span class="result-setting">${hit.source}: ${hit.sA}=${hit.vA} + ${hit.sB}=${hit.vB}</span>`;
+    results.innerHTML += `<div class="${cls}"><strong>${label}</strong>${settingLine}<br>${hit.explanation}</div>`;
+  }
+};
+
+})();
+</script>
+
+</body>
+</html>

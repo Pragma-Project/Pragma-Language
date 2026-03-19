@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MemProof — A Basic Explanation</title>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #000;
+  background: #fff;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 64px 40px 120px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #000;
+  margin: 32px 0;
+}
+
+hr.thick {
+  border-top: 2px solid #000;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 36px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 14px;
+}
+
+code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+}
+
+/* Floating back button */
+.back-btn {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  background: #fff;
+  border: 1px solid #000;
+  padding: 6px 16px;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #000;
+  z-index: 100;
+}
+
+.back-btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+</style>
+</head>
+<body>
+
+<a href="safety.html" class="back-btn">← Back</a>
+
+<h1>A Basic Explanation of a Mathematical Proof Methodology Applied to Source Code</h1>
+
+<hr class="thick">
+
+<p style="background:#f5f5f0; border-left:3px solid #888; padding:12px 16px; margin-bottom:20px;"><strong>This is not a novel methodology.</strong> The techniques described here &mdash; formal verification, SMT solving, abstract interpretation, safe subset restriction &mdash; are the same methods used by Airbus for flight-critical avionics (DO-178C), by automotive manufacturers under ISO 26262 and MISRA-C, and by organizations like NASA, the FDA (medical devices), and defense contractors for safety-critical systems. MemProof applies these established, industry-proven approaches to UL source code. Nothing here is experimental or untested at the conceptual level.</p>
+
+<p>This page describes what MemProof does at each stage &mdash; what goes in, what comes out, and roughly why. It is not a formal treatment. For that, see the <a href="memproof-formal.html">formal design document</a>.</p>
+
+<hr>
+
+<h2>1. Safe Subset Check</h2>
+
+<p>If the function or module is marked <code>@safe</code>, the compiler first checks that the code uses only a restricted set of constructs: no dynamic allocation, no unbounded recursion, all loops with visible bounds or annotations, no function pointers in safety regions. This is the same model Airbus uses for avionics code. Code that passes this check verifies at 90–95% automatic coverage. A violation is a compile error before MemProof even runs.</p>
+
+<h2>2. IR Construction</h2>
+
+<p>The UL AST is lowered into typed SSA (Static Single Assignment) form. In SSA, every variable is assigned exactly once — any reassignment creates a new version of the variable. The control flow is mapped as an explicit graph with loop structures and branch conditions identified precisely. This is the internal representation everything else in the pipeline operates on.</p>
+
+<h2>3. Abstract Interpretation</h2>
+
+<p>This step runs through the entire IR without executing it, tracking the possible values of every variable at every program point — across all possible inputs, branches, and loop iterations. A loop counter that starts at 0 and increments to <code>n</code> gets tracked as <code>i ∈ [0, n]</code>. A sensor input declared as 0–1000 PSI gets tracked as <code>pressure ∈ [0, 1000]</code>. For loops, a technique called widening forces convergence when bounds aren't immediately visible from the code; narrowing then recovers the precise bound. The result is a guaranteed over-approximation: every value a variable could possibly hold at any point is captured.</p>
+
+<h2>4. Separation Logic and Shape Analysis</h2>
+
+<p>While abstract interpretation tracks scalar values (integers, booleans), separation logic tracks the heap — ownership of memory regions, which pointers alias, what each allocation contains. Its key property is local reasoning: a function can be verified using only the memory it actually touches, without reasoning about the entire program heap at once. This is what makes the approach scale to real programs. Shape analysis extends this to complex structures like linked lists and trees using inductive definitions that can be reasoned about symbolically without unrolling the structure.</p>
+
+<h2>5. Verification Condition Generation</h2>
+
+<p>For every potentially unsafe operation in the program, the VCG generates a precise mathematical question — a verification condition. For an array access <code>arr[i]</code>: is it possible for <code>i</code> to be negative, or to be greater than or equal to the array's length at this point in the code? For a pointer dereference: is it possible for the pointer to be null or to point to freed memory? Each question is enriched with everything abstract interpretation learned: the known value ranges at that point, the heap ownership facts from separation logic. This context is what lets the next stage answer efficiently.</p>
+
+<h2>6. SMT Solving (CVC5)</h2>
+
+<p>The solver takes each verification condition and tries to find a counterexample — a concrete input that produces a violation. It applies theory solvers for linear integer arithmetic, bitvectors, arrays, and heap predicates. When a partial assignment is found to be impossible, conflict-driven learning rules out entire regions of the search space at once, rather than continuing to explore them. When the solver exhausts all possibilities and finds none that cause a violation, it returns UNSAT. This is a formal proof by refutation, not a heuristic — it has genuinely checked every case. If it finds a counterexample, it returns SAT with the specific input values that trigger the violation. That is your bug report.</p>
+
+<h2>7. Proof Witness</h2>
+
+<p>For each UNSAT result, CVC5 produces an LFSC proof witness — a formal mathematical object encoding the entire reasoning chain that led to the conclusion. This witness is checked by a small, separately verified kernel of approximately 5,000 lines of auditable code. The kernel has no heuristics and no complex algorithms — it mechanically confirms whether a proof term is valid or not. Even if CVC5 had a bug that produced a wrong UNSAT result, a malformed witness would be rejected by the kernel. The trusted base shrinks to the kernel, not the full solver.</p>
+
+<h2>8. Certificate and Publication</h2>
+
+<p>The proof witnesses for all verification conditions, bundled with metadata — program hash, verifier version (as an IPFS content ID), each VC's location and result, and the proof witness hashes — form the certificate. Proof witnesses and the MemProof Coq source go to IPFS and Arweave. The certificate JSON, roughly 1KB, goes to the blockchain. Anyone can retrieve the MemProof Coq source from IPFS, check the proof with <code>coqc</code>, and confirm the verifier itself is formally sound — not just that it produced a result for your program.</p>
+
+</body>
+</html>

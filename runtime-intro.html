@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic — Runtime Introduction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1a1a1a;
+  background: #fafaf8;
+  display: flex;
+  height: 100vh;
+}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+
+nav {
+  position: fixed;
+  top: 0; left: 0;
+  width: 230px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0 24px;
+  z-index: 100;
+  background: #1e1e2e;
+  border-right: 1px solid #313244;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-logo {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0 20px 16px;
+  color: #5b8fc9;
+  border-bottom: 1px solid #313244;
+  margin-bottom: 8px;
+  display: block;
+  text-decoration: none;
+}
+
+.nav-section {
+  margin-top: 14px;
+  padding: 3px 20px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: #585b70;
+}
+
+nav a.nav-link {
+  display: block;
+  padding: 5px 20px 5px 23px;
+  text-decoration: none;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: #a6adc8;
+  border-left: 3px solid transparent;
+  transition: background 0.12s, color 0.12s;
+  cursor: pointer;
+}
+
+nav a.nav-link:hover {
+  background: #313244;
+  color: #cdd6f4;
+  border-left-color: #7ab3e0;
+}
+
+nav a.nav-link.active {
+  background: #313244;
+  color: #fff;
+  border-left-color: #7ab3e0;
+}
+
+.nav-step-num {
+  display: inline-block;
+  width: 18px;
+  font-size: 11px;
+  color: #585b70;
+}
+
+nav a.nav-link.active .nav-step-num {
+  color: #7ab3e0;
+}
+
+.nav-spacer { flex: 1; }
+
+.nav-bottom {
+  padding: 12px 20px 0;
+  border-top: 1px solid #313244;
+}
+
+.download-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  color: #a6adc8;
+  border: 1px solid #313244;
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.download-btn:hover {
+  color: #cdd6f4;
+  border-color: #7ab3e0;
+  background: rgba(122,179,224,0.08);
+}
+
+/* ── MAIN ─────────────────────────────────────────────────── */
+
+main {
+  margin-left: 230px;
+  height: 100vh;
+  width: calc(100% - 230px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content-area {
+  flex: 1;
+  padding: 48px 72px 0;
+  max-width: 860px;
+  overflow: hidden;
+}
+
+.section {
+  display: none;
+}
+.section.active {
+  display: block;
+}
+
+.section h1 {
+  font-size: 2rem;
+  font-weight: normal;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  color: #1a1a1a;
+  border-bottom: 2px solid #e0d8f0;
+}
+
+.section .step-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #7ab3e0;
+  margin-bottom: 6px;
+}
+
+.section p {
+  margin-bottom: 14px;
+  color: #2a2a2a;
+}
+
+.section pre {
+  padding: 16px 20px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 12px 0 16px;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-left: 3px solid #7ab3e0;
+}
+
+.section code {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  background: #ede8f5;
+  color: #1a3a7a;
+}
+.section pre code { background: none; color: inherit; padding: 0; }
+
+.section .note {
+  padding: 12px 16px;
+  margin: 14px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 15px;
+  background: #f0f4ff;
+  border-left: 4px solid #6c7ef7;
+}
+.section .note strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4a5fcc;
+}
+
+.kw  { color: #7ab3e0; }
+.ty  { color: #89dceb; }
+.str { color: #a6e3a1; }
+.num { color: #fab387; }
+.cm  { color: #585b70; font-style: italic; }
+.op  { color: #89b4fa; }
+
+/* ── NAV BAR (bottom) ────────────────────────────────────── */
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 14px 72px 20px;
+  border-top: 1px solid #e8e4f0;
+  flex-shrink: 0;
+}
+
+.nav-bar .counter {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: #888;
+  letter-spacing: 0.06em;
+  margin-right: auto;
+}
+
+.nav-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  padding: 8px 24px;
+  border: 1px solid #d8cff0;
+  border-radius: 4px;
+  background: #fff;
+  color: #2d1b69;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.nav-btn:hover {
+  background: #2d1b69;
+  color: #fff;
+  border-color: #2d1b69;
+}
+.nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background: #fff;
+  color: #2d1b69;
+  border-color: #d8cff0;
+}
+
+/* ── NAV HINT (first page only) ──────────────────────────── */
+
+.nav-hint {
+  margin-top: 24px;
+  text-align: right;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d1b69;
+  letter-spacing: 0.06em;
+}
+
+@keyframes bounce-right {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(12px); }
+}
+
+.bounce-right {
+  display: inline-block;
+  font-size: 1.6rem;
+  animation: bounce-right 1s ease-in-out infinite;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── PRINT PAGE ──────────────────────────────────────────── */
+
+#print-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #fff;
+  overflow-y: auto;
+  z-index: 200;
+  padding: 60px 80px 100px;
+}
+
+#print-overlay .print-close {
+  position: fixed;
+  top: 20px;
+  left: 28px;
+  background: #e8e3db;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  color: #666;
+  z-index: 210;
+  padding: 6px 10px;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+#print-overlay .print-close:hover { color: #111; background: #d8d2c8; border-color: #999; }
+
+#print-content {
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+#print-content h1 {
+  font-size: 2rem;
+  font-weight: normal;
+  margin: 48px 0 8px;
+  padding-bottom: 12px;
+  color: #1a1a1a;
+  border-bottom: 2px solid #e0d8f0;
+}
+#print-content h1:first-child { margin-top: 0; }
+
+#print-content .step-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #7ab3e0;
+  margin-bottom: 6px;
+}
+
+#print-content p { margin-bottom: 14px; color: #2a2a2a; line-height: 1.7; }
+
+#print-content pre {
+  padding: 16px 20px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 12px 0 16px;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-left: 3px solid #7ab3e0;
+}
+#print-content code {
+  padding: 1px 6px; border-radius: 3px;
+  font-family: 'Share Tech Mono', monospace; font-size: 14px;
+  background: #ede8f5; color: #1a3a7a;
+}
+#print-content pre code { background: none; color: inherit; padding: 0; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  nav { display: none; }
+  main { margin-left: 0; width: 100%; }
+  .content-area { padding: 24px 20px 0; }
+  .nav-bar { padding: 14px 20px 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="javascript:history.back()" class="nav-logo">&larr; Back</a>
+  <div class="nav-section">Sections</div>
+  <div id="nav-links"></div>
+  <div class="nav-spacer"></div>
+  <div class="nav-section">Also</div>
+  <a href="industry-developments.html" class="nav-link" style="cursor:pointer;">AI Integration News</a>
+  <a href="about-author.html" class="nav-link" style="cursor:pointer;">About the Author</a>
+  <a href="language-main.html" class="nav-link" style="cursor:pointer;">Syntax Reference</a>
+  <div class="nav-bottom">
+    <button class="download-btn" onclick="openPrintView()">View Full Guide</button>
+  </div>
+</nav>
+
+<main>
+  <div class="content-area" id="content-area">
+
+    <div class="section" data-title="Why This Matters">
+      <div class="step-label">Section 1 of 15</div>
+      <h1>Why This Matters</h1>
+      <p>Every programming language makes decisions for you. How memory is managed, how types are checked, how threads work &mdash; these are baked into the language before you write a single line. Pick Python and it automatically cleans up your variables from memory whether you want it to or not. Pick C and you're responsible for every byte of memory you touch.</p>
+      <p>These aren't just academic details. They determine whether your program leaks memory, crashes under load, runs on a microcontroller, or works in a browser. Most developers never think about them because most languages never let you choose. UL takes these aspects of other languages and makes them features and options.</p>
+      <p>This tutorial explains what those choices are, what they mean, and why having control over them changes what you can build.</p>
+      <div class="nav-hint">Use these to navigate <span class="bounce-right">&rarr;</span></div>
+    </div>
+
+    <div class="section" data-title="What is Runtime">
+      <div class="step-label">Section 2 of 15</div>
+      <h1>What is Runtime</h1>
+      <p>The <strong>Runtime Environment</strong>, or just "runtime" for short, is the system that supports your program while it's actually running. It handles things like memory management, type checking, and threading &mdash; everything that happens after the compiler is done and the program starts executing. Every language has one, whether you see it or not.</p>
+      <p><strong>Runtime behavior</strong> is the set of rules that runtime follows. How does it allocate memory? Does it check array bounds? Does it use one thread or many? In most languages, these rules are fixed and you don't get a say. Python automatically cleans up unused memory. C makes you do it yourself. Java checks every array access. C skips the check.</p>
+      <p>Each choice has tradeoffs. The next few sections look at how four major languages handle this, and what you give up in each case.</p>
+    </div>
+
+    <div class="section" data-title="Concepts You Need to Know">
+      <div class="step-label">Section 3 of 15</div>
+      <h1>Runtime Concepts You Need to Know</h1>
+      <p><strong>Allocation</strong> &mdash; asking the system for a chunk of memory to store data in. Every variable, object, and array lives in memory that was allocated.</p>
+      <p><strong>Freeing / deallocation</strong> &mdash; giving memory back when you're done with it.</p>
+      <p><strong>Memory leak</strong> &mdash; when allocated memory is never freed. It stays reserved forever, unavailable to anything else, until the program ends.</p>
+      <p><strong>Garbage collection (GC)</strong> &mdash; an automatic system that finds memory nothing is using anymore and frees it for you. The runtime decides when, not you. Automatic also means no control over timing or behavior.</p>
+      <p><strong>Manual memory</strong> &mdash; you allocate and free memory yourself, explicitly, in your code. Faster execution comes with extra work and dangers.</p>
+      <p><strong>Reference counting</strong> &mdash; each object has a counter tracking how many things point to it. When the counter hits zero, it frees itself immediately. Fails when two objects point to each other (a <em>cycle</em>).</p>
+      <p><strong>Arena</strong> &mdash; one big block of memory reserved up front. Allocations just move a pointer forward. When the scope ends, the entire block is freed at once. Fast, but every pointer into it dies when the scope closes.</p>
+    </div>
+
+    <div class="section" data-title="Concepts (continued)" data-hidden="true">
+      <div class="step-label">Section 4 of 15</div>
+      <h1>Runtime Concepts (continued)</h1>
+      <p><strong>Threads</strong> &mdash; independent paths of execution running at the same time inside one program, potentially on multiple CPU cores. They let a program do multiple things simultaneously.</p>
+      <p><strong>Concurrency</strong> &mdash; when a program manages multiple tasks at once. This can mean threads running in parallel, or a single thread switching between tasks quickly (like JavaScript's event loop).</p>
+      <p><strong>GIL (Global Interpreter Lock)</strong> &mdash; a lock in Python that only lets one thread run Python code at a time, even on multi-core machines. It exists to protect Python's internal data structures, but it prevents true parallel execution of Python code.</p>
+      <p><strong>Bounds checking</strong> &mdash; verifying that an array index is within the valid range before accessing it. Java does this automatically. C does not &mdash; writing past the end of an array corrupts whatever memory sits next to it.</p>
+      <p><strong>Type checking</strong> &mdash; verifying that a value matches the type expected. <em>Static</em> type checking happens at compile time (Java, C). <em>Dynamic</em> type checking happens at runtime (Python, JavaScript) &mdash; errors only appear when that line of code actually executes.</p>
+    </div>
+
+    <div class="section" data-title="Python">
+      <div class="step-label">Section 5 of 15</div>
+      <h1>Python</h1>
+      <p>Python manages memory for you using garbage collection (see previous page). You never call <code>free()</code>. Types are checked at runtime &mdash; you can put a string where an integer was expected and Python won't complain until that line actually executes.</p>
+      <p>This makes Python fast to write and forgiving to learn. It also means bugs hide until production, performance is 10&ndash;100x slower than compiled languages, and the GIL prevents true CPU parallelism &mdash; only one thread can run Python code at a time, even if your machine has 16 cores. You can't turn any of this off. There's no <code>manual memory</code> mode. There's no <code>strict types</code> switch.</p>
+      <p>For scripting and prototyping, these tradeoffs are fine. For systems programming, embedded work, or latency-sensitive applications, they're dealbreakers.</p>
+    </div>
+
+    <div class="section" data-title="C">
+      <div class="step-label">Section 6 of 15</div>
+      <h1>C</h1>
+      <p>C gives you total control and total responsibility. You allocate memory with <code>malloc()</code> and free it with <code>free()</code>. The compiler trusts everything you write &mdash; no bounds checking, no null-pointer guards, no type safety beyond what you declare. If you write past the end of an array, C will happily corrupt whatever sits next to it in memory.</p>
+      <p>This makes C the fastest language for systems work. Operating systems, databases, and embedded firmware are written in C because nothing is wasted on safety checks you didn't ask for. The cost: memory bugs are the #1 source of security vulnerabilities. Google and Microsoft both report that ~70% of their critical CVEs are memory safety issues in C and C++ code.</p>
+      <p>C's runtime behavior is fixed at the opposite extreme from Python &mdash; manual everything, checked nothing. You can't ask for automatic memory cleanup. You can't ask for bounds checking. The language doesn't offer those options.</p>
+    </div>
+
+    <div class="section" data-title="JavaScript">
+      <div class="step-label">Section 7 of 15</div>
+      <h1>JavaScript</h1>
+      <p>JavaScript runs in a browser engine (V8, SpiderMonkey) that automatically cleans up unused memory, uses dynamic types, and runs on a single-threaded event loop. You can't manage memory directly &mdash; there's no pointer, no allocator, no way to control when objects are freed. The engine decides.</p>
+      <p>The event loop means JavaScript handles concurrency through callbacks and promises rather than threads. This avoids data races entirely but makes CPU-heavy work block the entire UI. Web Workers exist but run in isolated contexts with message-passing &mdash; no shared memory by default.</p>
+      <p>Like Python, JavaScript's runtime is take-it-or-leave-it. You get automatic memory cleanup, dynamic types, and single-threaded execution. There's no switch for manual memory, strict types, or real threads. The language was designed for the browser and its runtime reflects that.</p>
+    </div>
+
+    <div class="section" data-title="Java">
+      <div class="step-label">Section 8 of 15</div>
+      <h1>Java</h1>
+      <p>Java runs on the JVM with automatic memory cleanup, strict static types, and built-in threading. You create objects with <code>new</code> and never think about freeing them &mdash; the runtime detects when they're no longer used and reclaims the memory. The JVM's JIT compiler optimizes hot paths to near-native speed over time.</p>
+      <p>Java's automatic cleanup system is sophisticated (multiple implementations exist) but still pauses threads to scan and free memory. For most applications this is invisible. For low-latency trading systems or real-time audio, pauses of even a few milliseconds are unacceptable. You can tune the cleanup behavior but you can't turn it off.</p>
+      <p>The JVM gives you real threads and a strong type system. What it doesn't give you is a choice. Automatic cleanup is always on. Bounds checking is always on. The type system is always strict. These are good defaults, but they're not configurable.</p>
+    </div>
+
+    <div class="section" data-title="The DR System">
+      <div class="step-label">Section 9 of 15</div>
+      <h1>The DR System</h1>
+      <p>UniLogic's Dynamic Runtime lets you declare runtime behavior per file. Instead of inheriting a fixed set of rules from the language, you state what you want at the top of each source file: <code>memory: gc</code> or <code>memory: manual</code>. <code>safety: checked</code> or <code>safety: unchecked</code>. <code>concurrency: threaded</code> or <code>concurrency: async</code>.</p>
+      <p>The compiler reads these directives and enforces them. If two files with incompatible settings call each other, the compiler flags it before you run anything. A file using automatic cleanup passing a pointer to a manual-memory file gets a warning at the call site &mdash; not a crash at 3am.</p>
+      <p>The next five sections show how the four memory models work: automatic cleanup (GC), manual, reference counting, and arena. Each has an interactive animation. Hit Play or step through to see what happens.</p>
+    </div>
+
+    <div class="section" data-title="Memory: Garbage Collection">
+      <div class="step-label">Section 10 of 15</div>
+      <h1>Memory: Garbage Collection</h1>
+      <p style="margin-bottom:10px;"><strong>Garbage collection</strong> is a system that automatically frees memory you're no longer using. Instead of you deciding when to clean up, the runtime periodically scans for objects that nothing points to anymore and deletes them for you. The catch: to do this safely, it has to pause everything else your program is doing while it scans. This is called "stop-the-world." Press Play to see the cycle in action.</p>
+      <div id="gc-w">
+<style>
+#gc-w .cell{width:28px;height:28px;border-radius:4px;border:0.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;transition:background 0.4s,border-color 0.4s;}
+#gc-w .cell.occupied{background:#B5D4F4;border-color:#378ADD;color:#0C447C;}
+#gc-w .cell.unreachable{background:#F7C1C1;border-color:#E24B4A;color:#A32D2D;}
+#gc-w .cell.freed{background:#f5f5f5;border-color:#ccc;color:#999;}
+#gc-w .cell.empty{background:transparent;border-color:#eee;}
+#gc-w .tbar{height:28px;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:500;position:relative;overflow:hidden;transition:opacity 0.3s;background:#f5f5f5;}
+#gc-w .tbar.paused{opacity:0.3;}
+#gc-w .tprog{position:absolute;left:0;top:0;height:100%;border-radius:6px;}
+#gc-w .sbadge{display:inline-block;background:#E6F1FB;color:#185FA5;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:500;margin-right:6px;}
+#gc-w .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid #ccc;display:inline-block;margin:0 2px;transition:background 0.3s,border-color 0.3s;}
+#gc-w .dot.active{background:#185FA5;border-color:#185FA5;}
+#gc-w button{font-size:12px;padding:5px 14px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;}
+#gc-w button:hover{background:#f5f5f5;}
+#gc-w button:disabled{opacity:0.4;cursor:default;}
+</style>
+<div style="display:flex;gap:24px;align-items:flex-start;">
+<div>
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">heap</div>
+<div id="grid" style="display:grid;grid-template-columns:repeat(8,28px);gap:4px;"></div>
+<div style="margin-top:8px;display:flex;gap:10px;flex-wrap:wrap;">
+<span style="font-size:11px;color:#888;display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:2px;background:#B5D4F4;border:0.5px solid #378ADD;display:inline-block;"></span>live</span>
+<span style="font-size:11px;color:#888;display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:2px;background:#F7C1C1;border:0.5px solid #E24B4A;display:inline-block;"></span>unreachable</span>
+<span style="font-size:11px;color:#888;display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:2px;background:#f5f5f5;border:0.5px solid #ccc;display:inline-block;"></span>freed</span>
+</div>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">stack references</div>
+<div id="stack" style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px;"></div>
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">threads</div>
+<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">
+<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:#888;min-width:60px;">Thread 1</span><div class="tbar" id="t1" style="flex:1;"><div class="tprog" id="t1p" style="background:#B5D4F4;width:0%;"></div><span id="t1l" style="position:relative;z-index:1;font-size:11px;">running</span></div></div>
+<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:#888;min-width:60px;">Thread 2</span><div class="tbar" id="t2" style="flex:1;"><div class="tprog" id="t2p" style="background:#B5D4F4;width:0%;"></div><span id="t2l" style="position:relative;z-index:1;font-size:11px;">running</span></div></div>
+<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:#888;min-width:60px;">GC</span><div class="tbar" id="t3" style="flex:1;"><div class="tprog" id="t3p" style="background:#C0DD97;width:0%;"></div><span id="t3l" style="position:relative;z-index:1;font-size:11px;">idle</span></div></div>
+</div>
+<div id="desc" style="font-size:13px;color:#555;line-height:1.5;min-height:52px;padding:8px 12px;background:#f9f9f9;border-radius:8px;border:0.5px solid #ddd;"></div>
+</div>
+</div>
+<div style="margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+<button onclick="prev()" id="btn-prev">← Prev</button>
+<button onclick="next()" id="btn-next">Next →</button>
+<button onclick="play()" id="btn-play">▶ Auto</button>
+<div id="dots" style="display:flex;align-items:center;margin-left:4px;"></div>
+<span id="counter" style="font-size:11px;color:#aaa;font-weight:500;"></span>
+</div>
+<script>
+
+const LIVE=[0,1,2,5,8,9,12,14,17,20,21,24,25,28],DEAD=[3,6,10,13,16,18,22,26,29,30];
+const REFS=[{name:'varA',cell:0},{name:'strB',cell:5},{name:'objC',cell:12},{name:'arrD',cell:20},{name:'fnE',cell:25}];
+const STEPS=[
+{badge:'1',desc:'Code allocates objects on the heap. Live references exist on the stack.',phase:'alloc',t1:'running',t2:'running',gc:'idle',t1p:45,t2p:60,gcp:0},
+{badge:'2',desc:'Some objects become unreachable — no stack reference points to them anymore.',phase:'unreachable',t1:'running',t2:'running',gc:'idle',t1p:70,t2p:80,gcp:0},
+{badge:'3',desc:'GC starts its scan. All threads are paused — stop-the-world begins.',phase:'stw',t1:'paused',t2:'paused',gc:'scanning',t1p:70,t2p:80,gcp:30},
+{badge:'4',desc:'GC sweeps the heap, finding and freeing every unreachable cell.',phase:'sweep',t1:'paused',t2:'paused',gc:'sweeping',t1p:70,t2p:80,gcp:80},
+{badge:'5',desc:'Stop-the-world ends. All threads resume. Freed memory is available for new allocations.',phase:'resume',t1:'running',t2:'running',gc:'idle',t1p:90,t2p:95,gcp:0},
+];
+let cells=[],idx=0,timer=null,running=false;
+function build(){const g=document.getElementById('grid');g.innerHTML='';cells=[];for(let i=0;i<32;i++){const d=document.createElement('div');d.className='cell '+(LIVE.includes(i)||DEAD.includes(i)?'occupied':'empty');g.appendChild(d);cells.push(d);}
+const s=document.getElementById('stack');s.innerHTML='';REFS.forEach(r=>{const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:6px;font-size:12px;';row.innerHTML=`<span style="min-width:36px;font-weight:500;">${r.name}</span><span style="color:#aaa;">→</span><span style="color:#378ADD;">cell[${r.cell}]</span>`;s.appendChild(row);});
+const dots=document.getElementById('dots');dots.innerHTML='';STEPS.forEach((_,i)=>{const d=document.createElement('span');d.className='dot';d.id='dot'+i;dots.appendChild(d);});}
+function apply(i){const s=STEPS[i];
+if(s.phase==='alloc')cells.forEach((c,j)=>{c.className='cell '+(LIVE.includes(j)||DEAD.includes(j)?'occupied':'empty');});
+else if(s.phase==='unreachable')cells.forEach((c,j)=>{c.className='cell '+(DEAD.includes(j)?'unreachable':LIVE.includes(j)?'occupied':'empty');});
+else if(s.phase==='stw')cells.forEach((c,j)=>{c.className='cell '+(DEAD.includes(j)?'unreachable':LIVE.includes(j)?'occupied':'empty');});
+else cells.forEach((c,j)=>{c.className='cell '+(DEAD.includes(j)?'freed':LIVE.includes(j)?'occupied':'empty');});
+document.getElementById('t1').className='tbar'+(s.t1==='paused'?' paused':'');
+document.getElementById('t2').className='tbar'+(s.t2==='paused'?' paused':'');
+document.getElementById('t1l').textContent=s.t1;document.getElementById('t2l').textContent=s.t2;document.getElementById('t3l').textContent=s.gc;
+document.getElementById('t1p').style.width=s.t1p+'%';document.getElementById('t2p').style.width=s.t2p+'%';document.getElementById('t3p').style.width=s.gcp+'%';
+document.getElementById('desc').innerHTML=`<span class="sbadge">${s.badge}</span>${s.desc}`;
+document.getElementById('counter').textContent=`Step ${i+1} of ${STEPS.length}`;
+document.getElementById('btn-prev').disabled=i===0;document.getElementById('btn-next').disabled=i===STEPS.length-1;
+STEPS.forEach((_,j)=>{const d=document.getElementById('dot'+j);if(d)d.className='dot'+(j===i?' active':'');});}
+function prev(){if(idx>0){idx--;apply(idx);}}
+function next(){if(idx<STEPS.length-1){idx++;apply(idx);}}
+function play(){if(running){clearInterval(timer);running=false;document.getElementById('btn-play').textContent='▶ Auto';return;}running=true;document.getElementById('btn-play').textContent='⏸ Stop';timer=setInterval(()=>{if(idx<STEPS.length-1){idx++;apply(idx);}else{clearInterval(timer);running=false;document.getElementById('btn-play').textContent='▶ Auto';}},2000);}
+build();apply(0);
+</script>      </div>
+    </div>
+
+    <div class="section" data-title="Memory: Manual">
+      <div class="step-label">Section 11 of 15</div>
+      <h1>Memory: Manual</h1>
+      <p style="margin-bottom:10px;"><strong>Manual memory</strong> means there is no automatic cleanup. You explicitly ask for memory when you need it (<code>memtake</code>) and explicitly give it back when you're done (<code>memgive</code>). Nothing happens automatically &mdash; if you forget to give it back, it's gone forever. The animation walks through correct usage, then shows two classic bugs: a leak and a use-after-free.</p>
+      <div id="manual-w">
+<style>
+#manual-w .cell{width:28px;height:28px;border-radius:4px;border:0.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;transition:background 0.35s,border-color 0.35s;}
+#manual-w .cell.empty{background:transparent;border-color:#eee;}
+#manual-w .cell.alloc{background:#B5D4F4;border-color:#378ADD;color:#0C447C;}
+#manual-w .cell.freed{background:#f5f5f5;border-color:#ccc;color:#999;}
+#manual-w .cell.leaked{background:#F7C1C1;border-color:#E24B4A;color:#A32D2D;}
+#manual-w .cell.dangling{background:#FAECE7;border-color:#D85A30;color:#993C1D;animation:dang 0.7s ease-in-out infinite;}
+@keyframes dang{0%,100%{opacity:1}50%{opacity:0.5}}
+#manual-w .cl{font-family:monospace;font-size:12px;padding:3px 8px;border-radius:4px;margin-bottom:2px;color:#aaa;transition:background 0.3s,color 0.3s;}
+#manual-w .cl.active{background:#E6F1FB;color:#185FA5;font-weight:500;}
+#manual-w .cl.done{color:#ddd;}
+#manual-w .cl.error{background:#FAECE7;color:#993C1D;font-weight:500;}
+#manual-w .sbadge{display:inline-block;background:#E6F1FB;color:#185FA5;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:500;margin-right:6px;}
+#manual-w .sbadge.danger{background:#FAECE7;color:#993C1D;}
+#manual-w .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid #ccc;display:inline-block;margin:0 2px;transition:background 0.3s;}
+#manual-w .dot.active{background:#185FA5;border-color:#185FA5;}
+#manual-w button{font-size:12px;padding:5px 14px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;}
+#manual-w button:hover{background:#f5f5f5;}
+#manual-w button:disabled{opacity:0.4;cursor:default;}
+</style>
+<div style="display:flex;gap:24px;align-items:flex-start;">
+<div>
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">heap</div>
+<div id="grid-m" style="display:grid;grid-template-columns:repeat(8,28px);gap:4px;"></div>
+<div style="margin-top:12px;font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">source code</div>
+<div id="code-m">
+<div class="cl" id="cl0-m">int* p = memtake(sizeof(int));</div>
+<div class="cl" id="cl1-m">*p = 42;</div>
+<div class="cl" id="cl2-m">use(p);</div>
+<div class="cl" id="cl3-m">memgive(p);  // freed</div>
+<div class="cl" id="cl4-m" style="margin-top:6px;">int* q = memtake(sizeof(int));</div>
+<div class="cl" id="cl5-m">q = other_ptr;  // leak!</div>
+<div class="cl" id="cl6-m" style="margin-top:6px;">int* r = memtake(sizeof(int));</div>
+<div class="cl" id="cl7-m">memgive(r);</div>
+<div class="cl" id="cl8-m">*r = 99;  // use-after-free!</div>
+</div>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">stack pointers</div>
+<div id="ptrs-m" style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px;min-height:50px;"></div>
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:4px;text-transform:uppercase;">heap status</div>
+<div id="status-m" style="font-size:12px;font-family:monospace;color:#888;margin-bottom:12px;min-height:18px;"></div>
+<div id="desc-m" style="font-size:13px;color:#555;line-height:1.5;min-height:52px;padding:8px 12px;background:#f9f9f9;border-radius:8px;border:0.5px solid #ddd;"></div>
+<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+<span style="font-size:11px;color:#888;display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:2px;background:#B5D4F4;border:0.5px solid #378ADD;display:inline-block;"></span>allocated</span>
+<span style="font-size:11px;color:#888;display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:2px;background:#F7C1C1;border:0.5px solid #E24B4A;display:inline-block;"></span>leaked</span>
+<span style="font-size:11px;color:#888;display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:2px;background:#FAECE7;border:0.5px solid #D85A30;display:inline-block;"></span>dangling</span>
+</div>
+</div>
+</div>
+<div style="margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+<button onclick="prev_m()" id="btn-prev-m">← Prev</button>
+<button onclick="next_m()" id="btn-next-m">Next →</button>
+<button onclick="play_m()" id="btn-play-m">▶ Auto</button>
+<div id="dots-m" style="display:flex;align-items:center;margin-left:4px;"></div>
+<span id="counter-m" style="font-size:11px;color:#aaa;font-weight:500;"></span>
+</div>
+<script>
+(function(){
+
+const STEPS=[
+{badge:'1',danger:false,desc:'Manual memory: you call memtake() to allocate, memgive() to free. No GC. No safety net.',code:[0],alloc:[4],free:[],leak:[],dang:[],ptrs:[{n:'p',c:4}],status:'allocated: cell[4]'},
+{badge:'2',danger:false,desc:'Write a value into the allocated cell. p points to cell[4] on the heap.',code:[0,1,2],alloc:[4],free:[],leak:[],dang:[],ptrs:[{n:'p',c:4}],status:'in use: cell[4] = 42'},
+{badge:'3',danger:false,desc:'memgive(p) frees the memory. Cell returned to the allocator. p becomes invalid — but no error yet.',code:[0,1,2,3],alloc:[],free:[4],leak:[],dang:[],ptrs:[],status:'freed: cell[4]'},
+{badge:'4',danger:true,desc:'Bug #1 — Memory leak. q is allocated but overwritten with another pointer. Original allocation lost forever — no reference, can never be freed.',code:[4,5],alloc:[4,7],free:[4],leak:[7],dang:[],ptrs:[{n:'q',c:'lost'}],status:'leaked: cell[7] — unreachable, never freed'},
+{badge:'5',danger:true,desc:'Bug #2 — Use-after-free. r is allocated then freed. Code then writes to r anyway. The memory may belong to something else now. Silent corruption.',code:[6,7,8],alloc:[4,10],free:[4,10],leak:[7],dang:[10],ptrs:[{n:'r',c:10,dead:true}],status:'use-after-free: cell[10] — freed but accessed'},
+];
+let cells=[],idx=0,timer=null,running=false;
+function build(){const g=document.getElementById('grid-m');g.innerHTML='';cells=[];for(let i=0;i<32;i++){const d=document.createElement('div');d.className='cell empty';g.appendChild(d);cells.push(d);}
+const dots=document.getElementById('dots-m');dots.innerHTML='';STEPS.forEach((_,i)=>{const d=document.createElement('span');d.className='dot';d.id='dot'+i+'-m';dots.appendChild(d);});}
+function apply(i){const s=STEPS[i];
+cells.forEach((c,j)=>{if(s.dang.includes(j))c.className='cell dangling';else if(s.leak.includes(j))c.className='cell leaked';else if(s.free.includes(j))c.className='cell freed';else if(s.alloc.includes(j))c.className='cell alloc';else c.className='cell empty';});
+for(let j=0;j<9;j++){const el=document.getElementById('cl'+j+'-m');if(!el)continue;if(s.code.includes(j))el.className=j>=7&&s.danger?'cl error':'cl active';else if(j<Math.min(...s.code))el.className='cl done';else el.className='cl';}
+const p=document.getElementById('ptrs-m');p.innerHTML='';s.ptrs.forEach(pt=>{const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:6px;font-size:12px;';const t=pt.dead?`<span style="color:#D85A30;">cell[${pt.c}] ⚠ freed</span>`:pt.c==='lost'?'<span style="color:#E24B4A;">??? (lost)</span>':`<span style="color:#378ADD;">cell[${pt.c}]</span>`;row.innerHTML=`<span style="min-width:20px;font-weight:500;">${pt.n}</span><span style="color:#aaa;">→</span>${t}`;p.appendChild(row);});
+document.getElementById('status-m').textContent=s.status;
+const cls=s.danger?'sbadge danger':'sbadge';
+document.getElementById('desc-m').innerHTML=`<span class="${cls}">${s.badge}</span>${s.desc}`;
+document.getElementById('counter-m').textContent=`Step ${i+1} of ${STEPS.length}`;
+document.getElementById('btn-prev-m').disabled=i===0;document.getElementById('btn-next-m').disabled=i===STEPS.length-1;
+STEPS.forEach((_,j)=>{const d=document.getElementById('dot'+j+'-m');if(d)d.className='dot'+(j===i?' active':'');});}
+function prev(){if(idx>0){idx--;apply(idx);}}
+function next(){if(idx<STEPS.length-1){idx++;apply(idx);}}
+function play(){if(running){clearInterval(timer);running=false;document.getElementById('btn-play-m').textContent='▶ Auto';return;}running=true;document.getElementById('btn-play-m').textContent='⏸ Stop';timer=setInterval(()=>{if(idx<STEPS.length-1){idx++;apply(idx);}else{clearInterval(timer);running=false;document.getElementById('btn-play-m').textContent='▶ Auto';}},2000);}
+build();apply(0);
+
+window.prev_m=prev;
+window.next_m=next;
+window.play_m=play;
+})();
+</script>      </div>
+    </div>
+
+    <div class="section" data-title="Memory: Reference Counting">
+      <div class="step-label">Section 12 of 15</div>
+      <h1>Memory: Reference Counting</h1>
+      <p style="margin-bottom:10px;"><strong>Reference counting</strong> means each object tracks how many things point to it. When the count hits zero, it frees itself immediately &mdash; no pause needed. The tradeoff: if two objects point to each other, neither count ever hits zero and neither ever frees. This is called a reference cycle, and it's a permanent memory leak that counting alone cannot fix.</p>
+      <div id="rc-w">
+<style>
+#rc-w .cell{width:28px;height:28px;border-radius:4px;border:0.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;transition:background 0.35s,border-color 0.35s;}
+#rc-w .cell.empty{background:transparent;border-color:#eee;}
+#rc-w .cell.live{background:#B5D4F4;border-color:#378ADD;color:#0C447C;}
+#rc-w .cell.freed{background:#f5f5f5;border-color:#ccc;color:#999;}
+#rc-w .cell.cycle{background:#FAEEDA;border-color:#BA7517;color:#633806;animation:rc 1s ease-in-out infinite;}
+@keyframes rc{0%,100%{opacity:1}50%{opacity:0.5}}
+#rc-w .cnt{display:inline-block;padding:1px 6px;border-radius:99px;font-size:10px;font-weight:500;margin-left:4px;}
+#rc-w .cnt.up{background:#C0DD97;color:#27500A;}
+#rc-w .cnt.zero{background:#F7C1C1;color:#A32D2D;}
+#rc-w .cnt.normal{background:#f5f5f5;color:#888;}
+#rc-w .sbadge{display:inline-block;background:#E6F1FB;color:#185FA5;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:500;margin-right:6px;}
+#rc-w .sbadge.warn{background:#FAECE7;color:#993C1D;}
+#rc-w .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid #ccc;display:inline-block;margin:0 2px;transition:background 0.3s;}
+#rc-w .dot.active{background:#185FA5;border-color:#185FA5;}
+#rc-w button{font-size:12px;padding:5px 14px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;}
+#rc-w button:hover{background:#f5f5f5;}
+#rc-w button:disabled{opacity:0.4;cursor:default;}
+</style>
+<div style="display:flex;gap:24px;align-items:flex-start;">
+<div>
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">heap</div>
+<div id="grid-r" style="display:grid;grid-template-columns:repeat(8,28px);gap:4px;"></div>
+<div style="margin-top:12px;font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">reference counts</div>
+<div id="rcounts-r" style="display:flex;flex-direction:column;gap:4px;"></div>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">what's happening</div>
+<div id="desc-r" style="font-size:13px;color:#555;line-height:1.5;min-height:60px;padding:8px 12px;background:#f9f9f9;border-radius:8px;border:0.5px solid #ddd;margin-bottom:14px;"></div>
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">object graph</div>
+<div id="graph-r" style="font-size:12px;font-family:monospace;line-height:1.8;padding:8px 12px;background:#f9f9f9;border-radius:8px;border:0.5px solid #ddd;white-space:pre;"></div>
+</div>
+</div>
+<div style="margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+<button onclick="prev_r()" id="btn-prev-r">← Prev</button>
+<button onclick="next_r()" id="btn-next-r">Next →</button>
+<button onclick="play_r()" id="btn-play-r">▶ Auto</button>
+<div id="dots-r" style="display:flex;align-items:center;margin-left:4px;"></div>
+<span id="counter-r" style="font-size:11px;color:#aaa;font-weight:500;"></span>
+</div>
+<script>
+(function(){
+
+const STEPS=[
+{badge:'1',warn:false,desc:"Each object has a reference count — how many things point to it. When count hits 0, it frees itself automatically.",cells:{2:'live',5:'live'},counts:[{name:'A',cell:2,rc:1},{name:'B',cell:5,rc:1}],graph:'A (rc=1) → B (rc=1)'},
+{badge:'2',warn:false,desc:"A second pointer to B is created. B's reference count goes to 2. Neither A nor B is freed yet.",cells:{2:'live',5:'live'},counts:[{name:'A',cell:2,rc:1},{name:'B',cell:5,rc:2,changed:true}],graph:'A (rc=1) → B (rc=2)\nC (rc=1) ──────↗'},
+{badge:'3',warn:false,desc:"C is dropped. B's count drops back to 1. Still alive — A still holds a reference.",cells:{2:'live',5:'live'},counts:[{name:'A',cell:2,rc:1},{name:'B',cell:5,rc:1,changed:true}],graph:'A (rc=1) → B (rc=1)\nC dropped'},
+{badge:'4',warn:false,desc:"A is dropped. A's count hits 0 → frees itself. A held the last reference to B, so B's count hits 0 → B frees too. Chain reaction.",cells:{2:'freed',5:'freed'},counts:[{name:'A',cell:2,rc:0,zero:true},{name:'B',cell:5,rc:0,zero:true}],graph:'A dropped → rc=0 → freed\nB rc=0 → freed'},
+{badge:'!',warn:true,desc:"Circular reference trap: A points to B, B points back to A. Both counts stay at 1 forever. Neither hits 0. Neither ever frees. This is a memory leak refcount can never fix.",cells:{8:'cycle',11:'cycle'},counts:[{name:'X',cell:8,rc:1,cycle:true},{name:'Y',cell:11,rc:1,cycle:true}],graph:'X (rc=1) → Y (rc=1)\nY (rc=1) → X  ← cycle!'},
+];
+let cells=[],idx=0,timer=null,running=false;
+function build(){const g=document.getElementById('grid-r');g.innerHTML='';cells=[];for(let i=0;i<32;i++){const d=document.createElement('div');d.className='cell empty';g.appendChild(d);cells.push(d);}
+const dots=document.getElementById('dots-r');dots.innerHTML='';STEPS.forEach((_,i)=>{const d=document.createElement('span');d.className='dot';d.id='dot'+i+'-r';dots.appendChild(d);});}
+function apply(i){const s=STEPS[i];
+cells.forEach((c,j)=>{c.className='cell empty';});
+Object.entries(s.cells).forEach(([j,st])=>{cells[parseInt(j)].className='cell '+st;});
+const rc=document.getElementById('rcounts-r');rc.innerHTML='';
+s.counts.forEach(c=>{const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:6px;font-size:12px;';const cls=c.zero?'zero':c.cycle?'zero':c.changed?'up':'normal';row.innerHTML=`<span style="min-width:20px;font-weight:500;">${c.name}</span><span style="color:#aaa;">cell[${c.cell}]</span><span class="cnt ${cls}">rc=${c.rc}</span>`;rc.appendChild(row);});
+document.getElementById('graph-r').textContent=s.graph;
+const cls=s.warn?'sbadge warn':'sbadge';
+document.getElementById('desc-r').innerHTML=`<span class="${cls}">${s.badge}</span>${s.desc}`;
+document.getElementById('counter-r').textContent=`Step ${i+1} of ${STEPS.length}`;
+document.getElementById('btn-prev-r').disabled=i===0;document.getElementById('btn-next-r').disabled=i===STEPS.length-1;
+STEPS.forEach((_,j)=>{const d=document.getElementById('dot'+j+'-r');if(d)d.className='dot'+(j===i?' active':'');});}
+function prev(){if(idx>0){idx--;apply(idx);}}
+function next(){if(idx<STEPS.length-1){idx++;apply(idx);}}
+function play(){if(running){clearInterval(timer);running=false;document.getElementById('btn-play-r').textContent='▶ Auto';return;}running=true;document.getElementById('btn-play-r').textContent='⏸ Stop';timer=setInterval(()=>{if(idx<STEPS.length-1){idx++;apply(idx);}else{clearInterval(timer);running=false;document.getElementById('btn-play-r').textContent='▶ Auto';}},2200);}
+build();apply(0);
+
+window.prev_r=prev;
+window.next_r=next;
+window.play_r=play;
+})();
+</script>      </div>
+    </div>
+
+    <div class="section" data-title="Memory: Arena">
+      <div class="step-label">Section 13 of 15</div>
+      <h1>Memory: Arena</h1>
+      <p style="margin-bottom:10px;">An arena pre-allocates one large block of memory. Every allocation just advances a pointer &mdash; no searching, no bookkeeping. When the scope ends, the entire block is freed at once. Extremely fast and zero fragmentation. The risk: any pointer into the arena becomes invalid the instant the scope closes.</p>
+      <div id="arena-w">
+<style>
+#arena-w .cell{width:28px;height:28px;border-radius:4px;border:0.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;transition:background 0.35s,border-color 0.35s;}
+#arena-w .cell.slab{background:#f5f5f5;border-color:#ccc;}
+#arena-w .cell.alloc{background:#B5D4F4;border-color:#378ADD;color:#0C447C;}
+#arena-w .bump{display:inline-block;background:#C0DD97;color:#173404;border-radius:4px;padding:1px 8px;font-size:11px;font-weight:500;font-family:monospace;transition:all 0.3s;}
+#arena-w .sbadge{display:inline-block;background:#E6F1FB;color:#185FA5;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:500;margin-right:6px;}
+#arena-w .sbadge.warn{background:#FAECE7;color:#993C1D;}
+#arena-w .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid #ccc;display:inline-block;margin:0 2px;transition:background 0.3s;}
+#arena-w .dot.active{background:#185FA5;border-color:#185FA5;}
+#arena-w button{font-size:12px;padding:5px 14px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;}
+#arena-w button:hover{background:#f5f5f5;}
+#arena-w button:disabled{opacity:0.4;cursor:default;}
+</style>
+<div style="display:flex;gap:24px;align-items:flex-start;">
+<div>
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:4px;text-transform:uppercase;">arena slab</div>
+<div style="font-size:10px;color:#aaa;margin-bottom:6px;">pre-allocated block of memory</div>
+<div style="border:1.5px dashed #ccc;border-radius:6px;padding:6px;margin-bottom:8px;">
+<div id="grid-a" style="display:grid;grid-template-columns:repeat(8,28px);gap:4px;"></div>
+</div>
+<div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+<span style="font-size:11px;color:#888;">bump pointer:</span>
+<span class="bump" id="bump-a">offset 0</span>
+</div>
+<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+<span style="font-size:11px;color:#888;display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:2px;background:#f5f5f5;border:0.5px solid #ccc;display:inline-block;"></span>slab</span>
+<span style="font-size:11px;color:#888;display:flex;align-items:center;gap:3px;"><span style="width:10px;height:10px;border-radius:2px;background:#B5D4F4;border:0.5px solid #378ADD;display:inline-block;"></span>allocated</span>
+</div>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">allocations</div>
+<div id="allocs-a" style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px;min-height:60px;font-size:12px;font-family:monospace;"></div>
+<div style="font-size:11px;font-weight:500;color:#888;margin-bottom:6px;text-transform:uppercase;">scope</div>
+<div id="scope-a" style="font-size:12px;padding:6px 10px;border-radius:6px;border:0.5px solid #3B6D11;background:#f9f9f9;font-family:monospace;margin-bottom:14px;color:#333;">{ arena scope open }</div>
+<div id="desc-a" style="font-size:13px;color:#555;line-height:1.5;min-height:52px;padding:8px 12px;background:#f9f9f9;border-radius:8px;border:0.5px solid #ddd;"></div>
+</div>
+</div>
+<div style="margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+<button onclick="prev_a()" id="btn-prev-a">← Prev</button>
+<button onclick="next_a()" id="btn-next-a">Next →</button>
+<button onclick="play_a()" id="btn-play-a">▶ Auto</button>
+<div id="dots-a" style="display:flex;align-items:center;margin-left:4px;"></div>
+<span id="counter-a" style="font-size:11px;color:#aaa;font-weight:500;"></span>
+</div>
+<script>
+(function(){
+
+const STEPS=[
+{badge:'1',warn:false,desc:'Arena memory: one large slab reserved upfront. Allocations just advance a bump pointer — no per-object tracking, no GC, no manual free calls.',filled:0,allocs:[],scope:'{ arena scope open }',bump:'offset 0',ended:false},
+{badge:'2',warn:false,desc:'Allocate object A (2 cells). Bump pointer advances by 2. No heap search, no bookkeeping — just move the pointer forward.',filled:2,allocs:[{name:'A',cells:'0..1',size:2}],scope:'{ arena scope open }',bump:'offset 2',ended:false},
+{badge:'3',warn:false,desc:'Allocate object B (3 cells). Bump pointer advances by 3. Arena allocation is O(1) — always the same speed regardless of heap state.',filled:5,allocs:[{name:'A',cells:'0..1',size:2},{name:'B',cells:'2..4',size:3}],scope:'{ arena scope open }',bump:'offset 5',ended:false},
+{badge:'4',warn:false,desc:'Allocate C and D. Objects are packed tightly with no fragmentation. The bump pointer is the only bookkeeping needed.',filled:11,allocs:[{name:'A',cells:'0..1',size:2},{name:'B',cells:'2..4',size:3},{name:'C',cells:'5..7',size:3},{name:'D',cells:'8..10',size:3}],scope:'{ arena scope open }',bump:'offset 11',ended:false},
+{badge:'5',warn:false,desc:'Scope ends. The entire arena is freed in one operation — one pointer reset, regardless of how many objects were allocated. No individual free calls needed.',filled:0,allocs:[],scope:'} scope closed — entire arena freed',bump:'offset 0 (reset)',ended:true},
+{badge:'!',warn:true,desc:'The trap: any pointer into the arena becomes invalid the moment the scope ends. An async callback or thread holding that pointer reads freed memory. Silent corruption.',filled:0,allocs:[{name:'dangling_ptr',danger:true}],scope:'} scope ended',bump:'offset 0',ended:true},
+];
+let cells=[],idx=0,timer=null,running=false;
+function build(){const g=document.getElementById('grid-a');g.innerHTML='';cells=[];for(let i=0;i<24;i++){const d=document.createElement('div');d.className='cell slab';g.appendChild(d);cells.push(d);}
+const dots=document.getElementById('dots-a');dots.innerHTML='';STEPS.forEach((_,i)=>{const d=document.createElement('span');d.className='dot';d.id='dot'+i+'-a';dots.appendChild(d);});}
+function apply(i){const s=STEPS[i];
+cells.forEach((c,j)=>{c.className='cell '+(s.ended?'slab':j<s.filled?'alloc':'slab');});
+document.getElementById('bump-a').textContent=s.bump;
+const al=document.getElementById('allocs-a');al.innerHTML='';
+s.allocs.forEach(a=>{const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:8px;';if(a.danger){row.innerHTML=`<span style="color:#E24B4A;font-weight:500;">${a.name}</span><span style="color:#A32D2D;">→ freed arena memory ⚠</span>`;}else{row.innerHTML=`<span style="font-weight:500;">${a.name}</span><span style="color:#aaa;">cells[${a.cells}]</span><span style="color:#aaa;">${a.size} cells</span>`;}al.appendChild(row);});
+const sc=document.getElementById('scope-a');sc.textContent=s.scope;sc.style.borderColor=s.ended?'#ccc':'#3B6D11';sc.style.color=s.ended?'#aaa':'#333';
+const cls=s.warn?'sbadge warn':'sbadge';
+document.getElementById('desc-a').innerHTML=`<span class="${cls}">${s.badge}</span>${s.desc}`;
+document.getElementById('counter-a').textContent=`Step ${i+1} of ${STEPS.length}`;
+document.getElementById('btn-prev-a').disabled=i===0;document.getElementById('btn-next-a').disabled=i===STEPS.length-1;
+STEPS.forEach((_,j)=>{const d=document.getElementById('dot'+j+'-a');if(d)d.className='dot'+(j===i?' active':'');});}
+function prev(){if(idx>0){idx--;apply(idx);}}
+function next(){if(idx<STEPS.length-1){idx++;apply(idx);}}
+function play(){if(running){clearInterval(timer);running=false;document.getElementById('btn-play-a').textContent='▶ Auto';return;}running=true;document.getElementById('btn-play-a').textContent='⏸ Stop';timer=setInterval(()=>{if(idx<STEPS.length-1){idx++;apply(idx);}else{clearInterval(timer);running=false;document.getElementById('btn-play-a').textContent='▶ Auto';}},2000);}
+build();apply(0);
+
+window.prev_a=prev;
+window.next_a=next;
+window.play_a=play;
+})();
+</script>      </div>
+    </div>
+
+    <div class="section" data-title="Setting Conflicts">
+      <div class="step-label">Section 14 of 15</div>
+      <h1>Setting Conflicts</h1>
+      <p style="margin-bottom:10px;">When two files use different memory models and one calls the other, the rules collide. A GC-managed pointer passed to a manual-memory function can be freed by both systems. The animation below shows exactly how this happens &mdash; and why the DR system flags it at compile time before any code runs.</p>
+      <div id="conflict-w">
+<style>
+#conflict-w .fcell{width:22px;height:22px;border-radius:3px;border:0.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;transition:background 0.35s,border-color 0.35s;}
+#conflict-w .fcell.empty{background:transparent;border-color:#eee;}
+#conflict-w .fcell.gc-live{background:#B5D4F4;border-color:#378ADD;color:#0C447C;}
+#conflict-w .fcell.gc-freed{background:#f5f5f5;border-color:#ccc;color:#999;}
+#conflict-w .fcell.manual-live{background:#C0DD97;border-color:#3B6D11;color:#173404;}
+#conflict-w .fcell.dangling{background:#F7C1C1;border-color:#E24B4A;color:#A32D2D;animation:cfb 0.6s ease-in-out infinite;}
+@keyframes cfb{0%,100%{opacity:1}50%{opacity:0.4}}
+#conflict-w .fbox{border-radius:8px;padding:10px;border:1.5px solid #ccc;}
+#conflict-w .fbox.gc{border-color:#378ADD;background:rgba(53,138,221,0.04);}
+#conflict-w .fbox.manual{border-color:#3B6D11;background:rgba(59,109,17,0.04);}
+#conflict-w .dr{display:inline-block;padding:1px 8px;border-radius:99px;font-size:10px;font-weight:500;margin-left:4px;}
+#conflict-w .dr.gc{background:#B5D4F4;color:#0C447C;}
+#conflict-w .dr.manual{background:#C0DD97;color:#173404;}
+#conflict-w .cf{font-family:monospace;font-size:11px;padding:2px 6px;border-radius:3px;margin-bottom:2px;color:#aaa;transition:background 0.3s,color 0.3s;}
+#conflict-w .cf.active{background:#E6F1FB;color:#185FA5;font-weight:500;}
+#conflict-w .cf.error{background:#FAECE7;color:#993C1D;font-weight:500;}
+#conflict-w .sbadge{display:inline-block;background:#E6F1FB;color:#185FA5;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:500;margin-right:6px;}
+#conflict-w .sbadge.danger{background:#FAECE7;color:#993C1D;}
+#conflict-w .sbadge.warn{background:#FAEEDA;color:#854F0B;}
+#conflict-w .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid #ccc;display:inline-block;margin:0 2px;transition:background 0.3s;}
+#conflict-w .dot.active{background:#185FA5;border-color:#185FA5;}
+#conflict-w button{font-size:12px;padding:5px 14px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;}
+#conflict-w button:hover{background:#f5f5f5;}
+#conflict-w button:disabled{opacity:0.4;cursor:default;}
+</style>
+<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-bottom:14px;">
+<div class="fbox gc">
+<div style="font-size:11px;font-weight:500;margin-bottom:6px;color:#185FA5;">file_a.ul <span class="dr gc">memory = gc</span></div>
+<div id="heap-a-c" style="display:grid;grid-template-columns:repeat(6,22px);gap:3px;margin-bottom:8px;"></div>
+<div class="cf" id="ca0-c">function process() returns none</div>
+<div class="cf" id="ca1-c">  Point p = new Point()</div>
+<div class="cf" id="ca2-c">  p.x = 10</div>
+<div class="cf" id="ca3-c">  render(p)  // calls file_b</div>
+<div class="cf" id="ca4-c">end function</div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+<div id="arrow-c" style="font-size:18px;color:#aaa;transition:color 0.4s;">→</div>
+<div id="alabel-c" style="font-size:10px;color:#aaa;text-align:center;max-width:60px;">calls</div>
+</div>
+<div class="fbox manual">
+<div style="font-size:11px;font-weight:500;margin-bottom:6px;color:#3B6D11;">file_b.ul <span class="dr manual">memory = manual</span></div>
+<div id="heap-b-c" style="display:grid;grid-template-columns:repeat(6,22px);gap:3px;margin-bottom:8px;"></div>
+<div class="cf" id="cb0-c">function render(Point p) returns none</div>
+<div class="cf" id="cb1-c">  // uses p.x, p.y</div>
+<div class="cf" id="cb2-c">  draw(p.x, p.y)</div>
+<div class="cf" id="cb3-c">  memgive(p)  // FREES p!</div>
+<div class="cf" id="cb4-c">end function</div>
+</div>
+</div>
+<div id="desc-c" style="font-size:13px;color:#555;line-height:1.5;min-height:52px;padding:8px 12px;background:#f9f9f9;border-radius:8px;border:0.5px solid #ddd;margin-bottom:10px;"></div>
+<div id="ptr-c" style="font-size:12px;font-family:monospace;color:#888;min-height:18px;"></div>
+<div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+<button onclick="prev_c()" id="btn-prev-c">← Prev</button>
+<button onclick="next_c()" id="btn-next-c">Next →</button>
+<button onclick="play_c()" id="btn-play-c">▶ Auto</button>
+<div id="dots-c" style="display:flex;align-items:center;margin-left:4px;"></div>
+<span id="counter-c" style="font-size:11px;color:#aaa;font-weight:500;"></span>
+</div>
+<script>
+(function(){
+
+const STEPS=[
+{badge:'1',type:'normal',desc:'Two files with different DR settings. file_a uses GC — objects freed automatically. file_b uses manual memory — you call memgive() yourself.',cA:{2:'gc-live'},cB:{},arrow:'→',alabel:'calls',codeA:[],codeB:[],ptr:''},
+{badge:'2',type:'normal',desc:'file_a allocates a Point object on the heap. GC is tracking it — when no references remain, GC will free it automatically.',cA:{2:'gc-live'},cB:{},arrow:'→',alabel:'calls',codeA:[1,2],codeB:[],ptr:'p → cell[2] (gc-managed)'},
+{badge:'3',type:'normal',desc:'file_a calls render(p) in file_b, passing the pointer across the file boundary. file_b receives p — but file_b thinks it owns the memory.',cA:{2:'gc-live'},cB:{2:'manual-live'},arrow:'→',alabel:'→ p',codeA:[3],codeB:[0,1,2],ptr:'p passed to file_b'},
+{badge:'!',type:'danger',desc:"file_b calls memgive(p) — it manually frees the object. From file_b's perspective this is correct. But GC in file_a still holds a reference to that same memory.",cA:{2:'dangling'},cB:{2:'gc-freed'},arrow:'⚠',alabel:'⚠ freed',codeA:[3],codeB:[3],ptr:"file_b freed p — file_a's reference is now dangling"},
+{badge:'!',type:'danger',desc:'When GC later tries to access p in file_a, it reads freed memory. Crash, corruption, or silent wrong value. No error at the call site — the bug is invisible until it explodes.',cA:{2:'dangling'},cB:{2:'gc-freed'},arrow:'⚠',alabel:'⚠ crash',codeA:[3],codeB:[],ptr:'GC accesses freed memory → undefined behavior'},
+{badge:'✓',type:'warn',desc:"This is exactly the conflict UL's DR checker flags. When file_a (gc) calls into file_b (manual), the compiler emits a warning at the call site before you ever run the code.",cA:{2:'gc-live'},cB:{},arrow:'→',alabel:'flagged',codeA:[3],codeB:[],ptr:'Compiler: DR conflict — gc caller → manual callee at render()'},
+];
+let cA=[],cB=[],idx=0,timer=null,running=false;
+function build(){['heap-a-c','heap-b-c'].forEach((id,w)=>{const g=document.getElementById(id);g.innerHTML='';const arr=w===0?cA:cB;arr.length=0;for(let i=0;i<18;i++){const d=document.createElement('div');d.className='fcell empty';g.appendChild(d);arr.push(d);}});
+const dots=document.getElementById('dots-c');dots.innerHTML='';STEPS.forEach((_,i)=>{const d=document.createElement('span');d.className='dot';d.id='dot'+i+'-c';dots.appendChild(d);});}
+function apply(i){const s=STEPS[i];
+cA.forEach((c,j)=>{c.className='fcell '+(s.cA[j]||'empty');});
+cB.forEach((c,j)=>{c.className='fcell '+(s.cB[j]||'empty');});
+const ar=document.getElementById('arrow-c');ar.textContent=s.arrow;ar.style.color=s.type==='danger'?'#E24B4A':'#aaa';
+document.getElementById('alabel-c').textContent=s.alabel;
+for(let j=0;j<5;j++){const a=document.getElementById('ca'+j+'-c'),b=document.getElementById('cb'+j+'-c');if(a)a.className='cf'+(s.codeA.includes(j)?(s.type==='danger'&&j===3?' error':' active'):'');if(b)b.className='cf'+(s.codeB.includes(j)?(s.type==='danger'&&j===3?' error':' active'):'');}
+document.getElementById('ptr-c').textContent=s.ptr;
+const cls=s.type==='danger'?'sbadge danger':s.type==='warn'?'sbadge warn':'sbadge';
+document.getElementById('desc-c').innerHTML=`<span class="${cls}">${s.badge}</span>${s.desc}`;
+document.getElementById('counter-c').textContent=`Step ${i+1} of ${STEPS.length}`;
+document.getElementById('btn-prev-c').disabled=i===0;document.getElementById('btn-next-c').disabled=i===STEPS.length-1;
+STEPS.forEach((_,j)=>{const d=document.getElementById('dot'+j+'-c');if(d)d.className='dot'+(j===i?' active':'');});}
+function prev(){if(idx>0){idx--;apply(idx);}}
+function next(){if(idx<STEPS.length-1){idx++;apply(idx);}}
+function play(){if(running){clearInterval(timer);running=false;document.getElementById('btn-play-c').textContent='▶ Auto';return;}running=true;document.getElementById('btn-play-c').textContent='⏸ Stop';timer=setInterval(()=>{if(idx<STEPS.length-1){idx++;apply(idx);}else{clearInterval(timer);running=false;document.getElementById('btn-play-c').textContent='▶ Auto';}},2400);}
+build();apply(0);
+
+window.prev_c=prev;
+window.next_c=next;
+window.play_c=play;
+})();
+</script>      </div>
+    </div>
+
+    <div class="section" data-title="Where to Go Next">
+      <div class="step-label">Section 15 of 15</div>
+      <h1>Where to Go Next</h1>
+      <p>You've seen what runtime behavior is, how four major languages handle it differently, and how UL lets you configure it per file. You've seen the four memory models animated and watched what happens when settings conflict across files.</p>
+      <p>From here: the <a href="dynamic-runtime.html" style="color:#1a3a7a;">Dynamic Runtime reference</a> documents every setting and its values. The <a href="dr-checker.html" style="color:#1a3a7a;">DR Conflict Checker</a> lets you test two configurations against the full conflict matrix. And the <a href="repl.html" style="color:#1a3a7a;">browser REPL</a> lets you write and run UL code right now.</p>
+      <p style="font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#7ab3e0; margin-top:20px; margin-bottom:6px;">Runtime Environment Educational Resources</p>
+      <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+        <tr><td style="padding:6px 10px; border-bottom:1px solid #e0d8f0;"><a href="https://mimo.org/glossary/programming-concepts/runtime" target="_blank" style="color:#1a3a7a;">Mimo &mdash; What is a Runtime?</a></td><td style="padding:6px 10px; border-bottom:1px solid #e0d8f0; color:#666;">Beginner-friendly glossary entry</td></tr>
+        <tr><td style="padding:6px 10px;"><a href="https://www.geeksforgeeks.org/compiler-design/runtime-environments-in-compiler-design/" target="_blank" style="color:#1a3a7a;">GeeksforGeeks &mdash; Runtime Environments in Compiler Design</a></td><td style="padding:6px 10px; color:#666;">Deeper dive into how compilers set up runtime</td></tr>
+      </table>
+    </div>
+
+
+  </div>
+
+  <div class="nav-bar">
+    <span class="counter" id="counter">1 / 9</span>
+    <button class="nav-btn" id="btn-prev" onclick="go(-1)">&larr; Previous</button>
+    <button class="nav-btn" id="btn-next" onclick="go(1)">Next &rarr;</button>
+  </div>
+</main>
+
+<div id="print-overlay">
+  <button class="print-close" onclick="closePrintView()">&larr; back</button>
+  <div id="print-content"></div>
+</div>
+
+<script>
+(function() {
+"use strict";
+
+const sections  = document.querySelectorAll(".section");
+const navLinks  = document.getElementById("nav-links");
+const counter   = document.getElementById("counter");
+const btnPrev   = document.getElementById("btn-prev");
+const btnNext   = document.getElementById("btn-next");
+const total     = sections.length;
+let current     = 0;
+
+// Build sidebar nav links (skip data-hidden sections)
+sections.forEach((sec, i) => {
+  if (sec.dataset.hidden) return;
+  const a = document.createElement("a");
+  a.className = "nav-link";
+  a.dataset.idx = i;
+  a.innerHTML = '<span class="nav-step-num">' + (i + 1) + '.</span> ' + sec.dataset.title;
+  a.onclick = function() { goTo(i); };
+  navLinks.appendChild(a);
+});
+
+function goTo(idx, pushState) {
+  if (idx < 0 || idx >= total) return;
+  sections[current].classList.remove("active");
+  current = idx;
+  sections[current].classList.add("active");
+  updateUI();
+  if (pushState !== false) {
+    history.pushState({ section: idx }, "", "#section-" + (idx + 1));
+  }
+}
+
+function go(delta) { goTo(current + delta); }
+window.go = go;
+
+window.addEventListener("popstate", function(e) {
+  if (e.state && typeof e.state.section === "number") {
+    goTo(e.state.section, false);
+  } else {
+    var hash = window.location.hash.match(/section-(\d+)/);
+    if (hash) goTo(parseInt(hash[1]) - 1, false);
+  }
+});
+
+function updateUI() {
+  counter.textContent = (current + 1) + " / " + total;
+  btnPrev.disabled = current === 0;
+  btnNext.disabled = current === total - 1;
+
+  const links = navLinks.querySelectorAll(".nav-link");
+  links.forEach(a => {
+    a.classList.toggle("active", parseInt(a.dataset.idx) === current);
+  });
+}
+
+// Keyboard navigation
+document.addEventListener("keydown", function(e) {
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); go(1); }
+  if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); go(-1); }
+});
+
+// Print / full-view overlay
+window.openPrintView = function() {
+  const overlay = document.getElementById("print-overlay");
+  const content = document.getElementById("print-content");
+  content.innerHTML = "";
+  sections.forEach(sec => {
+    content.innerHTML += sec.innerHTML;
+  });
+  overlay.style.display = "block";
+};
+
+window.closePrintView = function() {
+  document.getElementById("print-overlay").style.display = "none";
+};
+
+// Init — load from hash or start at 0
+var initHash = window.location.hash.match(/section-(\d+)/);
+var initIdx = initHash ? parseInt(initHash[1]) - 1 : 0;
+goTo(Math.max(0, Math.min(initIdx, total - 1)), false);
+history.replaceState({ section: current }, "", "#section-" + (current + 1));
+
+})();
+</script>
+
+</body>
+</html>

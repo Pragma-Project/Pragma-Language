@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic — Deployment Targets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #1c1c1c;
+  background: #f4f5f7;
+  display: flex;
+  min-height: 100vh;
+}
+
+nav {
+  position: fixed;
+  top: 0; left: 0;
+  width: 220px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 28px 0 40px;
+  z-index: 100;
+  background: #1a2332;
+  border-right: 1px solid #243044;
+}
+
+.nav-logo {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0 20px 16px;
+  color: #5b8fc9;
+  border-bottom: 1px solid #243044;
+  margin-bottom: 8px;
+}
+
+.nav-section {
+  margin-top: 16px;
+  padding: 2px 20px 4px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #3d5068;
+  font-family: 'Inter', sans-serif;
+}
+
+nav a {
+  display: block;
+  padding: 5px 20px;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #7a93ad;
+  border-left: 3px solid transparent;
+  transition: all 0.1s;
+}
+nav a:hover { background: #243044; color: #c8daea; border-left-color: #5b8fc9; }
+nav a.active { color: #c8daea; border-left-color: #5b8fc9; }
+
+.nav-back {
+  display: block;
+  padding: 5px 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #8aabca;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.1s;
+}
+.nav-back:hover { color: #c0d8ed; }
+
+main {
+  margin-left: 220px;
+  padding: 52px 72px 100px 64px;
+  max-width: 960px;
+  width: 100%;
+}
+
+.page-header {
+  border-bottom: 1px solid #dde1e8;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+}
+
+.page-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #5b8fc9;
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: #1a2332;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.page-intro {
+  font-size: 1rem;
+  color: #4a5568;
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a2332;
+  margin: 36px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dde1e8;
+  scroll-margin-top: 32px;
+}
+
+p {
+  color: #374151;
+  margin-bottom: 14px;
+  max-width: 720px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+@media (max-width: 720px) { .card-grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff;
+  border: 1px solid #dde1e8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2332;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid #eef0f4;
+  background: #f8f9fb;
+  font-family: 'Inter', sans-serif;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: #4a5568;
+  line-height: 1.6;
+  padding: 10px 16px 8px;
+}
+
+pre {
+  background: #1a2332;
+  padding: 12px 16px;
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #c8daea;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.kw  { color: #89b4fa; }
+.ann { color: #7ab3e0; }
+.ty  { color: #a6e3a1; }
+.fn  { color: #89dceb; }
+.str { color: #f9e2af; }
+.num { color: #fab387; }
+.cm  { color: #5a7a9a; font-style: italic; }
+.op  { color: #8a9ab0; }
+
+hr { border: none; border-top: 1px solid #dde1e8; margin: 40px 0; }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="javascript:history.back()" class="nav-back">← Back</a>
+  <div class="nav-logo">UniLogic / Targets</div>
+
+  <div class="nav-section">Targets</div>
+  <a href="#python">Python</a>
+  <a href="#java">Java</a>
+
+  <div class="nav-section">Related</div>
+  <a href="features.html">All Features</a>
+  <a href="dynamic-runtime.html">Dynamic Runtime</a>
+  <a href="translation.html">Translation / XPile</a>
+</nav>
+
+<main>
+
+<div class="page-header">
+  <div class="page-label">Compiler — Deployment</div>
+  <h1>Deployment Targets</h1>
+  <p class="page-intro">What is required beyond the transpiler to deploy UL code on each target platform.</p>
+</div>
+
+<h2 id="python">Python Target</h2>
+<p>Transpiler + Python stdlib mapping + concurrency bridge + pip integration.</p>
+<div class="card-grid">
+
+  <div class="card">
+    <div class="card-title">Python Standard Library Mapping</div>
+    <div class="card-desc">A UL standard library for Python interop — py.collections, py.io, py.os etc. that map to Python's stdlib. You write the UL call; the transpiler outputs the Python equivalent.</div>
+    <pre><span class="cm">// UL</span>
+<span class="kw">let</span> data = io.<span class="fn">read</span>(<span class="str">"file.txt"</span>)
+
+<span class="cm">// transpiles to Python</span>
+data = <span class="fn">open</span>(<span class="str">"file.txt"</span>).<span class="fn">read</span>()</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">GIL-Aware Threading Model</div>
+    <div class="card-desc">Python's threading is constrained by the GIL. UL's concurrency primitives map to threading, multiprocessing, or asyncio depending on the use case — the transpiler selects the correct backend.</div>
+    <pre><span class="cm">// CPU-bound → multiprocessing</span>
+<span class="ann">@parallel</span>
+<span class="kw">function</span> <span class="fn">process_batch</span>(<span class="ty">list</span> items)
+  <span class="cm">// ...</span>
+<span class="kw">end function</span>
+
+<span class="cm">// I/O-bound → asyncio</span>
+<span class="ann">@async</span>
+<span class="kw">function</span> <span class="fn">fetch_all</span>(<span class="ty">list</span> urls)
+  <span class="cm">// ...</span>
+<span class="kw">end function</span></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Runtime Shim</div>
+    <div class="card-desc">UL's refcount model differs from Python's. A small bridge handles object lifecycle differences so UL-transpiled code behaves correctly inside a Python runtime.</div>
+    <pre><span class="cm"># pragma_rt.py — auto-imported</span>
+
+<span class="kw">class</span> <span class="ty">ULRef</span>:
+  <span class="kw">def</span> <span class="fn">__init__</span>(self, obj):
+    self._obj = obj
+  <span class="kw">def</span> <span class="fn">__del__</span>(self):
+    <span class="cm"># lifecycle hook for UL DR</span>
+    <span class="fn">pragma_release</span>(self._obj)</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Package Bridge</div>
+    <div class="card-desc">pip and PyPI are the ecosystem. UL declares Python dependencies in its module manifest and imports them as UL modules — the bridge resolves and installs them.</div>
+    <pre><span class="cm">// pragma.module</span>
+target python
+depend requests == <span class="str">"2.31.0"</span>
+depend numpy    >= <span class="str">"1.24"</span>
+
+<span class="cm">// in UL source</span>
+<span class="kw">import</span> py.requests <span class="kw">as</span> http
+<span class="kw">let</span> resp = http.<span class="fn">get</span>(url)</pre>
+  </div>
+
+</div>
+
+<hr>
+
+<h2 id="java">Java Target</h2>
+<p>Transpiler + JVM stdlib mapping + exception model bridge + Maven/Gradle integration.</p>
+<div class="card-grid">
+
+  <div class="card">
+    <div class="card-title">JVM Standard Library Mapping</div>
+    <div class="card-desc">A UL standard library for JVM interop — jvm.collections, jvm.io, jvm.net etc. mapping to Java's stdlib. You write the UL call; the transpiler expands to the full Java boilerplate.</div>
+    <pre><span class="cm">// UL</span>
+<span class="kw">let</span> resp = net.<span class="fn">get</span>(url)
+
+<span class="cm">// transpiles to Java</span>
+<span class="ty">HttpClient</span> client = <span class="ty">HttpClient</span>.<span class="fn">newHttpClient</span>();
+<span class="ty">HttpRequest</span> req = <span class="ty">HttpRequest</span>.<span class="fn">newBuilder</span>()
+  .<span class="fn">uri</span>(<span class="ty">URI</span>.<span class="fn">create</span>(url)).<span class="fn">build</span>();
+<span class="kw">var</span> resp = client.<span class="fn">send</span>(req, <span class="fn">ofString</span>());</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Type System Bridge</div>
+    <div class="card-desc">Java's type system is nominal and explicit. UL types map cleanly to JVM types, including handling Java generics which have no direct UL equivalent.</div>
+    <pre><span class="cm">// UL type</span>
+<span class="kw">type</span> <span class="ty">UserRecord</span>
+  <span class="kw">string</span> name
+  <span class="kw">int</span>    age
+<span class="kw">end type</span>
+
+<span class="cm">// JVM output</span>
+<span class="kw">public record</span> <span class="ty">UserRecord</span>(
+  <span class="ty">String</span> name, <span class="kw">int</span> age
+) <span class="kw">implements</span> <span class="ty">ULType</span> {}</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Checked Exception Bridge</div>
+    <div class="card-desc">Java forces checked exceptions up the call stack. Transpiled UL code either wraps everything in RuntimeException or generates throws declarations from @throws annotations.</div>
+    <pre><span class="cm">// UL</span>
+<span class="ann">@throws</span>(<span class="ty">IOError</span>)
+<span class="kw">function</span> <span class="fn">read_file</span>(<span class="kw">string</span> path)
+
+<span class="cm">// JVM output</span>
+<span class="kw">public static</span> <span class="ty">String</span> <span class="fn">readFile</span>(<span class="ty">String</span> path)
+    <span class="kw">throws</span> <span class="ty">IOException</span> {
+  <span class="cm">// ...</span>
+}</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Build Integration</div>
+    <div class="card-desc">Maven and Gradle are the Java ecosystem. UL output slots into a standard Java build pipeline — the transpiler emits .java files into the expected source tree.</div>
+    <pre><span class="cm">// pragma.module</span>
+target jvm
+depend com.google.guava == <span class="str">"32.0"</span>
+depend org.slf4j        >= <span class="str">"2.0"</span>
+
+<span class="cm"># src/main/pragma/ → src/main/java/</span>
+<span class="cm"># then normal: ./gradlew build</span></pre>
+  </div>
+
+</div>
+
+</main>
+</body>
+</html>

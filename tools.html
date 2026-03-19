@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic Tools &amp; Utilities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1a1a1a;
+  background: #fafaf8;
+  display: flex;
+}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+
+nav {
+  position: fixed;
+  top: 0; left: 0;
+  width: 230px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0 40px;
+  z-index: 100;
+  background: #1e1e2e;
+  border-right: 1px solid #313244;
+}
+
+.nav-logo {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0 20px 16px;
+  color: #5b8fc9;
+  border-bottom: 1px solid #313244;
+  margin-bottom: 8px;
+  display: block;
+  text-decoration: none;
+}
+
+.nav-section {
+  margin-top: 14px;
+  padding: 3px 20px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  font-weight: bold;
+  color: #585b70;
+}
+
+nav a {
+  display: block;
+  padding: 5px 20px 5px 23px;
+  text-decoration: none;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: #a6adc8;
+  border-left: 3px solid transparent;
+  transition: background 0.12s, color 0.12s;
+}
+
+nav a:hover {
+  background: #313244;
+  color: #cdd6f4;
+  border-left-color: #7ab3e0;
+}
+
+/* ── MAIN ─────────────────────────────────────────────────── */
+
+main {
+  margin-left: 230px;
+  padding: 56px 80px 100px 72px;
+  max-width: 920px;
+  width: 100%;
+}
+
+h1 { font-size: 2.2rem; font-weight: normal; margin-bottom: 8px; padding-bottom: 14px; color: #1a1a1a; border-bottom: 2px solid #e0d8f0; }
+.subtitle { font-size: 1rem; margin-bottom: 32px; font-style: italic; color: #666; }
+h2 { font-size: 1.5rem; font-weight: normal; margin-top: 64px; margin-bottom: 4px; padding-bottom: 6px; scroll-margin-top: 32px; color: #2d1b69; border-bottom: 1px solid #e0d8f0; }
+h3 { font-size: 1.05rem; font-weight: bold; margin-top: 32px; margin-bottom: 8px; scroll-margin-top: 32px; color: #333; }
+p { margin-bottom: 14px; color: #2a2a2a; }
+hr { border: none; border-top: 1px solid #e8e4f0; margin: 40px 0; }
+
+/* ── CODE ─────────────────────────────────────────────────── */
+
+pre {
+  padding: 18px 22px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 14px 0 20px;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-left: 3px solid #7ab3e0;
+}
+
+code {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  background: #ede8f5;
+  color: #1a3a7a;
+}
+pre code { background: none; color: inherit; padding: 0; }
+
+.kw  { color: #7ab3e0; }
+.ty  { color: #89dceb; }
+.str { color: #a6e3a1; }
+.num { color: #fab387; }
+.cm  { color: #ffffff; font-style: italic; }
+.op  { color: #89b4fa; }
+.fn  { color: #f9e2af; }
+
+/* ── NOTES ─────────────────────────────────────────────────── */
+
+.note, .warn {
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 15px;
+}
+.note strong, .warn strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.note { background: #f0f4ff; border-left: 4px solid #6c7ef7; }
+.warn { background: #fff8e8; border-left: 4px solid #f5a623; }
+.note strong { color: #4a5fcc; }
+.warn strong { color: #c07820; }
+
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.93rem; }
+th { background: #1e1e2e; color: #7ab3e0; padding: 8px 12px; text-align: left; font-weight: 500; }
+td { padding: 8px 12px; border-bottom: 1px solid #eee; color: #2a2a2a; }
+tr:nth-child(even) td { background: #f5f3fb; }
+td:first-child { color: #1a3a7a; font-family: 'Share Tech Mono', monospace; font-size: 0.88em; }
+
+/* ── QUICK LINKS ───────────────────────────────────────────── */
+
+.quick-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e8e4f0;
+}
+.quick-links a {
+  background: #f0ebfa;
+  color: #1a3a7a;
+  text-decoration: none;
+  padding: 5px 16px;
+  border-radius: 20px;
+  font-size: 0.83rem;
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  border: 1px solid #d8cff0;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.quick-links a:hover {
+  background: #1a3a7a;
+  color: #fff;
+  border-color: #1a3a7a;
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+
+.hero {
+  background: linear-gradient(135deg, #1e1e2e 0%, #0a1f5e 100%);
+  color: #cdd6f4;
+  padding: 32px 36px;
+  border-radius: 6px;
+  margin: 0 0 32px;
+}
+.hero-headline {
+  color: #7ab3e0;
+  font-family: 'Georgia', serif;
+  font-size: 1.45rem;
+  font-weight: bold;
+  margin: 0 0 10px;
+  line-height: 1.35;
+}
+.hero-sub {
+  color: #a6adc8;
+  font-size: 0.97rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.hero-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hero-pill {
+  background: rgba(100, 160, 220, 0.12);
+  border: 1px solid rgba(100, 160, 220, 0.4);
+  color: #7ab3e0;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* ── TOOL CARDS ───────────────────────────────────────────── */
+
+.tool-card {
+  background: #f5f3fb;
+  border: 1px solid #d8cff0;
+  border-left: 4px solid #7ab3e0;
+  border-radius: 0 6px 6px 0;
+  padding: 20px 24px;
+  margin: 20px 0;
+}
+.tool-card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #1a3a7a;
+  font-size: 1.1rem;
+}
+.tool-card p {
+  margin-bottom: 10px;
+}
+.tool-card p:last-child {
+  margin-bottom: 0;
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="javascript:history.back()" class="nav-logo">&larr; Back</a>
+  <div class="nav-section">Build Toolchain</div>
+  <a href="#xpile">XPile Compiler</a>
+  <a href="#repl">REPL</a>
+  <a href="#vscode">VS Code Extension</a>
+  <a href="#project-manager">Project Manager GUI</a>
+  <div class="nav-section">Runtime</div>
+  <a href="dr-checker.html">Runtime Conflict Checker</a>
+  <div class="nav-section">Reference</div>
+  <a href="https://github.com/albazzaztariq/UniLogic" target="_blank">GitHub &nearr;</a>
+</nav>
+
+<main>
+
+<h1>Tools &amp; Utilities</h1>
+<p style="font-family:'Jost',sans-serif; font-size:1.1rem; font-weight:300; letter-spacing:0.06em; color:#2d1b69; margin-bottom:32px;">UL tools to help you build and analyze.</p>
+
+<div class="hero">
+  <div class="hero-headline">Write, compile, and manage UniLogic projects end-to-end.</div>
+  <p class="hero-sub">Four tools that cover the full development loop: a multi-target compiler, an interactive REPL, a VS Code extension with diagnostics and hover docs, and a GUI for managing project files and build settings.</p>
+  <div class="hero-pills">
+    <span class="hero-pill">XPile</span>
+    <span class="hero-pill">REPL</span>
+    <span class="hero-pill">VS Code</span>
+    <span class="hero-pill">Project Manager</span>
+  </div>
+</div>
+
+<p style="font-family:'Share Tech Mono',monospace; font-size:17px; font-weight:bold; letter-spacing:0.15em; text-transform:uppercase; color:#585b70; margin-bottom:8px;">Jump To</p>
+<div class="quick-links">
+  <a href="#xpile">XPile Compiler</a>
+  <a href="#repl">REPL</a>
+  <a href="#vscode">VS Code Extension</a>
+  <a href="#project-manager">Project Manager GUI</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     XPILE COMPILER
+════════════════════════════════════════════════════════════ -->
+
+<h2 id="xpile" style="margin-top: 16px;">XPile Compiler</h2>
+
+<p>XPile is the UniLogic compiler. It takes <code>.ul</code> source files through lexing, parsing, AST construction, and code generation. It currently emits four targets:</p>
+
+<table>
+  <tr><th>Target</th><th>Output</th><th>Use Case</th></tr>
+  <tr><td>C</td><td>Portable C99</td><td>Systems work, embedding, maximum portability</td></tr>
+  <tr><td>Python</td><td>Python 3</td><td>Scripting, prototyping, interop with Python libraries</td></tr>
+  <tr><td>JavaScript</td><td>ES6</td><td>Browser and Node.js targets</td></tr>
+  <tr><td>LLVM IR</td><td>.ll files</td><td>Native compilation via LLVM, optimization passes</td></tr>
+</table>
+
+<p>The pipeline runs in stages: the lexer tokenizes the source, the parser builds an AST, and the codegen backend walks the AST to emit the selected target. Each target has its own backend module.</p>
+
+<h3>Usage</h3>
+
+<pre><span class="cm"># Compile to C (default)</span>
+xpile main.ul
+
+<span class="cm"># Compile to Python</span>
+xpile main.ul <span class="op">--</span>target python
+
+<span class="cm"># Compile to JavaScript</span>
+xpile main.ul <span class="op">--</span>target js
+
+<span class="cm"># Emit LLVM IR</span>
+xpile main.ul <span class="op">--</span>target llvm</pre>
+
+<div class="note">
+  <strong>Multi-target by design</strong>
+  The same source compiles to any target without modification. Write once, deploy to systems code (C), scripts (Python), the browser (JS), or native binaries (LLVM).
+</div>
+
+<h3>Pipeline</h3>
+
+<pre><span class="str">.ul source</span> &rarr; <span class="fn">Lexer</span> &rarr; <span class="fn">Parser</span> &rarr; <span class="ty">AST</span> &rarr; <span class="fn">CodeGen</span> &rarr; <span class="str">C | Python | JS | LLVM IR</span></pre>
+
+<!-- ═══════════════════════════════════════════════════════════
+     REPL
+════════════════════════════════════════════════════════════ -->
+
+<h2 id="repl">REPL</h2>
+
+<p>The UniLogic REPL is an interactive shell for evaluating expressions and statements line-by-line. It runs through the same lexer and parser as XPile, so what works in the REPL works in compiled code.</p>
+
+<h3>Usage</h3>
+
+<pre><span class="cm"># Start the REPL</span>
+ul
+
+<span class="cm"># Inside the REPL</span>
+<span class="kw">ul&gt;</span> <span class="ty">int</span> x <span class="op">=</span> <span class="num">10</span>
+<span class="kw">ul&gt;</span> <span class="kw">print</span> x <span class="op">*</span> <span class="num">2</span>
+<span class="num">20</span></pre>
+
+<p>The <code>ul</code> command launches the REPL directly. It supports variable declarations, expressions, function definitions, and control flow. State persists across lines within a session.</p>
+
+<div class="tool-card">
+  <h3>What the REPL is for</h3>
+  <p>Testing syntax, exploring the type system, and verifying small logic before committing it to a file. It is not a debugger or a build tool.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     VS CODE EXTENSION
+════════════════════════════════════════════════════════════ -->
+
+<h2 id="vscode">VS Code Extension</h2>
+
+<p>The UniLogic VS Code extension provides editor integration for <code>.ul</code> files. It connects to the UniLogic language toolchain and surfaces information directly in the editor.</p>
+
+<h3>Features</h3>
+
+<table>
+  <tr><th>Feature</th><th>Description</th></tr>
+  <tr><td>Syntax Highlighting</td><td>Full tokenization of UniLogic keywords, types, operators, literals, and comments</td></tr>
+  <tr><td>Diagnostics</td><td>Inline error and warning markers from the compiler, updated on save</td></tr>
+  <tr><td>Hover</td><td>Type information and documentation on mouse hover for variables, functions, and types</td></tr>
+  <tr><td>Code Walkthrough</td><td>Step-by-step annotations explaining what each section of code does</td></tr>
+</table>
+
+<div class="note">
+  <strong>Diagnostics are compiler-backed</strong>
+  Errors shown in the editor come from the same analysis pipeline as XPile. If the extension marks something red, the compiler will reject it too.
+</div>
+
+<h3>Code Walkthrough</h3>
+
+<p>The walkthrough feature annotates UniLogic source files with plain-language explanations. It is designed for reading unfamiliar code or onboarding onto an existing project. Annotations appear inline and can be toggled on or off.</p>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PROJECT MANAGER GUI
+════════════════════════════════════════════════════════════ -->
+
+<h2 id="project-manager">UniLogic Project Manager</h2>
+
+<p>The Project Manager is a standalone GUI application for creating, organizing, and building UniLogic projects. It handles project structure, file management, and build configuration without requiring the command line.</p>
+
+<h3>Capabilities</h3>
+
+<table>
+  <tr><th>Function</th><th>Description</th></tr>
+  <tr><td>Project creation</td><td>Scaffold new projects with the standard directory layout</td></tr>
+  <tr><td>File management</td><td>Create, rename, move, and delete <code>.ul</code> source files within a project tree</td></tr>
+  <tr><td>Build settings</td><td>Select compilation target (C, Python, JS, LLVM IR) and configure output paths</td></tr>
+  <tr><td>Build &amp; run</td><td>Compile and execute from the GUI with output displayed in an integrated console</td></tr>
+</table>
+
+<div class="tool-card">
+  <h3>When to use it</h3>
+  <p>The Project Manager is useful for managing multi-file projects and for developers who prefer a graphical interface over the command line. It calls XPile under the hood &mdash; the compiler does the actual work.</p>
+</div>
+
+<h3>Download</h3>
+<p style="margin-bottom:6px;">Windows x86-64</p>
+<a href="UniLogic_Project_Manager.exe" download style="display:inline-block; text-decoration:none; padding:8px 24px; border-radius:4px; font-family:'Share Tech Mono',monospace; font-size:13px; font-weight:700; letter-spacing:0.08em; background:#7ab3e0; color:#1e1e2e; transition:background 0.15s;">Download Now</a>
+
+</main>
+
+</body>
+</html>

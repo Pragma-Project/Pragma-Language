@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Side-by-Side — UniLogic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.page-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 48px 100px;
+}
+
+.back-link {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  z-index: 100;
+  display: inline-block;
+  color: #7ab3e0;
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  border: 1px solid #1a3a7a;
+  padding: 4px 12px;
+  border-radius: 3px;
+  background: #1e1e2e;
+  transition: border-color 0.15s;
+}
+.back-link:hover { border-color: #7ab3e0; }
+
+h1 {
+  font-family: 'VT323', monospace;
+  font-size: 2.4rem;
+  font-weight: normal;
+  color: #7ab3e0;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #a6adc8;
+  font-size: 0.9rem;
+  margin-bottom: 52px;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.example {
+  margin-bottom: 56px;
+}
+
+.example-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #585b70;
+  font-family: 'Jost', sans-serif;
+  font-weight: bold;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #313244;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.cols > div {
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .cols { grid-template-columns: 1fr; }
+}
+
+.col-header {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #585b70;
+  margin-bottom: 8px;
+  font-family: 'Jost', sans-serif;
+  font-weight: bold;
+}
+
+.col-header.lang-py { color: #a6e3a1; }
+.col-header.lang-pragma { color: #7ab3e0; }
+
+pre {
+  overflow-x: hidden;
+  min-width: 0;
+  background: #181825;
+  border-left: 3px solid #313244;
+  border-radius: 0 4px 4px 0;
+  padding: 16px 20px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+pre.py-code  { border-left-color: #a6e3a1; }
+pre.p-code   { border-left-color: #7ab3e0; }
+
+.kw  { color: #7ab3e0; }
+.ty  { color: #89dceb; }
+.cm  { color: #585b70; font-style: italic; }
+.num { color: #fab387; }
+.str { color: #a6e3a1; }
+.op  { color: #89dceb; }
+.ang { color: #f38ba8; }
+.fn  { color: #89b4fa; }
+
+hr {
+  border: none;
+  border-top: 1px solid #313244;
+  margin: 52px 0;
+}
+
+.note {
+  background: #181825;
+  border-left: 4px solid #6c7ef7;
+  padding: 10px 16px;
+  margin: 16px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: 13px;
+  color: #a6adc8;
+}
+
+.explain {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: #a6adc8;
+  line-height: 1.75;
+  margin-top: 24px;
+}
+
+.explain strong { color: #cdd6f4; font-weight: 400; }
+.explain code { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: #a6e3a1; }
+
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<a href="index.html" class="back-link">← UniLogic</a>
+
+<h1>Python Side-by-Side</h1>
+<p class="subtitle">Python source translated into UL, with notes on where the languages diverge.</p>
+
+<!-- ═══════════════════════════════════ EXAMPLE 1 ═══════════════════════════════════ -->
+<div class="example">
+  <div class="example-label">Example 1 — append_to</div>
+  <div class="cols">
+    <div>
+      <div class="col-header lang-py">Python</div>
+      <pre class="py-code"><span class="kw">def</span> <span class="fn">append_to</span>(element, to<span class="op">=</span><span class="kw">None</span>):
+  <span class="kw">if</span> to <span class="kw">is</span> <span class="kw">None</span>:
+    to = []
+  to.<span class="fn">append</span>(element)
+  <span class="kw">return</span> to</pre>
+    </div>
+    <div>
+      <div class="col-header lang-pragma">UL</div>
+      <pre class="p-code"><span class="kw">function</span> <span class="fn">append_to</span>(<span class="ty">int</span> element, <span class="ty">none</span> <span class="ang">&lt;</span>to<span class="ang">&gt;</span>)
+  to.<span class="fn">append</span>(element)
+  <span class="kw">return</span> to
+<span class="kw">end function</span></pre>
+    </div>
+  </div>
+  <div class="explain">
+    <p>Python's mutable default argument <code>to=[]</code> is one of the language's most well-known traps. Default values are evaluated <strong>once at function definition time</strong>, not on each call. Every call that doesn't pass <code>to</code> shares the same list object — so appending in one call affects all future calls.</p>
+    <p style="margin-top:12px;">The standard workaround is to default to <code>None</code> and assign a new list inside the body. This works, but the intent is hidden behind a conditional that exists only to paper over the language behavior.</p>
+    <p style="margin-top:12px;">In UL, default parameter values are evaluated fresh on every call — there is no shared mutable state between invocations. The caller passes what it needs, or the function builds its own fresh state. No hidden shared objects, no defensive <code>if to is None</code> guards.</p>
+  </div>
+</div>
+
+<hr>
+
+</div><!-- /page-wrap -->
+</body>
+</html>

@@ -10,9 +10,13 @@
 
 ## What is UniLogic?
 
-UL is a statically-typed systems language that transpiles to C, Python, JavaScript, and LLVM IR. Designed to be readable to anyone who has written code in any modern language, while providing access to the full hardware stack when needed.
+A unified systems, application, and web language that transpiles to C, Python, and JavaScript. Runtime behavior such as memory model, stack size, safety checks and others are settings, not just language defaults. Includes a formal memory safety proof system with verifiable certificates.
 
-Standard UL reads like natural language. Base UL adds memory management, pointers, and bitwise operations in the same file — no mode switch, no separate language.
+Standard mode reads like natural language. Base mode adds memory management, pointers, and bitwise operations in the same file — no mode switch, no separate language.
+
+**Example — `container_of`.** Recovering a struct from a pointer to one of its members. A pattern used throughout the Linux kernel.
+
+![container_of side-by-side](container_of.png)
 
 ## Compiler
 
@@ -20,15 +24,8 @@ Requires Python 3 and clang or gcc.
 
 ## Safety
 
-UL targets mathematically proven memory safety and functional correctness via formal verification with SMT solvers. See the [Safety page](https://albazzaztariq.github.io/UniLogic/safety.html) for the full methodology.
+UniLogic targets mathematically proven memory safety and functional correctness via a formal verification pipeline. See the [Safety page](https://albazzaztariq.github.io/UniLogic/safety.html) for the full methodology.
 
 ## Dynamic Runtime
 
-UL exposes 9 runtime settings — memory model, safety level, type system, integer width, concurrency, and more — declared per source file at compile time. See the [Dynamic Runtime page](https://albazzaztariq.github.io/UniLogic/dynamic-runtime.html) for all settings.
-
-## Links
-
-- [Features & Functionality](https://albazzaztariq.github.io/UniLogic/features.html)
-- [Learning & Resources](https://albazzaztariq.github.io/UniLogic/learning.html)
-- [Tools & Utilities](https://albazzaztariq.github.io/UniLogic/tools.html)
-- [Browser REPL](https://albazzaztariq.github.io/UniLogic/repl.html)
+UniLogic exposes 9 runtime settings — memory model, allocator, overflow behaviour, stack size, bounds checking, float semantics, and more — declared per source file at compile time. See the [Runtime page](https://albazzaztariq.github.io/UniLogic/dynamic-runtime.html) for all settings.

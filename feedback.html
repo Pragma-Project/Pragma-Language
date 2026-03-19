@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!-- TODO: replace Formspree endpoint with real form ID after creating account at formspree.io -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic — AI/ML Feedback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Georgia', serif; font-size: 16px; line-height: 1.7; color: #1a1a1a; background: #fafaf8; display: flex; }
+nav { position: fixed; top: 0; left: 0; width: 230px; height: 100vh; overflow-y: auto; padding: 24px 0 40px; z-index: 100; background: #1e1e2e; border-right: 1px solid #313244; }
+.nav-logo { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 20px 16px; color: #5b8fc9; border-bottom: 1px solid #313244; margin-bottom: 8px; display: block; text-decoration: none; }
+.nav-section { margin-top: 14px; padding: 3px 20px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; font-family: sans-serif; font-weight: bold; color: #585b70; }
+nav a { display: block; padding: 5px 20px 5px 23px; text-decoration: none; font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #a6adc8; border-left: 3px solid transparent; transition: background 0.12s, color 0.12s; }
+nav a:hover { background: #313244; color: #cdd6f4; border-left-color: #7ab3e0; }
+main { margin-left: 230px; padding: 56px 80px 100px 72px; max-width: 920px; width: 100%; }
+h1 { font-size: 2.2rem; font-weight: normal; margin-bottom: 8px; padding-bottom: 14px; color: #1a1a1a; border-bottom: 2px solid #e0d8f0; }
+.subtitle { font-size: 1rem; margin-bottom: 24px; font-style: italic; color: #666; }
+h2 { font-size: 1.5rem; font-weight: normal; margin-top: 40px; margin-bottom: 4px; padding-bottom: 6px; scroll-margin-top: 32px; color: #2d1b69; border-bottom: 1px solid #e0d8f0; }
+p { margin-bottom: 14px; color: #2a2a2a; }
+code { padding: 1px 6px; border-radius: 3px; font-family: 'Share Tech Mono', monospace; font-size: 14px; background: #ede8f5; color: #1a3a7a; }
+
+.feat-item { padding: 10px 0; border-bottom: 1px solid #f0eef5; }
+.feat-item:last-child { border-bottom: none; }
+.feat-name { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: #1a3a7a; font-weight: 500; }
+.feat-desc { font-size: 0.92rem; color: #555; margin-top: 2px; }
+
+form { margin-top: 24px; }
+label { display: block; font-family: 'Share Tech Mono', monospace; font-size: 13px; color: #2d1b69; letter-spacing: 0.04em; margin-bottom: 4px; margin-top: 18px; }
+textarea, input[type="text"], input[type="email"] {
+  width: 100%; padding: 10px 14px; border: 1px solid #d8cff0; border-radius: 4px;
+  font-family: 'Georgia', serif; font-size: 15px; line-height: 1.6; color: #1a1a1a;
+  background: #fff; transition: border-color 0.15s;
+}
+textarea:focus, input:focus { outline: none; border-color: #7ab3e0; }
+textarea { min-height: 80px; resize: vertical; }
+.submit-btn {
+  display: inline-block; margin-top: 20px; padding: 10px 32px;
+  font-family: 'Share Tech Mono', monospace; font-size: 14px; font-weight: 700;
+  letter-spacing: 0.1em; color: #1e1e2e; background: #7ab3e0; border: none;
+  border-radius: 5px; cursor: pointer; transition: background 0.15s;
+}
+.submit-btn:hover { background: #a87fd4; }
+#form-thanks { display: none; margin-top: 16px; padding: 14px 18px; background: #e8fbe8; border-left: 4px solid #4caf50; border-radius: 0 4px 4px 0; color: #2e7d32; font-size: 15px; }
+
+@media (max-width: 700px) { nav { display: none; } main { margin-left: 0; padding: 20px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="javascript:history.back()" class="nav-logo">&larr; Back</a>
+  <div class="nav-section">On This Page</div>
+  <a href="#language">Language Features</a>
+  <a href="#compiler">Compiler Features</a>
+  <a href="#form">Feedback Form</a>
+  <div class="nav-section">Related</div>
+  <a href="learn-ai-optimization.html">AI/ML Learning</a>
+  <a href="features.html">All Features</a>
+  <a href="https://github.com/albazzaztariq/UniLogic" target="_blank">GitHub &nearr;</a>
+</nav>
+
+<main>
+
+<h1>AI/ML Practitioner Feedback</h1>
+<p>This project is being built with AI and ML workloads as a primary target. If you work in this space or play with its tools, your input on what's missing or what doesn't matter is worth its weight in gold. The list below covers what exists at the language and compiler level. Use the form at the bottom to say what matters, what's missing, and what's noise.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="language">Language-Level Features</h2>
+
+<div class="feat-item"><span class="feat-name">Mixed precision types</span><div class="feat-desc"><code>@dr precision = fp16 | bf16 | int8 | int4</code> declares computation precision at the file level, compiler emits appropriate instructions</div></div>
+
+<div class="feat-item"><span class="feat-name">Quantization as a type</span><div class="feat-desc"><code>q8</code> and <code>q4</code> as first-class types, compiler manages dequantize/requantize at type boundaries automatically</div></div>
+
+<div class="feat-item"><span class="feat-name">Sparsity construct</span><div class="feat-desc"><code>@sparsity = auto</code> on a type, compiler generates sparse compute paths when density warrants it</div></div>
+
+<div class="feat-item"><span class="feat-name">Tensor memory layout</span><div class="feat-desc"><code>@layout = column_major | row_major</code> on types, compiler generates correct access patterns for cache efficiency</div></div>
+
+<div class="feat-item"><span class="feat-name">Alignment annotations</span><div class="feat-desc"><code>@alignment = 64</code> on types, guarantees 64-byte alignment for AVX-512</div></div>
+
+<div class="feat-item"><span class="feat-name">Static type system</span><div class="feat-desc">All types known at compile time, enables every optimization decision before execution</div></div>
+
+<div class="feat-item"><span class="feat-name">Zero-overhead value types</span><div class="feat-desc"><code>type</code> keyword produces C struct equivalent with no heap allocation, no vtable, no header overhead</div></div>
+
+<div class="feat-item"><span class="feat-name">Arena memory model</span><div class="feat-desc"><code>@dr memory = arena</code> gives deterministic allocation with no GC pauses</div></div>
+
+<div class="feat-item"><span class="feat-name">No GIL equivalent</span><div class="feat-desc">Compiled native code, no single-threaded execution bottleneck</div></div>
+
+<div class="feat-item"><span class="feat-name">Kernel fusion annotation</span><div class="feat-desc"><code>@fuse</code> on a function body hints the compiler to generate a single fused operation</div></div>
+
+<div class="feat-item"><span class="feat-name">Vectorization guarantee</span><div class="feat-desc"><code>@dr vectorize = avx2 | avx512 | neon</code> &mdash; compiler vectorizes or errors, no silent fallback</div></div>
+
+<div class="feat-item"><span class="feat-name">FMA guarantee</span><div class="feat-desc"><code>@dr fma = required</code> &mdash; compiler guarantees fused multiply-add emission</div></div>
+
+<div class="feat-item"><span class="feat-name">Prefetch annotation</span><div class="feat-desc"><code>@prefetch(distance=auto)</code> &mdash; compiler calculates optimal prefetch distance per target architecture</div></div>
+
+<div class="feat-item"><span class="feat-name">CUDA/ROCm/Metal targets</span><div class="feat-desc"><code>@dr compute = cuda | rocm | metal</code> &mdash; same UL source compiles to GPU kernels</div></div>
+
+<div class="feat-item"><span class="feat-name">Inline assembly</span><div class="feat-desc"><code>@asm(x86_64) ... end asm</code> for when you need direct hardware access with a UL fallback</div></div>
+
+<div class="feat-item"><span class="feat-name">Compile-time constants</span><div class="feat-desc"><code>const</code> declarations substituted at compile time, zero runtime overhead</div></div>
+
+<div class="feat-item"><span class="feat-name">Static operation scheduling</span><div class="feat-desc"><code>@parallel</code> on functions with independent branches, compiler generates static execution schedule</div></div>
+
+<div class="feat-item"><span class="feat-name">NUMA awareness</span><div class="feat-desc"><code>@dr numa = local</code> forces memory allocation to stay on same socket as executing thread</div></div>
+
+<div class="feat-item"><span class="feat-name">Huge pages</span><div class="feat-desc"><code>@dr huge_pages = true</code> reduces TLB misses for large model weight access</div></div>
+
+<div class="feat-item"><span class="feat-name">Thread affinity</span><div class="feat-desc"><code>@dr cpu_affinity = 0,1</code> pins threads to specific cores</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="compiler">Compiler-Level Features</h2>
+
+<div class="feat-item"><span class="feat-name">LLVM backend</span><div class="feat-desc">Full LLVM IR emission, all LLVM optimization passes available</div></div>
+
+<div class="feat-item"><span class="feat-name">AI workload LLVM flags</span><div class="feat-desc"><code>@dr compute = tensor</code> automatically applies correct LLVM flags for AI workloads (disables aggressive unrolling, adds noalias on arrays, sets vectorization width)</div></div>
+
+<div class="feat-item"><span class="feat-name">Profile-guided compilation</span><div class="feat-desc"><code>--profile</code> flag instruments code, profile reader produces summary, VS Code panels display flame graph and hot path highlighting</div></div>
+
+<div class="feat-item"><span class="feat-name">Normalization levels 0-3</span><div class="feat-desc">Compiler can expand compound expressions, flatten call chains, split boolean expressions &mdash; controllable per file or per function</div></div>
+
+<div class="feat-item"><span class="feat-name">Cross-file DR conflict detection</span><div class="feat-desc">Compiler reads DR settings of every file in workspace, warns at call sites that cross memory model or safety boundaries</div></div>
+
+<div class="feat-item"><span class="feat-name">Native binary via LLVM</span><div class="feat-desc">Same source compiles to Windows, Linux, macOS, ARM via LLVM target triples</div></div>
+
+<div class="feat-item"><span class="feat-name">WebAssembly target</span><div class="feat-desc">Compile to WASM for browser or server via WASI</div></div>
+
+<div class="feat-item"><span class="feat-name">Bytecode VM</span><div class="feat-desc">Register-based bytecode interpreter for portable execution without native compilation</div></div>
+
+<div class="feat-item"><span class="feat-name">Profiler instrumentation</span><div class="feat-desc"><code>--profile</code> injects timing and allocation hooks, produces NDJSON event log</div></div>
+
+<div class="feat-item"><span class="feat-name">DR behavior monitor</span><div class="feat-desc">Real-time display of GC collections, refcount operations, arena resets during execution</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="form">Share Your Feedback</h2>
+
+<p>Feedback is submitted as a GitHub Issue. Click the button below &mdash; GitHub opens with a pre-filled template. Fill in what matters, what's missing, and what's noise, then submit. No account needed beyond GitHub.</p>
+
+<a href="https://github.com/albazzaztariq/UniLogic/issues/new?template=ai_feedback.md&title=AI%2FML+Feedback&labels=feedback,ai-ml" target="_blank" class="submit-btn" style="display:inline-block; text-decoration:none; margin-top:12px;">Submit Feedback via GitHub &rarr;</a>
+
+<p style="margin-top:16px; font-size:0.88rem; color:#888;">Prefer email? <button onclick="document.getElementById('fb-email').style.display='inline';this.style.display='none';" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:3px 10px;border:1px solid #ccc;border-radius:3px;background:#fff;color:#666;cursor:pointer;">Click</button> <span id="fb-email" style="display:none;"><a href="mailto:albazzaztariq@gmail.com" style="color:#1a3a7a;">albazzaztariq@gmail.com</a></span></p>
+
+</main>
+
+</body>
+</html>

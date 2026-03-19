@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Industry Research &amp; Developments — UniLogic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  transition: background 0.25s, color 0.25s;
+  font-family: 'Georgia', serif;
+}
+
+/* ══ THEMES ══ */
+body.theme-default {
+  background: #1e1e2e;
+  color: #cdd6f4;
+}
+body.theme-base {
+  background: #f5f0e8;
+  color: #1a1a1a;
+}
+
+/* ══ MODE TOGGLE ══ */
+#mode-toggle-top {
+  position: fixed;
+  top: 14px;
+  right: 20px;
+  z-index: 300;
+  padding: 18px 16px;
+  font-size: 11px;
+  font-family: 'VT323', monospace;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+  border: none;
+}
+#mode-toggle-top .flip-label { font-size: 22px; letter-spacing: 0.18em; }
+#mode-toggle-top .mode-label { font-size: 10px; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.12em; opacity: 0.6; }
+body.theme-default #mode-toggle-top { background: #313244; color: #cdd6f4; }
+body.theme-default #mode-toggle-top:hover { background: #45475a; }
+body.theme-base #mode-toggle-top { background: #e0d8c8; color: #1a1a1a; }
+body.theme-base #mode-toggle-top:hover { background: #cfc7b5; }
+
+/* ══ BACK LINK ══ */
+.back-link {
+  position: fixed;
+  top: 20px;
+  left: 28px;
+  z-index: 300;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.85rem;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+.back-link:hover { opacity: 1; }
+body.theme-default .back-link { color: #7ab3e0; }
+body.theme-base .back-link { color: #5a3a8a; }
+
+/* ══ LAYOUT ══ */
+.page-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 20px 40px 80px;
+}
+
+/* ══ HEADER ══ */
+.page-header {
+  padding: 40px 0 16px;
+  border-bottom: 1px solid;
+  margin-bottom: 12px;
+}
+body.theme-default .page-header { border-color: #313244; }
+body.theme-base .page-header { border-color: #ccc; }
+
+.page-header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+body.theme-default .page-header h1 { color: #7ab3e0; }
+body.theme-base .page-header h1 { color: #3a2060; }
+
+.page-header .intro {
+  font-family: 'Jost', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.75;
+  max-width: 700px;
+}
+body.theme-default .page-header .intro { color: #a6adc8; }
+body.theme-base .page-header .intro { color: #444; }
+
+/* ══ RANKING NOTE ══ */
+.ranking-note {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  border-left: 3px solid;
+  display: inline-block;
+}
+body.theme-default .ranking-note { border-color: #45475a; color: #6c7086; }
+body.theme-base .ranking-note { border-color: #ccc; color: #888; }
+
+/* ══ ENTRIES ══ */
+.entry {
+  margin-bottom: 56px;
+  padding-bottom: 52px;
+  border-bottom: 1px solid;
+}
+body.theme-default .entry { border-color: #313244; }
+body.theme-base .entry { border-color: #ddd; }
+
+.entry:last-child { border-bottom: none; }
+
+.entry-rank {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+.entry-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+body.theme-default .entry-headline { color: #cdd6f4; }
+body.theme-base .entry-headline { color: #1a1a1a; }
+
+.entry-meta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 18px;
+}
+body.theme-default .entry-meta { color: #6c7086; }
+body.theme-base .entry-meta { color: #888; }
+
+.entry-meta a {
+  text-decoration: none;
+  border-bottom: 1px dotted;
+}
+body.theme-default .entry-meta a { color: #89b4fa; border-color: #89b4fa; }
+body.theme-base .entry-meta a { color: #2a60a0; border-color: #2a60a0; }
+.entry-meta a:hover { opacity: 0.75; }
+
+.entry-body {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 300;
+  line-height: 1.8;
+}
+body.theme-default .entry-body { color: #bac2de; }
+body.theme-base .entry-body { color: #333; }
+
+.entry-body p { margin-bottom: 14px; }
+.entry-body p:last-child { margin-bottom: 0; }
+
+/* ══ FEATURED ENTRY ══ */
+.entry-featured {
+  padding: 28px 32px;
+  border-radius: 8px;
+  margin-bottom: 56px;
+  padding-bottom: 28px;
+  border: none;
+}
+body.theme-default .entry-featured { background: #24273a; border: 1px solid #45475a; }
+body.theme-base .entry-featured { background: #f0ece0; border: 1px solid #ccc; }
+
+.entry-featured .entry-rank { opacity: 0.6; }
+
+/* ══ FINDINGS BOX ══ */
+.findings {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: 5px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  letter-spacing: 0.03em;
+}
+body.theme-default .findings { background: #1e1e2e; color: #a6e3a1; border-left: 3px solid #a6e3a1; }
+body.theme-base .findings { background: #e8f0e0; color: #2a5a20; border-left: 3px solid #4a8a30; }
+
+.findings-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+
+</style>
+</head>
+<body class="theme-default">
+
+<button id="mode-toggle-top" onclick="toggleMode()">
+  <span class="flip-label" id="flip-label-top">⬛</span>
+  <span class="mode-label" id="mode-label-top">LIGHT</span>
+</button>
+
+<a href="javascript:history.back()" class="back-link">← Back</a>
+
+<div class="page-wrap">
+
+<header class="page-header">
+  <p class="intro" style="margin-bottom:24px;">Coding Agents like Claude Code and Codex are revolutionizing application development. However, there are lingering issues with code quality, even outright non-working code. <strong>UniLogic for Model and Agent Programming (UMAP)</strong> is a future project to design an intermediate representation between agent and user instead of only spoken words and the final code, closer to the actual code that it will be made of. Something close enough to natural language for anyone to use, but closer to programming syntax to drastically reduce interpretation and variability.</p>
+  <h1>Industry Research &amp; Developments</h1>
+  <div class="ranking-note" style="margin-top:4px;">Title describes the relationship to this project. Link to full paper included with each entry.</div>
+</header>
+
+
+<!-- ════ #1 ════ -->
+<div class="entry entry-featured">
+
+  <div class="entry-rank">#1</div>
+
+  <h2 class="entry-headline">UIUC — Formal Query Language Placed Between Natural Language Prompt and Agent-Generated Code</h2>
+
+  <div class="entry-meta">
+    Councilman, Fu, Gupta, Wang, Grove, Wang, Adve &nbsp;·&nbsp; 2025 &nbsp;·&nbsp;
+    <a href="https://arxiv.org/abs/2507.13290" target="_blank">arxiv.org/abs/2507.13290</a>
+  </div>
+
+  <div class="entry-body">
+    <p>Natural language prompts to LLMs produce code that cannot be formally verified to be correct. The authors built Astrogator: a formally-defined query language placed between the user prompt and LLM output. The user expresses intent in that structured form; Astrogator verifies the generated code against it. The formal intermediary is what makes verification possible.</p>
+
+    <p>UMAP addresses the specification side of the same gap — the structured schema is the formal intermediary. Where Astrogator adds a verification layer on top of LLM output, UMAP starts from a representation that is already unambiguous. The two approaches are working the same problem from opposite ends.</p>
+  </div>
+
+  <div class="findings">
+    <div class="findings-label">Results</div>
+    83% verification success for correct LLM-generated code. 92% detection rate for incorrect code. Tested on Ansible DSL tasks.
+  </div>
+
+</div><!-- /entry-featured -->
+
+
+<!-- ════ #2 ════ -->
+<div class="entry">
+
+  <div class="entry-rank">#2</div>
+
+  <h2 class="entry-headline">FSE 2024 — LLM Code Translation Failures Traced to Semantic Divergence Between Source and Target Languages</h2>
+
+  <div class="entry-meta">
+    Yang et al. &nbsp;·&nbsp; FSE 2024 &nbsp;·&nbsp; ACM DOI:10.1145/3660778 &nbsp;·&nbsp;
+    <a href="https://arxiv.org/abs/2404.14646" target="_blank">arXiv:2404.14646</a>
+  </div>
+
+  <div class="entry-body">
+    <p>Empirical study of LLM code translation across six language pairs. Three failure modes identified: LLM does not understand source logic (38.5%), missing I/O type information (14.9%), generated output diverges from source semantics without detection (41.4%). The dominant failure mode — undetected semantic divergence — accounts for the largest share of incorrect translations. UniTrans (test-case correction loops) was proposed as a workaround.</p>
+
+    <p>A single source representation that maps to any target without a translation step removes this failure mode entirely. The accuracy loss the study measures is the cost of the semantic gap between languages — the same gap a unified schema eliminates at the source.</p>
+  </div>
+
+  <div class="findings">
+    <div class="findings-label">Results</div>
+    UniTrans improvements over baseline (avg. across 6 language pairs): LLaMA-7B +28.58% computational accuracy, +71.22% exact match. LLaMA-13B +19.20% / +36.42%. GPT-3.5 +4.02% / +13.28%. Smaller models benefited most — GPT-3.5 baseline was already 87.92% CA before correction.
+  </div>
+
+</div><!-- /entry -->
+
+
+<!-- ════ #3 ════ -->
+<div class="entry">
+
+  <div class="entry-rank">#3</div>
+
+  <h2 class="entry-headline">UT Austin — Survey: Leading Code Generation Systems Use Symbolic Program Structure as Backbone, Not End-to-End Neural</h2>
+
+  <div class="entry-meta">
+    Chaudhuri &nbsp;·&nbsp; Handbook on Neurosymbolic AI and Knowledge Graphs, IOS Press 2025 &nbsp;·&nbsp;
+    <a href="https://www.cs.utexas.edu/~swarat/pubs/ns-handbook-2025.pdf" target="_blank">cs.utexas.edu/~swarat/pubs/ns-handbook-2025.pdf</a>
+  </div>
+
+  <div class="entry-body">
+    <p>A UT Austin survey covering where AI-assisted programming research is heading. The finding: the most capable recent code generation systems — including Google's AlphaDev (which discovered faster sorting algorithms) and SWE-agent (automated software engineering) — don't rely on AI alone. They use structured, rule-defined code as a backbone, with AI handling search and generation on top of it. AI working without that structure produces results that are unreliable and impossible to verify.</p>
+
+    <p>Two problems the field hasn't solved: getting AI to generate program structures it hasn't seen before, and translating what a user wants into something precise enough for the system to act on correctly. The survey identifies the second as the key missing piece.</p>
+  </div>
+
+  <div class="findings">
+    <div class="findings-label">Relation to UMAP</div>
+    Survey identified structured syntax as a core necessity. UMAP is built around the same idea.
+  </div>
+
+</div><!-- /entry -->
+
+
+<!-- ════ #4 ════ -->
+<div class="entry">
+
+  <div class="entry-rank">#4</div>
+
+  <h2 class="entry-headline">MIT CSAIL — Natural Language as Program Specification is Fundamentally Under-constrained</h2>
+
+  <div class="entry-meta">
+    Solar-Lezama &nbsp;·&nbsp; Program Synthesis Course &nbsp;·&nbsp; MIT CSAIL &nbsp;·&nbsp;
+    <a href="https://people.csail.mit.edu/asolar/SynthesisCourse/Lecture1.htm" target="_blank">Lecture 1</a> &nbsp;·&nbsp;
+    <a href="https://people.csail.mit.edu/asolar/SynthesisCourse/Lecture15.htm" target="_blank">Lecture 15</a>
+  </div>
+
+  <div class="entry-body">
+    <p>A graduate course — 25 lectures. Two are directly relevant. Lecture 1 frames the core problem: one of three named challenges is specification — how do you tell the system what you want? Natural language is the easiest way for a human to express intent but the most ambiguous for a system to act on. Any sentence has multiple programs that satisfy it with no reliable way to pick the right one. The alternative — formal mathematical specs — is precise but requires expertise most people don't have.</p>
+
+    <p>Lecture 15 covers the distinction between two agent architectures: one where the program is in control and the LLM is a tool it calls, and one where the LLM is in control and calls out to code when needed. The lecture treats these as the two fundamental models for how AI-assisted programming works.</p>
+  </div>
+
+  <div class="findings">
+    <div class="findings-label">Relation to UMAP</div>
+    Lecture 1: a practical explanation of the problem space UMAP naturally fits as a solution. Lecture 15: UMAP is a program-in-control architecture. The schema runs the process; the LLM is an optional tool alongside it.
+  </div>
+
+</div><!-- /entry -->
+
+
+<!-- ════ #5 ════ -->
+<div class="entry">
+
+  <div class="entry-rank">#5</div>
+
+  <h2 class="entry-headline">OOPSLA 2024 — Formal Semantics Synthesised Automatically from Grammar and Interpreter</h2>
+
+  <div class="entry-meta">
+    Liu, Murphy, Grover, Johnson, Reps, D'Antoni &nbsp;·&nbsp; OOPSLA 2024 &nbsp;·&nbsp;
+    <a href="https://dl.acm.org/doi/10.1145/3689724" target="_blank">dl.acm.org/doi/10.1145/3689724</a>
+  </div>
+
+  <div class="entry-body">
+    <p>Synantics takes a formal grammar and an executable interpreter and synthesises formal semantics expressed as Constrained-Horn Clauses, usable directly by verification and synthesis tools. The method applies only to languages that have a formal grammar and consistent interpreter — a prerequisite a schema-based language satisfies by construction.</p>
+  </div>
+
+  <div class="findings">
+    <div class="findings-label">Results</div>
+    Formal semantics synthesised for 14 interpreters. Found and resolved an ambiguity in one language's interpreter; produced a 1.1× speedup in a downstream synthesiser.
+  </div>
+
+</div><!-- /entry -->
+
+
+<!-- ════ #6 ════ -->
+<div class="entry">
+
+  <div class="entry-rank">#6 — Counter-position</div>
+
+  <h2 class="entry-headline">arXiv 2024 — Prediction that Natural Language Will Become the Primary Programming Interface</h2>
+
+  <div class="entry-meta">
+    Beheshti &nbsp;·&nbsp; arXiv:2406.05409 &nbsp;·&nbsp; 2024 &nbsp;·&nbsp;
+    <a href="https://arxiv.org/abs/2406.05409" target="_blank">arxiv.org/abs/2406.05409</a>
+  </div>
+
+  <div class="entry-body">
+    <p>Predicts natural language will replace traditional code syntax as the primary programming interface, citing generative AI as the enabling technology. The accessibility argument is valid. The mechanism proposed — natural language in, correct executable software out — is what the entries above collectively address.</p>
+  </div>
+
+  <div class="findings">
+    <div class="findings-label">Relation to UMAP</div>
+    <a href="usams/index.html" style="color:inherit; border-bottom:1px dotted; text-decoration:none;">Finance, telecom</a>, and other sectors use codes, contracts, and other standardized and heavily minimized language for modification and quicker comprehension. Programming goes farther in the direction of requiring such notation.
+  </div>
+
+</div><!-- /entry -->
+
+
+</div><!-- /page-wrap -->
+
+<script>
+function toggleMode() {
+  var isDefault = document.body.classList.contains('theme-default');
+  document.body.classList.toggle('theme-default', !isDefault);
+  document.body.classList.toggle('theme-base', isDefault);
+  document.getElementById('mode-label-top').textContent = isDefault ? 'DARK' : 'LIGHT';
+}
+</script>
+
+</body>
+</html>

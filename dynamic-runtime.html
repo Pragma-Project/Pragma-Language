@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLogic — Dynamic Runtime</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #1c1c1c;
+  background: #f4f5f7;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+nav {
+  position: fixed;
+  top: 0; left: 0;
+  width: 220px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 28px 0 40px;
+  z-index: 100;
+  background: #1a2332;
+  border-right: 1px solid #243044;
+}
+
+.nav-logo {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0 20px 16px;
+  color: #5b8fc9;
+  border-bottom: 1px solid #243044;
+  margin-bottom: 8px;
+}
+
+.nav-section {
+  margin-top: 16px;
+  padding: 2px 20px 4px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #3d5068;
+  font-family: 'Inter', sans-serif;
+}
+
+nav a {
+  display: block;
+  padding: 5px 20px;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #7a93ad;
+  border-left: 3px solid transparent;
+  transition: all 0.1s;
+}
+nav a:hover {
+  background: #243044;
+  color: #c8daea;
+  border-left-color: #5b8fc9;
+}
+nav a.active {
+  color: #c8daea;
+  border-left-color: #5b8fc9;
+}
+
+.nav-back {
+  display: block;
+  padding: 5px 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #8aabca;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.1s;
+}
+.nav-back:hover { color: #c0d8ed; }
+
+/* ── MAIN ── */
+main {
+  margin-left: 220px;
+  padding: 52px 72px 100px 64px;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* ── HEADER ── */
+.page-header {
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+}
+
+.page-aside {
+  display: inline-block;
+  background: #eef0f3;
+  color: #5a6372;
+  font-size: 0.88em;
+  font-style: italic;
+  padding: 7px 16px;
+  border-radius: 4px;
+  margin-top: 14px;
+  letter-spacing: 0.01em;
+}
+
+.page-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #5b8fc9;
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: #1a2332;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.page-intro {
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  font-size: 0.82rem;
+  color: #3d5068;
+  line-height: 1.85;
+  max-width: 680px;
+  background: #f0f3f7;
+  border-left: 3px solid #5b8fc9;
+  padding: 14px 18px;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── SECTIONS ── */
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a2332;
+  margin: 52px 0 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dde1e8;
+  scroll-margin-top: 32px;
+}
+
+h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2d3a4a;
+  margin: 28px 0 8px;
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  letter-spacing: 0.04em;
+}
+
+p {
+  color: #374151;
+  margin-bottom: 14px;
+  max-width: 720px;
+}
+
+/* ── SETTINGS TABLE ── */
+.setting-block {
+  background: #fff;
+  border: 1px solid #dde1e8;
+  border-radius: 6px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+.setting-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid #eef0f4;
+  background: #f8f9fb;
+}
+
+.setting-key {
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a2332;
+}
+
+.setting-values {
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: #5b8fc9;
+}
+
+.setting-body {
+  padding: 12px 20px 14px;
+}
+
+.setting-desc {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.setting-default {
+  font-size: 12px;
+  color: #8a9ab0;
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+}
+
+.setting-default span {
+  color: #5b8fc9;
+}
+
+/* ── EXAMPLE BLOCK ── */
+.example {
+  background: #1a2332;
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  font-size: 13px;
+  line-height: 2;
+  color: #c8daea;
+}
+
+.ex-key   { color: #89b4fa; }
+.ex-val   { color: #a6e3a1; }
+.ex-num   { color: #fab387; }
+.ex-cm    { color: #c8a030; }
+
+/* ── NOTE ── */
+.note {
+  background: #eef4fb;
+  border-left: 3px solid #5b8fc9;
+  padding: 12px 16px;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+  color: #2d3a4a;
+  margin: 16px 0;
+  line-height: 1.6;
+}
+
+hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
+
+/* ── SUB-OPTION BLOCK ── */
+.suboption-wrap {
+  margin: 12px 0 0 24px;
+  border-left: 3px solid #d0dcea;
+  padding-left: 16px;
+}
+
+.suboption-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8a9ab0;
+  margin-bottom: 8px;
+  margin-top: 4px;
+}
+
+.suboption-wrap .setting-block {
+  margin: 0;
+}
+
+.suboption-wrap p {
+  font-size: 13px;
+  color: #5a6a7a;
+  margin-bottom: 10px;
+  max-width: 680px;
+}
+
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="javascript:history.back()" class="nav-back">← back</a>
+  <div class="nav-logo">UniLogic / DR</div>
+
+  <a href="runtime-intro.html" style="display:block; padding:8px 20px; text-decoration:none; font-family:'Share Tech Mono',monospace; font-size:12px; color:#7ab3e0; border-left:3px solid #7ab3e0; margin-bottom:8px; transition:background 0.12s;">Runtime Tutorial &rarr;</a>
+  <div class="nav-section">Memory</div>
+  <a href="#memory">memory</a>
+  <a href="#allocator">allocator</a>
+  <a href="#overflow">overflow</a>
+  <a href="#stack_size">stack_size</a>
+
+  <div class="nav-section">Safety</div>
+  <a href="#safety">safety</a>
+  <a href="#bounds_check">bounds_check</a>
+
+  <div class="nav-section">Types &amp; Width</div>
+  <a href="#int_width">int_width</a>
+  <a href="#float_model">float_model</a>
+  <a href="#types">types</a>
+
+  <div class="nav-section">Execution</div>
+  <a href="#concurrency">concurrency</a>
+
+  <div class="nav-section">Related</div>
+  <a href="features.html">All Features</a>
+  <a href="runtime-policy.html">Runtime Policy Reference</a>
+  <a href="translation.html">Translation / XPile</a>
+  <a href="deployment-targets.html">Deployment Targets</a>
+</nav>
+
+<main>
+
+<div class="page-header">
+  <div class="page-label">Dynamic Runtime — DR</div>
+  <h1>Dynamic Runtime</h1>
+  <p class="page-intro">
+    UniLogic exposes 9 runtime settings that cover the decisions most languages make once at the language level and never revisit. Each setting is declared at the top of a source file and enforced by the compiler for that file. All settings have defaults — if you don't declare them, the defaults apply silently.
+  </p>
+  <div class="page-aside"><a href="runtime-intro.html" style="color:inherit; text-decoration:none; border-bottom:1px solid; font-size:1.15em; font-weight:500; transition:opacity 0.15s;">Runtime: Basics and Why It Matters</a><br><span style="font-size:0.95em; color:#444;">Not required, defaults apply. Programs run without ever touching DR.</span><br><span style="font-size:0.88em; color:#555;">If you aren't familiar with Runtime Environments, we recommend going to the link above on Runtime Basics and reviewing those materials first.</span></div>
+</div>
+
+<hr style="border:none; border-top:1px solid #e8e4f0; margin:24px 0 20px;">
+
+<p>Most languages pick a memory model and an error strategy at design time. You inherit them when you choose the language, and working around them — if possible at all — requires unsafe blocks, external libraries, or runtime flags. UL treats these as per-file compile-time configuration. The standard library is implemented to work correctly under all combinations.</p>
+
+<div class="example">
+<span class="ex-key">memory</span>:      <span class="ex-val">gc</span>          <span class="ex-cm">// or: manual · refcount</span><br>
+<span class="ex-key">safety</span>:      <span class="ex-val">checked</span>     <span class="ex-cm">// or: unchecked</span><br>
+<span class="ex-key">int_width</span>:   <span class="ex-num">32</span>          <span class="ex-cm">// or: 64 · platform</span><br>
+<span class="ex-key">float_model</span>: <span class="ex-val">ieee</span>        <span class="ex-cm">// or: fast</span><br>
+<span class="ex-key">overflow</span>:    <span class="ex-val">trap</span>        <span class="ex-cm">// or: wrap · saturate</span><br>
+<span class="ex-key">types</span>:       <span class="ex-val">strict</span>      <span class="ex-cm">// or: dynamic</span><br>
+<span class="ex-key">allocator</span>:   <span class="ex-val">system</span>      <span class="ex-cm">// or: custom · embedded</span><br>
+<span class="ex-key">bounds_check</span>:<span class="ex-val">enabled</span>     <span class="ex-cm">// or: disabled</span><br>
+<span class="ex-key">stack_size</span>:  <span class="ex-val">default</span>     <span class="ex-cm">// or: N (in KB, e.g. 512)</span>
+</div>
+
+<h2 id="memory">memory</h2>
+<p>Controls how the program allocates and frees heap memory. This setting affects every allocation in the file. The standard library's collection types, strings, and data structures all work under any model.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">memory</span>
+    <span class="setting-values">gc &nbsp;|&nbsp; manual &nbsp;|&nbsp; refcount</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>gc</strong> — Garbage collected. The runtime tracks live objects and reclaims unreachable memory automatically. Lowest programmer effort; some pause latency.</p>
+    <p class="setting-desc"><strong>manual</strong> — Programmer manages allocation and deallocation. Use <code>malloc</code>, <code>free</code>. Full control, zero overhead, full responsibility.</p>
+    <p class="setting-desc"><strong>refcount</strong> — Reference counting. Objects are freed when their reference count drops to zero. Deterministic timing; cycles require explicit handling.</p>
+    <div class="setting-default">default: <span>gc</span></div>
+  </div>
+</div>
+
+<div class="suboption-wrap">
+  <div class="suboption-label">Sub-option — memory: gc</div>
+  <p>Controls which garbage collection strategy the runtime uses. Performance-sensitive code may care significantly about pause behaviour and collection timing.</p>
+  <div class="setting-block">
+    <div class="setting-header">
+      <span class="setting-key">gc_strategy</span>
+      <span class="setting-values">generational &nbsp;|&nbsp; tracing &nbsp;|&nbsp; incremental</span>
+    </div>
+    <div class="setting-body">
+      <p class="setting-desc"><strong>generational</strong> — Divides objects into generations by age. Short-lived objects are collected frequently in a cheap minor pass; long-lived objects are promoted and collected rarely. Best general-purpose choice — low average pause time, high throughput.</p>
+      <p class="setting-desc"><strong>tracing</strong> — Traces all live objects from roots on each collection cycle. Simpler and fully accurate, but must scan the entire heap. Predictable behaviour; pauses scale with heap size.</p>
+      <p class="setting-desc"><strong>incremental</strong> — Breaks collection work into small slices interleaved with program execution. No single large pause — collection cost is spread across time. Best for latency-sensitive applications such as games or real-time systems.</p>
+      <div class="setting-default">default: <span>generational</span> &nbsp;·&nbsp; only applies when memory is gc</div>
+    </div>
+  </div>
+</div>
+
+<h2 id="allocator">allocator</h2>
+<p>Selects the underlying allocator used for heap operations. Applies when <code>memory</code> is <code>manual</code> or <code>gc</code>.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">allocator</span>
+    <span class="setting-values">system &nbsp;|&nbsp; custom &nbsp;|&nbsp; embedded</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>system</strong> — Uses the platform allocator (<code>malloc</code>/<code>free</code> on POSIX, <code>HeapAlloc</code> on Windows).</p>
+    <p class="setting-desc"><strong>custom</strong> — Binds to a user-provided allocator struct implementing the allocator interface. Useful for memory pools, instrumentation, or replacing jemalloc/mimalloc.</p>
+    <p class="setting-desc"><strong>embedded</strong> — Statically-sized allocator with no dependency on the OS heap. For bare-metal and firmware targets with no dynamic memory subsystem.</p>
+    <div class="setting-default">default: <span>system</span></div>
+  </div>
+</div>
+
+<div class="suboption-wrap">
+  <div class="suboption-label">Contract note — allocator: custom</div>
+  <p>When <code>allocator: custom</code> is set, the provided struct must implement the UL allocator interface: <code>alloc(size, align) → ptr</code>, <code>free(ptr)</code>, and <code>realloc(ptr, new_size) → ptr</code>. This is not a setting — it is a compile-time contract. The compiler will reject a custom allocator that does not satisfy the interface.</p>
+</div>
+
+<h2 id="overflow">overflow</h2>
+<p>Determines what happens when an integer arithmetic operation exceeds the type's range.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">overflow</span>
+    <span class="setting-values">trap &nbsp;|&nbsp; wrap &nbsp;|&nbsp; saturate</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>trap</strong> — Overflow triggers a runtime abort. Equivalent to Rust's debug builds. Safe but halts execution.</p>
+    <p class="setting-desc"><strong>wrap</strong> — Overflow wraps around (two's complement). Identical to C's unsigned arithmetic and Rust's release builds. Fastest; behaviour is defined but may be unintended.</p>
+    <p class="setting-desc"><strong>saturate</strong> — Overflow clamps to the type's maximum or minimum value. Common in signal processing and audio code.</p>
+    <div class="setting-default">default: <span>trap</span></div>
+  </div>
+</div>
+
+<h2 id="stack_size">stack_size</h2>
+<p>Sets the initial thread stack size. Relevant for recursive algorithms, large stack frames, or embedded targets with constrained memory.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">stack_size</span>
+    <span class="setting-values">default &nbsp;|&nbsp; N (KB)</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>default</strong> — Platform default (typically 1–8 MB depending on OS).</p>
+    <p class="setting-desc"><strong>N</strong> — Explicit size in kilobytes. Example: <code>stack_size: 256</code> allocates a 256 KB stack.</p>
+    <div class="setting-default">default: <span>default</span></div>
+  </div>
+</div>
+
+<h2 id="safety">safety</h2>
+<p>Controls whether the compiler inserts runtime safety checks. Does not affect formal verification — that is a separate compilation step controlled by the MemProof pipeline.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">safety</span>
+    <span class="setting-values">checked &nbsp;|&nbsp; unchecked</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>checked</strong> — Null pointer dereference, out-of-bounds access, and type mismatch checks are inserted at compile time. Violations abort with a diagnostic message.</p>
+    <p class="setting-desc"><strong>unchecked</strong> — No runtime checks. Behaviour on violation is undefined. Use in production hot paths where you have verified safety separately.</p>
+    <div class="setting-default">default: <span>checked</span></div>
+  </div>
+</div>
+
+<h2 id="bounds_check">bounds_check</h2>
+<p>Specifically controls array and pointer bounds checking, independently of <code>safety</code>. Useful when you want all other safety checks but need tight loops to run without bounds overhead.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">bounds_check</span>
+    <span class="setting-values">enabled &nbsp;|&nbsp; disabled</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>enabled</strong> — Every array access and pointer offset is range-checked at runtime.</p>
+    <p class="setting-desc"><strong>disabled</strong> — Bounds checks are omitted. The compiler will warn if this is set without <code>safety: unchecked</code>.</p>
+    <div class="setting-default">default: <span>enabled</span></div>
+  </div>
+</div>
+
+<h2 id="int_width">int_width</h2>
+<p>Sets the width of the unqualified <code>int</code> type. Does not affect explicitly-sized types (<code>int32</code>, <code>int64</code>, etc.).</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">int_width</span>
+    <span class="setting-values">32 &nbsp;|&nbsp; 64 &nbsp;|&nbsp; platform</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>32</strong> — <code>int</code> is always 32-bit signed, regardless of target architecture.</p>
+    <p class="setting-desc"><strong>64</strong> — <code>int</code> is always 64-bit signed.</p>
+    <p class="setting-desc"><strong>platform</strong> — <code>int</code> matches the platform's native integer width. Equivalent to C's <code>int</code>; not recommended for portable code.</p>
+    <div class="setting-default">default: <span>32</span></div>
+  </div>
+</div>
+
+<h2 id="float_model">float_model</h2>
+<p>Controls floating-point semantics.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">float_model</span>
+    <span class="setting-values">ieee &nbsp;|&nbsp; fast</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>ieee</strong> — Strict IEEE 754 compliance. Results are fully reproducible across platforms. Required for numerical software, financial code, and anything where floating-point output must be deterministic.</p>
+    <p class="setting-desc"><strong>fast</strong> — Allows the compiler to reorder, fuse, and reassociate floating-point operations for performance. Equivalent to <code>-ffast-math</code>. Results may differ by small amounts across architectures.</p>
+    <div class="setting-default">default: <span>ieee</span></div>
+  </div>
+</div>
+
+<h2 id="types">types</h2>
+<p>Controls whether the compiler enforces strict static typing or allows dynamic type behaviour. This setting is <strong>not target-independent</strong> — the valid values depend on the compile target. Declaring <code>types: dynamic</code> for a target that cannot support it is a compile error, not silent incorrect output.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">types</span>
+    <span class="setting-values">strict &nbsp;|&nbsp; dynamic</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>strict</strong> — All type coercions are explicit. Mixing <code>int</code> and <code>float</code> in an expression is a compile error without a cast. Valid for all targets.</p>
+    <p class="setting-desc"><strong>dynamic</strong> — Common numeric promotions are inserted automatically (int → float, narrower → wider). Closer to how Python or JavaScript handle arithmetic. <em>Not valid when targeting C — compile error.</em></p>
+    <div class="setting-default">default: <span>strict</span></div>
+  </div>
+</div>
+
+<div class="suboption-wrap">
+  <div class="suboption-label">Target constraints</div>
+  <p>The C target has a static type system that does not support dynamic typing. The compiler cannot emit valid C from dynamically typed source. Declaring <code>types: dynamic</code> when targeting C is a compile error. The Python and JavaScript targets support both modes.</p>
+</div>
+
+<h2 id="concurrency">concurrency</h2>
+<p>Controls which concurrency model the compiler targets when emitting code. Different targets expose concurrency through different mechanisms — declaring this setting tells the compiler which model to emit.</p>
+<p>This setting does not gate whether <code>@async</code> and <code>@await</code> are available in source — those decorators work regardless. It controls what the emitted runtime code looks like.</p>
+
+<div class="setting-block">
+  <div class="setting-header">
+    <span class="setting-key">concurrency</span>
+    <span class="setting-values">parallel &nbsp;|&nbsp; threaded &nbsp;|&nbsp; async</span>
+  </div>
+  <div class="setting-body">
+    <p class="setting-desc"><strong>parallel</strong> — CPU-bound data parallelism with shared memory. Maps to OpenMP or platform thread pools. Not available on the JS/HTML target.</p>
+    <p class="setting-desc"><strong>threaded</strong> — I/O-bound thread concurrency. For Python targets: <code>threading</code> module. For C targets: pthreads. Not available on the JS/HTML target.</p>
+    <p class="setting-desc"><strong>async</strong> — Cooperative single-threaded event loop. For Python targets: <code>asyncio</code>. For JavaScript targets: native async/await. Not available on the C target.</p>
+    <div class="setting-default">default: <span>threaded</span></div>
+  </div>
+</div>
+
+<div class="suboption-wrap">
+  <div class="suboption-label">Target constraints</div>
+  <p><code>parallel</code> and <code>threaded</code> are not available on the JS/HTML target — JavaScript is single-threaded; declaring either for that target is a compile error. <code>async</code> is not available on the C target — C has no built-in event loop; declaring it for that target is a compile error.</p>
+</div>
+
+<div class="note">
+  Settings are declared in a comment block at the top of each source file. If a setting is omitted, the default listed above is used — no configuration required for standard code. Settings do not propagate across files; each file is compiled according to its own declarations.
+</div>
+
+</main>
+</body>
+</html>
