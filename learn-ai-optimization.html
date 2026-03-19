@@ -109,6 +109,7 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
           <button onclick="llvmLoad(0)" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Simple add</button>
           <button onclick="llvmLoad(1)" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Loop</button>
           <button onclick="llvmLoad(2)" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Conditional</button>
+          <button onclick="llvmLoad(3)" style="font-size:10px;padding:4px 10px;border:1px solid #313244;border-radius:3px;background:transparent;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">String concat</button>
           <span id="llvm-pass" style="font-size:10px;color:#585b70;margin-left:auto;"></span>
         </div>
       </div>
@@ -244,7 +245,7 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
       <div id="quant-widget" style="margin:8px 0;font-family:'Share Tech Mono',monospace;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
           <span style="font-size:10px;color:#888;">FP32</span>
-          <input type="range" id="quant-slider" min="0" max="3" value="0" style="flex:1;accent-color:#7ab3e0;" oninput="quantUpdate()">
+          <input type="range" id="quant-slider" min="0" max="4" value="0" style="flex:1;accent-color:#7ab3e0;" oninput="quantUpdate()">
           <span style="font-size:10px;color:#888;">INT4</span>
         </div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;">
@@ -429,7 +430,7 @@ var llvmExamples = [
   { name:"Simple add",
     src:'function add(int a, int b) returns int\n  return a + b\nend function',
     ir:'define i32 @add(i32 %a.arg, i32 %b.arg) {\nentry:\n  %a.addr = alloca i32\n  store i32 %a.arg, i32* %a.addr\n  %b.addr = alloca i32\n  store i32 %b.arg, i32* %b.addr\n  %t0 = load i32, i32* %a.addr\n  %t1 = load i32, i32* %b.addr\n  %t2 = add i32 %t0, %t1\n  ret i32 %t2\n}',
-    passes:['mem2reg','instcombine','inline'],
+    passes:['mem2reg','instcombine','dead code elimination','inline'],
     asm:'add_func:\n    lea eax, [rdi + rsi]\n    ret'},
   { name:"Loop",
     src:'function sum(int n) returns int\n  int total = 0\n  int i = 0\n  while i < n\n    total += i\n    i++\n  end while\n  return total\nend function',
@@ -440,7 +441,12 @@ var llvmExamples = [
     src:'function max(int a, int b) returns int\n  if a > b\n    return a\n  end if\n  return b\nend function',
     ir:'define i32 @max(i32 %a.arg, i32 %b.arg) {\nentry:\n  %cmp = icmp sgt i32 %a.arg, %b.arg\n  br i1 %cmp, label %if.then, label %if.end\nif.then:\n  ret i32 %a.arg\nif.end:\n  ret i32 %b.arg\n}',
     passes:['simplifycfg','instcombine'],
-    asm:'max_func:\n    cmp edi, esi\n    cmovge eax, edi\n    cmovl eax, esi\n    ret'}
+    asm:'max_func:\n    cmp edi, esi\n    cmovge eax, edi\n    cmovl eax, esi\n    ret'},
+  { name:"String concat",
+    src:'function greet(string name) returns string\n  string msg = "Hello, " + name\n  return msg\nend function',
+    ir:'define i8* @greet(i8* %name.arg) {\nentry:\n  %t0 = getelementptr [8 x i8], [8 x i8]* @.str.0, i32 0, i32 0\n  %t1 = call i8* @ul_str_concat(i8* %t0, i8* %name.arg)\n  ret i8* %t1\n}',
+    passes:['mem2reg','instcombine','dead code elimination'],
+    asm:'greet_func:\n    lea rdi, [rip + .Lstr.hello]\n    mov rsi, rdi_arg\n    call ul_str_concat\n    ret'}
 ];
 var llvmCurrent = 0;
 function llvmLoad(idx) {
@@ -461,40 +467,68 @@ function llvmLoad(idx) {
 }
 function llvmCompile() {
   var e = llvmExamples[llvmCurrent];
+  var srcEl = document.getElementById('llvm-src');
   var irEl = document.getElementById('llvm-ir');
   var optEl = document.getElementById('llvm-opt');
   var passEl = document.getElementById('llvm-pass');
   if(!irEl) return;
-  // Animate IR lines appearing
+  irEl.textContent = '';
+  irEl.style.color = '#585b70';
+  optEl.textContent = '';
+  optEl.style.color = '#585b70';
+  passEl.textContent = '';
+
+  // Phase 1: highlight source lines one at a time
+  var srcLines = e.src.split('\n');
+  var si = 0;
+  function highlightSrc() {
+    if(si < srcLines.length) {
+      var html = srcLines.map(function(l,i) {
+        if(i === si) return '<span style="background:#0a1f5e;color:#7ab3e0;display:block;padding:0 4px;border-radius:2px;">' + l.replace(/</g,'&lt;') + '</span>';
+        if(i < si) return '<span style="color:#a6adc8;">' + l.replace(/</g,'&lt;') + '</span>';
+        return '<span style="color:#585b70;">' + l.replace(/</g,'&lt;') + '</span>';
+      }).join('\n');
+      srcEl.innerHTML = html;
+      si++;
+      setTimeout(highlightSrc, 400);
+    } else {
+      // All source highlighted, now show IR
+      srcEl.innerHTML = srcLines.map(function(l){return '<span style="color:#a6adc8;">'+l.replace(/</g,'&lt;')+'</span>';}).join('\n');
+      setTimeout(showIR, 200);
+    }
+  }
+
+  // Phase 2: animate IR lines
   var irLines = e.ir.split('\n');
   var irIdx = 0;
-  irEl.textContent = '';
-  irEl.style.color = '#a6e3a1';
   function showIR() {
+    irEl.style.color = '#a6e3a1';
     if(irIdx < irLines.length) {
       irEl.textContent += (irIdx > 0 ? '\n' : '') + irLines[irIdx];
       irIdx++;
       setTimeout(showIR, 80);
     } else {
-      // Show passes then assembly
-      var pi = 0;
-      function showPass() {
-        if(pi < e.passes.length) {
-          passEl.textContent = '\u2192 ' + e.passes[pi] + ' pass';
-          passEl.style.color = '#fab387';
-          pi++;
-          setTimeout(showPass, 500);
-        } else {
-          passEl.textContent = '\u2713 optimized';
-          passEl.style.color = '#a6e3a1';
-          optEl.style.color = '#fab387';
-          optEl.textContent = e.asm;
-        }
-      }
-      setTimeout(showPass, 300);
+      setTimeout(showPasses, 300);
     }
   }
-  showIR();
+
+  // Phase 3: optimization passes then assembly
+  var pi = 0;
+  function showPasses() {
+    if(pi < e.passes.length) {
+      passEl.textContent = '\u2192 ' + e.passes[pi];
+      passEl.style.color = '#fab387';
+      pi++;
+      setTimeout(showPasses, 500);
+    } else {
+      passEl.textContent = '\u2713 optimized';
+      passEl.style.color = '#a6e3a1';
+      optEl.style.color = '#fab387';
+      optEl.textContent = e.asm;
+    }
+  }
+
+  highlightSrc();
 }
 if(document.getElementById('llvm-src')) llvmLoad(0);
 
@@ -581,7 +615,7 @@ window.cacheRun=function(mode){if(cacheTimer){clearInterval(cacheTimer);cacheTim
 if(document.getElementById('cache-blocks'))cacheBuild();
 
 // ══════ Quantization slider (Section 11) ══════
-var qLevels=[{name:'FP32',bits:32,val:'0.73291016',err:'0.00000000',perReg:8,color:'#B5D4F4'},{name:'FP16',bits:16,val:'0.7329',err:'0.0000',perReg:16,color:'#C0DD97'},{name:'INT8',bits:8,val:'0.73',err:'0.0029',perReg:32,color:'#FAEEDA'},{name:'INT4',bits:4,val:'0.75',err:'0.0171',perReg:64,color:'#f38ba8'}];
+var qLevels=[{name:'FP32',bits:32,val:'0.73291016',err:'0.00000000',perReg:8,color:'#B5D4F4'},{name:'FP16',bits:16,val:'0.7329',err:'0.0000',perReg:16,color:'#C0DD97'},{name:'BF16',bits:16,val:'0.7344',err:'0.0015',perReg:16,color:'#89dceb'},{name:'INT8',bits:8,val:'0.73',err:'0.0029',perReg:32,color:'#FAEEDA'},{name:'INT4',bits:4,val:'0.75',err:'0.0171',perReg:64,color:'#f38ba8'}];
 window.quantUpdate=function(){var idx=parseInt(document.getElementById('quant-slider').value),q=qLevels[idx];document.getElementById('q-name').textContent=q.name;document.getElementById('q-name').style.color=q.color;document.getElementById('q-value').textContent=q.val;document.getElementById('q-error').textContent=q.err;document.getElementById('q-error').style.color=parseFloat(q.err)>0?'#f38ba8':'#a6e3a1';var bits=document.getElementById('q-bits');bits.innerHTML='';for(var i=0;i<Math.min(q.bits,32);i++)bits.innerHTML+='<div style="width:5px;height:16px;background:'+q.color+';border-radius:1px;"></div>';var reg=document.getElementById('q-reg');reg.innerHTML='';for(var i=0;i<Math.min(q.perReg,32);i++)reg.innerHTML+='<div style="width:5px;height:16px;background:'+q.color+';border-radius:1px;opacity:'+(i<16?1:0.6)+';"></div>';document.getElementById('q-count').textContent=q.perReg+' values';};
 if(document.getElementById('quant-slider'))quantUpdate();
 
