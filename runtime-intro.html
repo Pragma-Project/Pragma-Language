@@ -981,16 +981,28 @@ sections.forEach((sec, i) => {
   navLinks.appendChild(a);
 });
 
-function goTo(idx) {
+function goTo(idx, pushState) {
   if (idx < 0 || idx >= total) return;
   sections[current].classList.remove("active");
   current = idx;
   sections[current].classList.add("active");
   updateUI();
+  if (pushState !== false) {
+    history.pushState({ section: idx }, "", "#section-" + (idx + 1));
+  }
 }
 
 function go(delta) { goTo(current + delta); }
 window.go = go;
+
+window.addEventListener("popstate", function(e) {
+  if (e.state && typeof e.state.section === "number") {
+    goTo(e.state.section, false);
+  } else {
+    var hash = window.location.hash.match(/section-(\d+)/);
+    if (hash) goTo(parseInt(hash[1]) - 1, false);
+  }
+});
 
 function updateUI() {
   counter.textContent = (current + 1) + " / " + total;
@@ -1024,8 +1036,11 @@ window.closePrintView = function() {
   document.getElementById("print-overlay").style.display = "none";
 };
 
-// Init
-goTo(0);
+// Init — load from hash or start at 0
+var initHash = window.location.hash.match(/section-(\d+)/);
+var initIdx = initHash ? parseInt(initHash[1]) - 1 : 0;
+goTo(Math.max(0, Math.min(initIdx, total - 1)), false);
+history.replaceState({ section: current }, "", "#section-" + (current + 1));
 
 })();
 </script>
