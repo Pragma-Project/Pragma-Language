@@ -291,6 +291,7 @@ hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
   <a href="javascript:history.back()" class="nav-back">← back</a>
   <div class="nav-logo">UniLogic / DR</div>
 
+  <a href="runtime-intro.html" style="display:block; padding:8px 20px; text-decoration:none; font-family:'Share Tech Mono',monospace; font-size:12px; color:#7ab3e0; border-left:3px solid #7ab3e0; margin-bottom:8px; transition:background 0.12s;">Runtime Tutorial &rarr;</a>
   <div class="nav-section">Memory</div>
   <a href="#memory">memory</a>
   <a href="#allocator">allocator</a>
@@ -323,8 +324,10 @@ hr { border: none; border-top: 1px solid #dde1e8; margin: 48px 0; }
   <p class="page-intro">
     UniLogic exposes 9 runtime settings that cover the decisions most languages make once at the language level and never revisit. Each setting is declared at the top of a source file and enforced by the compiler for that file. All settings have defaults — if you don't declare them, the defaults apply silently.
   </p>
-  <div class="page-aside"><a href="runtime-intro.html" style="color:inherit; text-decoration:none; border-bottom:1px solid; font-size:1.15em; font-weight:500; transition:opacity 0.15s;">Runtime: Basics and Why It Matters</a><br><span style="font-size:0.95em; color:#444;">UL doesn't require runtime configuration. This is a feature but not a requirement. Defaults apply if you don't configure or define runtime specifics.</span></div>
+  <div class="page-aside"><a href="runtime-intro.html" style="color:inherit; text-decoration:none; border-bottom:1px solid; font-size:1.15em; font-weight:500; transition:opacity 0.15s;">Runtime: Basics and Why It Matters</a><br><span style="font-size:0.95em; color:#444;">Not required, defaults apply. Programs run without ever touching DR.</span><br><span style="font-size:0.88em; color:#555;">If you aren't familiar with Runtime Environments, we recommend going to the link above on Runtime Basics and reviewing those materials first.</span></div>
 </div>
+
+<hr style="border:none; border-top:1px solid #e8e4f0; margin:24px 0 20px;">
 
 <p>Most languages pick a memory model and an error strategy at design time. You inherit them when you choose the language, and working around them — if possible at all — requires unsafe blocks, external libraries, or runtime flags. UL treats these as per-file compile-time configuration. The standard library is implemented to work correctly under all combinations.</p>
 
