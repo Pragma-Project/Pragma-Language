@@ -56,7 +56,7 @@ td:first-child { color: #1a3a7a; font-family: 'Share Tech Mono', monospace; font
 <main>
 
 <h1>UniLogic Language Specification</h1>
-<p class="subtitle">Version 1.0-draft &mdash; 2026-03-18</p>
+<p class="subtitle">Version 1.1 &mdash; 2026-03-18</p>
 
 <p>This document is the formal specification of the UniLogic (UL) programming language. It defines the lexical structure, type system, declarations, expressions, statements, runtime directives, annotations, built-in functions, standard library, and formal grammar. A conforming implementation must support all constructs described here.</p>
 
@@ -65,8 +65,14 @@ td:first-child { color: #1a3a7a; font-family: 'Share Tech Mono', monospace; font
 <h2 id="lexical">1. Lexical Structure</h2>
 <p>UL source files are UTF-8 encoded. All keywords, operators, and identifiers use ASCII. String literals may contain any valid UTF-8.</p>
 <p>Line comments: <code>//</code> to end of line. No block comments. Whitespace is insignificant except inside strings.</p>
-<h3>1.1 Keywords (56)</h3>
-<p><code>function</code> <code>end</code> <code>returns</code> <code>return</code> <code>if</code> <code>else</code> <code>while</code> <code>do</code> <code>for</code> <code>each</code> <code>in</code> <code>match</code> <code>iterate</code> <code>default</code> <code>escape</code> <code>continue</code> <code>type</code> <code>inherits</code> <code>new</code> <code>fixed</code> <code>constant</code> <code>import</code> <code>from</code> <code>export</code> <code>print</code> <code>prompt</code> <code>parallel</code> <code>killswitch</code> <code>teleport</code> <code>portal</code> <code>nocache</code> <code>yield</code> <code>yields</code> <code>inline</code> <code>pack</code> <code>true</code> <code>false</code> <code>empty</code> <code>and</code> <code>or</code> <code>not</code> <code>equals</code> <code>both1</code> <code>both0</code> <code>either1</code> <code>delta</code> <code>bitflip</code> <code>negate</code> <code>left</code> <code>right</code> <code>address</code> <code>deref</code> <code>memmove</code> <code>memcopy</code> <code>memset</code> <code>memtake</code> <code>memgive</code> <code>size</code> <code>change</code> <code>absval</code></p>
+<h3>1.1 Keywords (Implemented)</h3>
+<p><strong>Control:</strong> <code>function</code> <code>end</code> <code>returns</code> <code>return</code> <code>if</code> <code>else</code> <code>while</code> <code>do</code> <code>for</code> <code>each</code> <code>in</code> <code>match</code> <code>default</code> <code>escape</code> <code>continue</code></p>
+<p><strong>Declarations:</strong> <code>type</code> <code>object</code> <code>inherits</code> <code>new</code> <code>fixed</code> <code>const</code> <code>import</code> <code>from</code> <code>export</code></p>
+<p><strong>I/O:</strong> <code>print</code> <code>prompt</code> &nbsp; <strong>Concurrency:</strong> <code>parallel</code> <code>spawn</code> <code>wait</code> <code>lock</code> <code>unlock</code></p>
+<p><strong>Hints:</strong> <code>nocache</code> <code>yield</code> <code>yields</code> <code>inline</code> <code>pack</code> &nbsp; <strong>Literals:</strong> <code>true</code> <code>false</code> <code>empty</code></p>
+<p><strong>Logical:</strong> <code>and</code> <code>or</code> <code>not</code> &nbsp; <strong>Memory:</strong> <code>address</code> <code>deref</code> <code>left</code> <code>right</code> <code>memmove</code> <code>memcopy</code> <code>memset</code> <code>memtake</code> <code>memgive</code></p>
+<p><strong>Built-ins:</strong> <code>size</code> <code>cast</code> <code>absval</code> <code>exit</code> <code>typeof</code></p>
+<p style="font-size:0.85rem;color:#888;"><strong>Reserved (not implemented):</strong> iterate, teleport, portal, killswitch, equals, both1, both0, either1, delta, bitflip, negate, change, constant</p>
 <p>Type keywords: <code>int</code> <code>integer</code> <code>float</code> <code>double</code> <code>string</code> <code>bool</code> <code>none</code> <code>complex</code> <code>int8</code> <code>int16</code> <code>int32</code> <code>int64</code> <code>uint8</code> <code>uint16</code> <code>uint32</code> <code>uint64</code> <code>array</code> <code>list</code> <code>map</code> <code>arena</code> <code>file</code> <code>ok</code> <code>error</code> <code>some</code></p>
 
 <h3>1.2 Operator Precedence</h3>
@@ -167,34 +173,46 @@ continue</pre>
 </table>
 
 <h2 id="stdlib">9. Standard Library</h2>
-<p><strong>Math:</strong> sqrt, pow, exp, log, log2, log10, floor, ceil, round, min, max, clamp, lerp</p>
-<p><strong>String:</strong> length, substring, index_of, replace, split, join, trim, upper, lower, starts_with, ends_with, contains</p>
-<p><strong>Array:</strong> length, push, pop, insert, remove, slice, reverse, sort, find, map, filter, reduce</p>
-<p><strong>Map:</strong> keys, values, has, get, set, delete, size</p>
-<p><strong>File:</strong> open, read, write, close, exists, readlines</p>
+<p>Function names use module prefix. Method syntax <code>obj.method()</code> rewrites to <code>module_method(obj)</code>.</p>
+<p><strong>String:</strong> str_len, str_upper, str_lower, str_contains, str_starts_with, str_ends_with, str_trim, str_split, str_replace, str_concat, str_substring, str_index_of</p>
+<p><strong>Array:</strong> array_len, array_sort, array_reverse, array_contains, array_sum, array_min, array_max, array_get, array_set, array_push, array_pop, array_slice</p>
+<p><strong>Math:</strong> math_sqrt, math_pow, math_abs, math_floor, math_ceil, math_round, math_min, math_max, math_log, math_log2, math_exp, math_pi, math_e</p>
+<p><strong>Map:</strong> map_keys, map_values, map_has, map_get, map_set, map_delete, map_size</p>
+<p><strong>File:</strong> file_open, file_read, file_write, file_close, file_exists, file_readlines</p>
 <p><strong>JSON:</strong> json_parse, json_stringify</p>
 
 <h2 id="grammar">10. Formal Grammar (EBNF)</h2>
-<pre>program        = { declaration } ;
-declaration    = dr_directive | function_decl | type_decl | foreign_import ;
+<pre>program        = { dr_directive | annotation | declaration } ;
+declaration    = function_decl | type_decl | object_decl | foreign_import | const_decl ;
 dr_directive   = "@dr" IDENT "=" IDENT ;
-function_decl  = "function" IDENT "(" [ param_list ] ")" [ "returns" type ] body "end" "function" ;
+annotation     = "@" IDENT [ "(" annotation_args ")" ] ;
+const_decl     = "const" type IDENT "=" expr ;
+function_decl  = "function" IDENT "(" [ param_list ] ")" [ "returns" return_type ] body "end" "function" ;
+return_type    = type | "(" type { "," type } ")" ;
 type_decl      = "type" IDENT [ "inherits" IDENT ] { field } "end" "type" ;
+object_decl    = "object" IDENT [ "inherits" IDENT ] { field | method_decl } "end" "object" ;
+method_decl    = "function" IDENT "(" [ param_list ] ")" [ "returns" return_type ] body "end" "function" ;
 foreign_import = "import" STRING "function" IDENT "(" [ param_list ] ")" [ "returns" type ] ;
-param_list     = param { "," param } ;
-param          = type IDENT ;
+param_list     = param { "," param } [ "," "..." ] ;
+param          = type IDENT [ "=" literal ] ;
 type           = [ "&lt;" ] type_name [ "&gt;" ] | "array" type_name ;
 body           = { statement } ;
-statement      = var_decl | assignment | if_stmt | while_stmt | for_stmt
-               | match_stmt | return_stmt | print_stmt | "escape" | "continue" | expr_stmt ;
-var_decl       = [ "fixed" ] type IDENT [ "=" expr ] ;
+statement      = var_decl | const_decl | assignment | if_stmt | while_stmt | for_stmt
+               | match_stmt | return_stmt | print_stmt | spawn_stmt | wait_stmt
+               | lock_stmt | asm_block | "escape" | "continue" | expr_stmt ;
+var_decl       = [ "fixed" | "const" ] type IDENT [ "=" expr ] ;
 if_stmt        = "if" expr body [ "else" body ] "end" "if" ;
 while_stmt     = "while" expr body "end" "while" ;
 for_stmt       = "for" "each" IDENT "in" expr body "end" "for" ;
 match_stmt     = "match" expr { match_case } [ "default" body ] "end" "match" ;
-return_stmt    = "return" [ expr ] | "return" "ok" expr | "return" "error" expr ;
+return_stmt    = "return" [ expr | "ok" expr | "error" expr | "(" expr { "," expr } ")" ] ;
 print_stmt     = "print" expr ;
-expr           = or_expr ;
+spawn_stmt     = "spawn" expr ;
+wait_stmt      = "wait" ;
+lock_stmt      = "lock" IDENT body "unlock" IDENT ;
+asm_block      = "@asm" "(" IDENT ")" { ASM_LINE } "end" "asm" ;
+expr           = pipe_expr ;
+pipe_expr      = or_expr { "|&gt;" or_expr } ;
 or_expr        = and_expr { "or" and_expr } ;
 and_expr       = not_expr { "and" not_expr } ;
 not_expr       = "not" not_expr | comparison ;
@@ -202,8 +220,16 @@ comparison     = addition { ("==" | "!=" | "&lt;" | "&gt;" | "&lt;=" | "&gt;=") 
 addition       = multiplication { ("+" | "-") multiplication } ;
 multiplication = unary { ("*" | "/" | "%") unary } ;
 unary          = ("-" | "address" | "deref") unary | postfix ;
-postfix        = primary { "(" [arg_list] ")" | "[" expr "]" | "." IDENT | "-&gt;" type | "++" | "--" } ;
-primary        = INT | HEX | FLOAT | STRING | "true" | "false" | "empty" | IDENT | "[" [arg_list] "]" | "(" expr ")" ;</pre>
+postfix        = primary { call | index | field_access | method_call | "++" | "--" | "?" } ;
+call           = "(" [ arg_list ] ")" ;
+index          = "[" expr "]" ;
+field_access   = "." IDENT ;
+method_call    = "." IDENT "(" [ arg_list ] ")" ;
+primary        = INT | HEX | FLOAT | string_literal | "true" | "false" | "empty"
+               | IDENT | "cast" "(" expr "," type ")" | "typeof" "(" expr ")"
+               | "[" [ array_body ] "]" | "(" expr { "," expr } ")" ;
+array_body     = expr { "," expr } | expr "for" IDENT "in" expr ;
+string_literal = '"' { char | escape | "{" expr "}" } '"' ;</pre>
 
 <h2 id="targets">11. Compilation Targets</h2>
 <table>

@@ -1,6 +1,6 @@
 # UniLogic Language Specification
 
-**Version:** 1.0-draft
+**Version:** 1.1
 **Date:** 2026-03-18
 
 ---
@@ -9,99 +9,62 @@
 
 ### 1.1 Character Set
 
-UL source files are UTF-8 encoded. All keywords, operators, and identifiers use ASCII characters. String literals may contain any valid UTF-8 sequence.
+UL source files are UTF-8 encoded. Keywords, operators, and identifiers use ASCII. String literals may contain any valid UTF-8 sequence.
 
 ### 1.2 Whitespace
 
-Spaces, tabs, carriage returns, and newlines are insignificant except inside string literals. There are no indentation requirements.
+Spaces, tabs, carriage returns, and newlines are insignificant except inside string literals. No indentation requirements.
 
 ### 1.3 Comments
 
-Line comments begin with `//` and extend to end of line. There are no block comments.
-
-```
-// this is a comment
-int x = 5  // inline comment
-```
+Line comments: `//` to end of line. No block comments.
 
 ### 1.4 Keywords
 
-56 reserved words. An identifier matching a keyword is always a keyword token.
+**Implemented:**
 
-**Control flow:** `function`, `end`, `returns`, `return`, `if`, `else`, `while`, `do`, `for`, `each`, `in`, `match`, `iterate`, `default`, `escape`, `continue`
+- Control: `function`, `end`, `returns`, `return`, `if`, `else`, `while`, `do`, `for`, `each`, `in`, `match`, `default`, `escape`, `continue`
+- Declarations: `type`, `object`, `inherits`, `new`, `fixed`, `const`, `import`, `from`, `export`
+- I/O: `print`, `prompt`
+- Concurrency: `parallel`, `spawn`, `wait`, `lock`, `unlock`
+- Hints: `nocache`, `yield`, `yields`, `inline`, `pack`
+- Literals: `true`, `false`, `empty`
+- Logical: `and`, `or`, `not`
+- Memory: `address`, `deref`, `memmove`, `memcopy`, `memset`, `memtake`, `memgive`, `left`, `right`
+- Built-ins: `size`, `cast`, `absval`, `exit`, `typeof`
+- Types: `int`, `integer`, `float`, `double`, `string`, `bool`, `none`, `complex`, `int8`, `int16`, `int32`, `int64`, `uint8`, `uint16`, `uint32`, `uint64`, `array`, `list`, `map`, `arena`, `file`
+- Result: `ok`, `error`, `some`
 
-**Declarations:** `type`, `inherits`, `new`, `fixed`, `constant`, `import`, `from`, `export`
-
-**I/O:** `print`, `prompt`
-
-**Concurrency:** `parallel`, `killswitch`, `teleport`, `portal`
-
-**Hints:** `nocache`, `yield`, `yields`, `inline`, `pack`
-
-**Literals:** `true`, `false`, `empty`
-
-**Logical:** `and`, `or`, `not`, `equals`
-
-**Bitwise:** `both1`, `both0`, `either1`, `delta`, `bitflip`, `negate`, `left`, `right`
-
-**Memory:** `address`, `deref`, `memmove`, `memcopy`, `memset`, `memtake`, `memgive`
-
-**Built-ins:** `size`, `change`, `absval`
-
-**Types:** `int`, `integer`, `float`, `double`, `string`, `bool`, `none`, `complex`, `int8`, `int16`, `int32`, `int64`, `uint8`, `uint16`, `uint32`, `uint64`, `array`, `list`, `map`, `arena`, `file`
-
-**Result:** `ok`, `error`, `some`
+**Reserved (in lexer, not implemented):** `iterate`, `teleport`, `portal`, `killswitch`, `equals`, `both1`, `both0`, `either1`, `delta`, `bitflip`, `negate`, `change`, `constant`
 
 ### 1.5 Operators
 
-Listed by precedence (highest first):
+Precedence (highest first):
 
-| Precedence | Operators | Associativity |
-|-----------|-----------|---------------|
-| 1 (highest) | `()` `[]` `.` `->` `++` `--` | left-to-right |
-| 2 | `-` (unary) `not` `address` `deref` | right-to-left |
-| 3 | `*` `/` `%` | left-to-right |
-| 4 | `+` `-` | left-to-right |
-| 5 | `<` `>` `<=` `>=` | left-to-right |
-| 6 | `==` `!=` | left-to-right |
-| 7 | `and` | left-to-right |
-| 8 | `or` | left-to-right |
-| 9 (lowest) | `=` `+=` `-=` `*=` `/=` `%=` `left=` `right=` | right-to-left |
+| Prec | Operators | Assoc |
+|------|-----------|-------|
+| 1 | `()` `[]` `.` `++` `--` | left |
+| 2 | `-` `not` `address` `deref` (unary) | right |
+| 3 | `*` `/` `%` | left |
+| 4 | `+` `-` | left |
+| 5 | `\|>` (pipe) | left |
+| 6 | `<` `>` `<=` `>=` | left |
+| 7 | `==` `!=` | left |
+| 8 | `and` | left |
+| 9 | `or` | left |
+| 10 | `=` `+=` `-=` `*=` `/=` `%=` `left=` `right=` | right |
 
-Additional operators: `?` (result propagation), `|>` (pipe), `|` (result type separator).
+Additional: `?` (result propagation), `|` (result type separator), `...` (variadic).
 
 ### 1.6 Literals
 
-**Integer:** Decimal digits. `0x` or `0X` prefix for hexadecimal.
-```
-42
-0xFF
-0xDEAD0000
-```
-
-**Float:** Decimal digits with `.` and optional exponent.
-```
-3.14
-1.0e-5
-2.5E+3
-```
-
-**String:** Double-quoted. Escape sequences: `\n` `\t` `\\` `\"`.
-```
-"hello world"
-"line one\nline two"
-"tab\there"
-```
-
-**Boolean:** `true` or `false`.
-
-**Empty:** `empty` (null/none value).
-
-**Array:** Square-bracket delimited, comma-separated.
-```
-[1, 2, 3]
-["a", "b", "c"]
-```
+**Integer:** `42`, `0xFF`
+**Float:** `3.14`, `1.0e-5`
+**String:** `"hello"`, `"line\n"`. Interpolation: `"hello {name}"` — `{expr}` inside strings is evaluated and concatenated.
+**Boolean:** `true`, `false`
+**Empty:** `empty`
+**Array:** `[1, 2, 3]`
+**Array comprehension:** `[x * x for x in range(1, 10)]`
 
 ---
 
@@ -109,41 +72,27 @@ Additional operators: `?` (result propagation), `|>` (pipe), `|` (result type se
 
 ### 2.1 Primitive Types
 
-| Type | Description | Size |
-|------|------------|------|
-| `int` | Signed 32-bit integer | 4 bytes |
-| `int8` | Signed 8-bit integer | 1 byte |
-| `int16` | Signed 16-bit integer | 2 bytes |
-| `int32` | Signed 32-bit integer | 4 bytes |
-| `int64` | Signed 64-bit integer | 8 bytes |
-| `uint8` | Unsigned 8-bit integer | 1 byte |
-| `uint16` | Unsigned 16-bit integer | 2 bytes |
-| `uint32` | Unsigned 32-bit integer | 4 bytes |
-| `uint64` | Unsigned 64-bit integer | 8 bytes |
-| `float` | IEEE 754 32-bit | 4 bytes |
-| `double` | IEEE 754 64-bit | 8 bytes |
-| `string` | UTF-8 string (heap-allocated) | pointer |
-| `bool` | Boolean (`true`/`false`) | 1 byte |
-| `none` | Void/absent value | 0 bytes |
-| `complex` | Complex number (reserved) | 16 bytes |
+| Type | Size | Description |
+|------|------|-------------|
+| `int` | 4B | Signed 32-bit integer |
+| `int8`..`int64` | 1-8B | Sized signed integers |
+| `uint8`..`uint64` | 1-8B | Sized unsigned integers |
+| `float` | 4B | IEEE 754 32-bit |
+| `double` | 8B | IEEE 754 64-bit |
+| `string` | ptr | Heap-allocated UTF-8 |
+| `bool` | 1B | `true` / `false` |
+| `none` | 0B | Void / absent |
+| `complex` | 16B | Complex number |
 
 ### 2.2 Compound Types
 
-**Array:** `array T` declares a fixed-size array of type T. Size inferred from initializer or declared explicitly.
-```
-array int nums = [1, 2, 3]
-```
+- `array T` — fixed-size array of type T
+- `<T>` — pointer to T
+- `(T, T)` — tuple (multiple return values)
+- `T|error` — result type
 
-**Map:** `map` (reserved). Key-value container.
+### 2.3 User-Defined Types (Value Semantics)
 
-**Pointer:** `<T>` wraps a type in angle brackets to indicate a pointer.
-```
-int <ptr> = address x
-```
-
-### 2.3 User-Defined Types
-
-**Type declaration:** Value semantics. Fields only, no methods.
 ```
 type Point
   float x
@@ -151,16 +100,33 @@ type Point
 end type
 ```
 
-**Inheritance:** Single inheritance via `inherits`.
+Single inheritance: `type Point3D inherits Point`.
+
+### 2.4 Objects (Reference Semantics)
+
 ```
-type Point3D inherits Point
-  float z
-end type
+object Shape
+  string name
+  int sides
+
+  function area() returns float
+    return 0.0
+  end function
+end object
+
+object Circle inherits Shape
+  float radius
+
+  function area() returns float
+    return 3.14159 * radius * radius
+  end function
+end object
 ```
 
-### 2.4 Result Types
+Objects support methods (functions declared inside the object body), vtable dispatch for inherited methods, and `expr.method(args)` call syntax.
 
-A function may return `T|error` to indicate it can succeed with type T or fail with an error.
+### 2.5 Result Types
+
 ```
 function divide(int a, int b) returns int|error
   if b == 0
@@ -177,19 +143,23 @@ end function
 ### 3.1 Function
 
 ```
-function name(type param, type param, ...) [returns type]
+function name(type param, type param = default, ...) [returns type]
   body
 end function
 ```
 
-If `returns` is omitted, the function returns `none`. The compiler inserts `return 0` at the OS level for `main` functions with no return type.
+- If `returns` is omitted, returns `none`. Compiler inserts `return 0` at OS level for `main`.
+- **Default parameters:** `type name = literal` in parameter list.
+- **Variadic:** `...` as last parameter.
+- **Multiple return:** `returns (type, type)`.
 
 ### 3.2 Variable
 
 ```
 type name = expr          // initialized
-type name                 // zero-initialized (0, 0.0, "", false, empty)
-fixed type name = expr    // constant (immutable after initialization)
+type name                 // zero-initialized
+fixed type name = expr    // immutable (legacy)
+const type name = expr    // immutable (preferred)
 ```
 
 ### 3.3 Type Declaration
@@ -197,29 +167,43 @@ fixed type name = expr    // constant (immutable after initialization)
 ```
 type Name [inherits Parent]
   type field_name
-  type field_name
-  ...
 end type
 ```
 
-### 3.4 Foreign Import
+### 3.4 Object Declaration
+
+```
+object Name [inherits Parent]
+  type field_name
+
+  function method(type param) [returns type]
+    body
+  end function
+end object
+```
+
+Methods are called via `instance.method(args)`. The compiler rewrites `obj.method(args)` to pass `obj` as an implicit first parameter.
+
+### 3.5 Foreign Import
 
 ```
 import "library" function name(type param, ...) [returns type]
 ```
 
-Supports variadic parameters via `...`:
-```
-import "stdio" function printf(string fmt, ...) returns int
-```
-
-### 3.5 Local Import
+### 3.6 Local Import
 
 ```
-import "file.ul" function name(type param, ...) [returns type]
+import "file.ul" function name(type param) [returns type]
 ```
 
-Imports a function declared in another UL source file.
+### 3.7 Const Declaration
+
+```
+const int MAX = 100
+const string VERSION = "1.0"
+```
+
+Compile-time constant. Must be initialized with a literal. Cannot be reassigned.
 
 ---
 
@@ -227,7 +211,7 @@ Imports a function declared in another UL source file.
 
 ### 4.1 Arithmetic
 
-`+`, `-`, `*`, `/`, `%`. Integer division truncates toward zero (C semantics). Division by zero is a runtime error.
+`+`, `-`, `*`, `/`, `%`. Integer division truncates toward zero. Division by zero is a runtime error.
 
 ### 4.2 Comparison
 
@@ -235,7 +219,7 @@ Imports a function declared in another UL source file.
 
 ### 4.3 Logical
 
-`and`, `or` (short-circuit), `not` (unary). Operands are truthy/falsy.
+`and`, `or` (short-circuit), `not` (unary).
 
 ### 4.4 Cast
 
@@ -243,58 +227,71 @@ Imports a function declared in another UL source file.
 cast(expr, type)
 ```
 
-Converts the value of `expr` to `type`. Float-to-int truncates. Int-to-float promotes. Any-to-string converts to string representation. Any-to-bool converts via truthiness.
+Float-to-int truncates. Any-to-string converts to representation. Any-to-bool via truthiness.
 
-### 4.5 Array Literal
-
-```
-[expr, expr, ...]
-```
-
-### 4.6 Index
+### 4.5 String Interpolation
 
 ```
-expr[expr]
+"hello {name}, you are {age} years old"
 ```
 
-Out-of-bounds access is a runtime error when `safety = checked`.
+Expressions inside `{}` are evaluated and converted to string. Nesting not supported.
 
-### 4.7 Field Access
+### 4.6 Array Literal and Comprehension
 
 ```
-expr.field
+[1, 2, 3]
+[x * x for x in range(1, 10)]
 ```
 
-### 4.8 Function Call
+### 4.7 Pipe Operator
+
+```
+data |> transform |> filter |> print
+```
+
+`a |> f` rewrites to `f(a)`. Chains left to right.
+
+### 4.8 Index
+
+```
+arr[i]
+```
+
+### 4.9 Field Access and Method Call
+
+```
+point.x
+circle.area()
+```
+
+Method calls: `obj.method(args)` dispatches through vtable for objects.
+
+### 4.10 Function Call
 
 ```
 name(expr, expr, ...)
 ```
 
-### 4.9 Result Propagation
+### 4.11 Result Propagation
 
 ```
 expr?
 ```
 
-If `expr` evaluates to `error`, the enclosing function immediately returns that error. If `ok`, the value is unwrapped.
+If error, enclosing function returns that error. If ok, unwraps value.
 
-### 4.10 Post-Increment / Post-Decrement
+### 4.12 Post-Increment / Post-Decrement
 
 ```
 x++
 x--
 ```
 
-Returns the value before modification.
-
-### 4.11 Unary
+### 4.13 Multiple Return Values
 
 ```
--expr          // arithmetic negation
-not expr       // logical negation
-address expr   // take memory address (returns pointer)
-deref expr     // dereference pointer
+(int a, int b) = swap(x, y)
 ```
 
 ---
@@ -303,16 +300,7 @@ deref expr     // dereference pointer
 
 ### 5.1 Assignment
 
-```
-name = expr
-name += expr
-name -= expr
-name *= expr
-name /= expr
-name %= expr
-name left= expr     // bitwise left shift and assign
-name right= expr    // bitwise right shift and assign
-```
+`=`, `+=`, `-=`, `*=`, `/=`, `%=`, `left=`, `right=`
 
 ### 5.2 If / Else
 
@@ -323,8 +311,6 @@ else
   body
 end if
 ```
-
-The `else` clause is optional.
 
 ### 5.3 While
 
@@ -342,30 +328,25 @@ for each var in iterable
 end for
 ```
 
-The loop variable `var` is implicitly typed from the iterable's element type.
-
 ### 5.5 Match
 
 ```
 match subject
-  value1
-    body
-  value2
+  value
     body
   default
     body
 end match
 ```
 
-Case values must be literals (integer, float, string, bool, `empty`) or negative literals. The `default` case is optional.
-
 ### 5.6 Return
 
 ```
-return expr         // return a value
-return ok expr      // return success (result type)
-return error "msg"  // return error (result type)
-return              // return none (void functions)
+return expr
+return ok expr
+return error "msg"
+return (expr, expr)       // multiple return
+return                    // return none
 ```
 
 ### 5.7 Print
@@ -374,35 +355,46 @@ return              // return none (void functions)
 print expr
 ```
 
-Prints the value followed by a newline. Booleans print as `0`/`1`. Floats print with `%f` format. Empty prints as `empty`.
-
 ### 5.8 Escape / Continue
 
 ```
-escape      // break out of nearest loop
-continue    // skip to next iteration
+escape      // break
+continue    // next iteration
+```
+
+### 5.9 Spawn / Wait
+
+```
+spawn process_data(chunk)
+wait
+```
+
+`spawn` starts a concurrent task. `wait` blocks until all spawned tasks complete.
+
+### 5.10 Lock / Unlock
+
+```
+lock mutex_name
+  // critical section
+unlock mutex_name
 ```
 
 ---
 
 ## 6. DR Directives
 
-Declared at file level before any function or type declaration. Each directive is prefixed with `@dr`.
-
 ```
 @dr memory = gc
 @dr safety = checked
 ```
 
-| Setting | Valid Values | Default |
-|---------|-------------|---------|
+| Setting | Values | Default |
+|---------|--------|---------|
 | `memory` | `gc`, `manual`, `refcount`, `arena` | `gc` |
 | `safety` | `checked`, `unchecked` | `checked` |
 | `types` | `strict`, `dynamic` | `strict` |
 | `int_width` | `32`, `64`, `platform` | `32` |
 | `concurrency` | `threaded`, `parallel`, `async`, `cooperative` | `threaded` |
-
-The compiler enforces that files with conflicting DR settings that call each other produce a warning at the call site.
 
 ---
 
@@ -410,14 +402,27 @@ The compiler enforces that files with conflicting DR settings that call each oth
 
 | Annotation | Scope | Description |
 |-----------|-------|-------------|
-| `@dr key = value` | File | Dynamic Runtime directive |
-| `@norm N` | File or function | Set normalization level (0-3) |
-| `@deprecated("msg")` | Function | Mark function as deprecated |
-| `@fuse` | Block | Hint to fuse operations in this block |
-| `@prefetch(distance=N)` | Loop or data structure | Insert prefetch instructions |
-| `@layout = value` | Type | Control memory layout (SoA, AoS) |
-| `@precision = value` | File or function | Set floating-point precision mode |
-| `@sparsity = value` | Type | Declare tensor sparsity pattern |
+| `@dr key = value` | File | Runtime directive |
+| `@norm N` | File or function | Normalization level (0-3) |
+| `@deprecated("msg")` | Function | Mark as deprecated |
+| `@fuse` | Block | Hint to fuse operations |
+| `@prefetch(distance=N)` | Loop/data | Insert prefetch instructions |
+| `@layout = value` | Type | Memory layout (SoA, AoS) |
+| `@precision = value` | File/function | Float precision mode |
+| `@sparsity = value` | Type | Tensor sparsity pattern |
+| `@asm(arch)` | Block | Inline assembly |
+
+### 7.1 Inline Assembly
+
+```
+@asm(x86)
+  mov eax, [rdi]
+  add eax, [rsi]
+  ret
+end asm
+```
+
+Architecture-specific. The block is emitted verbatim into the target output. Only valid for C and LLVM IR targets.
 
 ---
 
@@ -425,74 +430,94 @@ The compiler enforces that files with conflicting DR settings that call each oth
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
-| `print` | `print expr` | Print value to stdout with newline |
+| `print` | `print expr` | Print to stdout with newline |
 | `prompt` | `prompt(string msg) returns string` | Read line from stdin |
 | `absval` | `absval(numeric x) returns numeric` | Absolute value |
 | `size` | `size(T) returns int` | Size of type in bytes |
 | `cast` | `cast(expr, type) returns type` | Type conversion |
-| `exit` | `exit(int code)` | Terminate program with exit code |
+| `exit` | `exit(int code)` | Terminate with exit code |
 | `typeof` | `typeof(expr) returns string` | Runtime type name |
 | `memtake` | `memtake(int bytes) returns <none>` | Allocate heap memory |
 | `memgive` | `memgive(<none> ptr)` | Free heap memory |
-| `memcopy` | `memcopy(<none> dst, <none> src, int n)` | Copy n bytes (no overlap) |
-| `memmove` | `memmove(<none> dst, <none> src, int n)` | Copy n bytes (overlap safe) |
-| `memset` | `memset(<none> ptr, int val, int n)` | Fill n bytes with val |
-| `address` | `address expr` | Take memory address (unary operator) |
-| `deref` | `deref expr` | Dereference pointer (unary operator) |
+| `memcopy` | `memcopy(<none> dst, <none> src, int n)` | Copy bytes (no overlap) |
+| `memmove` | `memmove(<none> dst, <none> src, int n)` | Copy bytes (overlap safe) |
+| `memset` | `memset(<none> ptr, int val, int n)` | Fill bytes |
 
 ---
 
 ## 9. Standard Library
 
-### 9.1 Math
+Function names use module prefix. Method syntax `obj.method()` rewrites to `module_method(obj)`.
 
-`sqrt(x)`, `pow(x, y)`, `exp(x)`, `log(x)`, `log2(x)`, `log10(x)`, `floor(x)`, `ceil(x)`, `round(x)`, `min(a, b)`, `max(a, b)`, `clamp(x, lo, hi)`, `lerp(a, b, t)`.
+### 9.1 String
 
-### 9.2 String
+`str_len(s)`, `str_upper(s)`, `str_lower(s)`, `str_contains(s, sub)`, `str_starts_with(s, prefix)`, `str_ends_with(s, suffix)`, `str_trim(s)`, `str_split(s, delim)`, `str_replace(s, old, new)`, `str_concat(a, b)`, `str_substring(s, start, len)`, `str_index_of(s, sub)`
 
-`length(s)`, `substring(s, start, len)`, `index_of(s, sub)`, `replace(s, old, new)`, `split(s, delim)`, `join(arr, delim)`, `trim(s)`, `upper(s)`, `lower(s)`, `starts_with(s, prefix)`, `ends_with(s, suffix)`, `contains(s, sub)`.
+Method syntax: `s.len()` → `str_len(s)`, `s.upper()` → `str_upper(s)`, etc.
 
-### 9.3 Array
+### 9.2 Array
 
-`length(arr)`, `push(arr, val)`, `pop(arr)`, `insert(arr, idx, val)`, `remove(arr, idx)`, `slice(arr, start, end)`, `reverse(arr)`, `sort(arr)`, `find(arr, val)`, `map(arr, fn)`, `filter(arr, fn)`, `reduce(arr, fn, init)`.
+`array_len(arr)`, `array_sort(arr)`, `array_reverse(arr)`, `array_contains(arr, val)`, `array_sum(arr)`, `array_min(arr)`, `array_max(arr)`, `array_get(arr, idx)`, `array_set(arr, idx, val)`, `array_push(arr, val)`, `array_pop(arr)`, `array_slice(arr, start, end)`
+
+Method syntax: `arr.sort()` → `array_sort(arr)`, `arr.len()` → `array_len(arr)`, etc.
+
+### 9.3 Math
+
+`math_sqrt(x)`, `math_pow(x, y)`, `math_abs(x)`, `math_floor(x)`, `math_ceil(x)`, `math_round(x)`, `math_min(a, b)`, `math_max(a, b)`, `math_log(x)`, `math_log2(x)`, `math_exp(x)`, `math_pi`, `math_e`
 
 ### 9.4 Map
 
-`keys(m)`, `values(m)`, `has(m, key)`, `get(m, key)`, `set(m, key, val)`, `delete(m, key)`, `size(m)`.
+`map_keys(m)`, `map_values(m)`, `map_has(m, key)`, `map_get(m, key)`, `map_set(m, key, val)`, `map_delete(m, key)`, `map_size(m)`
 
 ### 9.5 File
 
-`open(path [, mode])`, `read(f)`, `write(f, data)`, `close(f)`, `exists(path)`, `readlines(f)`.
+`file_open(path [, mode])`, `file_read(f)`, `file_write(f, data)`, `file_close(f)`, `file_exists(path)`, `file_readlines(f)`
 
 ### 9.6 JSON
 
-`json_parse(s)`, `json_stringify(val)`.
+`json_parse(s)`, `json_stringify(val)`
 
 ---
 
 ## 10. Grammar (EBNF)
 
 ```ebnf
-program        = { declaration } ;
+program        = { dr_directive | annotation | declaration } ;
 
-declaration    = dr_directive
-               | function_decl
+declaration    = function_decl
                | type_decl
+               | object_decl
                | foreign_import
-               | local_import ;
+               | local_import
+               | const_decl ;
 
 dr_directive   = "@dr" IDENT "=" IDENT ;
+annotation     = "@" IDENT [ "(" annotation_args ")" ] ;
 
-function_decl  = "function" IDENT "(" [ param_list ] ")" [ "returns" type ] body "end" "function" ;
+const_decl     = "const" type IDENT "=" expr ;
 
-type_decl      = "type" IDENT [ "inherits" IDENT ] { field } "end" "type" ;
+function_decl  = "function" IDENT "(" [ param_list ] ")"
+                 [ "returns" return_type ] body "end" "function" ;
 
-foreign_import = "import" STRING "function" IDENT "(" [ param_list ] ")" [ "returns" type ] ;
+return_type    = type | "(" type { "," type } ")" ;
 
-local_import   = "import" STRING "function" IDENT "(" [ param_list ] ")" [ "returns" type ] ;
+type_decl      = "type" IDENT [ "inherits" IDENT ]
+                 { field } "end" "type" ;
 
-param_list     = param { "," param } ;
-param          = type IDENT ;
+object_decl    = "object" IDENT [ "inherits" IDENT ]
+                 { field | method_decl } "end" "object" ;
+
+method_decl    = "function" IDENT "(" [ param_list ] ")"
+                 [ "returns" return_type ] body "end" "function" ;
+
+foreign_import = "import" STRING "function" IDENT
+                 "(" [ param_list ] ")" [ "returns" type ] ;
+
+local_import   = "import" STRING "function" IDENT
+                 "(" [ param_list ] ")" [ "returns" type ] ;
+
+param_list     = param { "," param } [ "," "..." ] ;
+param          = type IDENT [ "=" literal ] ;
 
 field          = type IDENT ;
 
@@ -507,43 +532,37 @@ type_name      = "int" | "int8" | "int16" | "int32" | "int64"
 
 body           = { statement } ;
 
-statement      = var_decl
-               | assignment
-               | if_stmt
-               | while_stmt
-               | for_stmt
-               | match_stmt
-               | return_stmt
-               | print_stmt
-               | "escape"
-               | "continue"
-               | expr_stmt ;
+statement      = var_decl | const_decl | assignment | if_stmt | while_stmt
+               | for_stmt | match_stmt | return_stmt | print_stmt
+               | spawn_stmt | wait_stmt | lock_stmt
+               | asm_block | "escape" | "continue" | expr_stmt ;
 
-var_decl       = [ "fixed" ] type IDENT [ "=" expr ] ;
+var_decl       = [ "fixed" | "const" ] type IDENT [ "=" expr ] ;
 
 assignment     = expr assign_op expr ;
 assign_op      = "=" | "+=" | "-=" | "*=" | "/=" | "%=" | "left=" | "right=" ;
 
 if_stmt        = "if" expr body [ "else" body ] "end" "if" ;
-
 while_stmt     = "while" expr body "end" "while" ;
-
 for_stmt       = "for" "each" IDENT "in" expr body "end" "for" ;
 
 match_stmt     = "match" expr { match_case } [ default_case ] "end" "match" ;
 match_case     = expr body ;
 default_case   = "default" body ;
 
-return_stmt    = "return" [ expr ]
-               | "return" "ok" expr
-               | "return" "error" expr ;
+return_stmt    = "return" [ expr | "ok" expr | "error" expr
+               | "(" expr { "," expr } ")" ] ;
 
 print_stmt     = "print" expr ;
+spawn_stmt     = "spawn" expr ;
+wait_stmt      = "wait" ;
+lock_stmt      = "lock" IDENT body "unlock" IDENT ;
+asm_block      = "@asm" "(" IDENT ")" { ASM_LINE } "end" "asm" ;
 
 expr_stmt      = expr ;
 
-expr           = or_expr ;
-
+expr           = pipe_expr ;
+pipe_expr      = or_expr { "|>" or_expr } ;
 or_expr        = and_expr { "or" and_expr } ;
 and_expr       = not_expr { "and" not_expr } ;
 not_expr       = "not" not_expr | comparison ;
@@ -552,59 +571,59 @@ addition       = multiplication { ( "+" | "-" ) multiplication } ;
 multiplication = unary { ( "*" | "/" | "%" ) unary } ;
 unary          = ( "-" | "address" | "deref" ) unary | postfix ;
 
-postfix        = primary { call | index | field_access | cast_expr | "++" | "--" } ;
+postfix        = primary { call | index | field_access | method_call
+               | "++" | "--" | "?" } ;
 call           = "(" [ arg_list ] ")" ;
 index          = "[" expr "]" ;
 field_access   = "." IDENT ;
-cast_expr      = "->" type ;
+method_call    = "." IDENT "(" [ arg_list ] ")" ;
 
 arg_list       = expr { "," expr } ;
 
-primary        = INT_LITERAL
-               | HEX_LITERAL
-               | FLOAT_LITERAL
-               | STRING_LITERAL
-               | "true" | "false" | "empty"
+primary        = INT_LITERAL | HEX_LITERAL | FLOAT_LITERAL
+               | string_literal | "true" | "false" | "empty"
                | IDENT
-               | "change"
-               | "[" [ arg_list ] "]"
-               | "(" expr ")" ;
+               | "cast" "(" expr "," type ")"
+               | "typeof" "(" expr ")"
+               | "[" [ array_body ] "]"
+               | "(" expr { "," expr } ")" ;
+
+array_body     = expr { "," expr }
+               | expr "for" IDENT "in" expr ;
+
+string_literal = '"' { char | escape | interpolation } '"' ;
+interpolation  = "{" expr "}" ;
 
 INT_LITERAL    = digit { digit } ;
 HEX_LITERAL    = "0" ( "x" | "X" ) hex_digit { hex_digit } ;
-FLOAT_LITERAL  = digit { digit } "." digit { digit } [ ( "e" | "E" ) [ "+" | "-" ] digit { digit } ] ;
-STRING_LITERAL = '"' { char | escape } '"' ;
+FLOAT_LITERAL  = digit { digit } "." digit { digit }
+                 [ ( "e" | "E" ) [ "+" | "-" ] digit { digit } ] ;
 IDENT          = ( letter | "_" ) { letter | digit | "_" } ;
-
-digit          = "0" ... "9" ;
-hex_digit      = digit | "a" ... "f" | "A" ... "F" ;
-letter         = "a" ... "z" | "A" ... "Z" ;
-char           = any UTF-8 character except '"' and '\' and newline ;
-escape         = '\' ( 'n' | 't' | '"' | '\' ) ;
 ```
 
 ---
 
 ## 11. Compilation Targets
 
-The compiler emits code for the following targets:
-
-| Target | Flag | Output | Description |
-|--------|------|--------|-------------|
-| C | `-t c` | `.c` | C99 source. Compile with gcc/clang for native binary. |
-| Python | `-t python` | `.py` | Python 3.10+ source with dataclasses. |
-| JavaScript | `-t js` | `.js` | ES6 source for browser or Node.js. |
-| LLVM IR | `-t llvm` | `.ll` | LLVM IR text. Compile with clang for native binary. |
-| WebAssembly | `-t wasm` | `.wasm` | Browser-portable bytecode. |
+| Target | Flag | Output |
+|--------|------|--------|
+| C | `-t c` | `.c` (C99) |
+| Python | `-t python` | `.py` (Python 3.10+) |
+| JavaScript | `-t js` | `.js` (ES6) |
+| LLVM IR | `-t llvm` | `.ll` |
+| WebAssembly | `-t wasm` | `.wasm` |
 
 ---
 
-## 12. Semantics Notes
+## 12. Semantics
 
-- Integer division truncates toward zero (C99 behavior).
-- Short-circuit evaluation: `and` does not evaluate right operand if left is false. `or` does not evaluate right operand if left is true.
-- Variable declarations in inner scopes shadow outer declarations.
-- Function parameters are passed by value. Pointers enable pass-by-reference.
-- The `?` operator in a non-result function prints the error to stderr and exits with code 1.
-- `fixed` variables are immutable after initialization. Attempting to assign to a `fixed` variable is a compile error.
-- `empty` is falsy. `0`, `0.0`, `""`, and `false` are falsy. All other values are truthy.
+- Integer division truncates toward zero (C99).
+- `and`/`or` short-circuit.
+- Inner scopes shadow outer.
+- Parameters passed by value. Pointers for pass-by-reference.
+- `?` in non-result functions prints error to stderr and exits with code 1.
+- `fixed` and `const` variables are immutable.
+- Falsy: `empty`, `0`, `0.0`, `""`, `false`. All else truthy.
+- Method syntax `obj.method(args)` rewrites to `Type_method(obj, args)`.
+- Pipe `a |> f` rewrites to `f(a)`.
+- String interpolation `"x = {expr}"` rewrites to `"x = " + cast(expr, string)`.
