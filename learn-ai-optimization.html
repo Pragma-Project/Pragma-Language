@@ -531,6 +531,8 @@ function llvmCompile() {
 
   highlightSrc();
 }
+window.llvmLoad = llvmLoad;
+window.llvmCompile = llvmCompile;
 if(document.getElementById('llvm-src')) llvmLoad(0);
 
 // ══════ SIMD widget ══════
