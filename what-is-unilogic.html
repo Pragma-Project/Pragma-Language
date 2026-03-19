@@ -71,13 +71,15 @@ hr { border: none; border-top: 1px solid #ddd; margin: 36px 0; }
 
   <p><strong>What is this?</strong></p>
 
-  <p>An open-source programming language and research project. UL (UniLogic) is a single language that compiles to C, Python, JavaScript, LLVM IR, and WebAssembly from the same source file. It is statically typed by default with an optional dynamic mode, has configurable runtime behavior per file, and treats AI/ML optimization as a first-class language concern rather than a library afterthought.</p>
+  <p>An open-source programming language and research project. UL is a single language that compiles to C, Python, JavaScript, LLVM IR, and WebAssembly from the same source file. It is statically typed by default with an optional dynamic mode, has configurable runtime behavior per file, and treats AI/ML optimization as a first-class language concern rather than a library afterthought.</p>
 
-  <p>The project is open-source, documented as it develops, and not a product for sale. It's a research effort exploring whether a single unified language can replace the tradeoffs that currently force developers to choose between performance, portability, safety, and ecosystem access. Collaboration and feedback from anyone who finds this worth thinking about is welcome.</p>
+  <p>The goal is to unify, minimize, and optimize in one language. At the same time, readability and clarity are chosen over cleverness as a philosophy in the syntax. Likewise, choice is a core idea &mdash; you choose from an array of options rather than make hard tradeoff decisions.</p>
+
+  <p>The project is open-source, documented as it develops, and not a product for sale. It's a grassroots research effort exploring whether a single unified language can replace the tradeoffs that currently force developers to choose between performance, portability, safety, and ecosystem access.</p>
 
   <hr>
 
-  <p><strong>Why does this exist?</strong></p>
+  <p><strong>Why does this matter?</strong></p>
 
   <p>Every programming language makes tradeoff decisions that you inherit when you choose it. Python gives you an enormous ecosystem and fast development but is 10&ndash;100x slower than C, has a GIL that prevents real parallelism, and offers no path to native binaries. C gives you maximum performance and hardware access but has no memory safety, no package ecosystem comparable to pip, and alienates practitioners who aren't systems programmers. JavaScript runs everywhere but has no integer type, no static types without bolting on TypeScript, and no way to write low-level code. Java gives you type safety and threading but locks you into the JVM, GC you can't turn off, and startup times measured in seconds.</p>
 
@@ -97,7 +99,26 @@ hr { border: none; border-top: 1px solid #ddd; margin: 36px 0; }
 
   <hr>
 
-  <p><strong>What about AI and ML?</strong></p>
+  <p><strong>Why did this start?</strong></p>
+
+  <p>I ran heavy inference workloads, immediately went down the rabbit hole of optimization, ran into Claude generating code in languages I didn't know and couldn't fix, started building a simple OS kernel and got lost in Linux's <code>/net</code> mess, and realized I needed three things:</p>
+
+  <ol style="margin:10px 0 16px 24px; color:#2a2a2a; line-height:2;">
+    <li>Something that could optimize without inaccessible tooling</li>
+    <li>Something that was a single representation of app space across everything for general purpose computing</li>
+    <li>Something I could read and didn't have the mental gymnastics the gifted and the gatekeepers make a requirement with their code</li>
+  </ol>
+
+  <p>Likewise, I realized that there were quite a few problem areas that could benefit from these: AI being a rapidly growing household staple reality, vibe coders who had never coded a hello world suddenly thrown into spaghetti code in 5 languages, and a growing full-stack developer demographic that wants to build across wherever you execute instead of one isolated space.</p>
+
+  <p>Quite a bit of time is spent on designing, testing and still simultaneously designing, and iterating again and again to get things right. Feedback is genuinely appreciated and encouraged. Features that take time but are not of interest means more time and effort on the things that matter. Feel free to contact me via email.</p>
+
+  <button onclick="document.getElementById('wiu-email').style.display='block';this.style.display='none';" style="display:inline-block;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.06em;padding:6px 16px;border:1px solid #ccc;border-radius:3px;background:#e8e3db;color:#666;cursor:pointer;transition:all 0.15s;">Click to show email</button>
+  <div id="wiu-email" style="display:none;margin-top:8px;font-family:'Share Tech Mono',monospace;font-size:14px;"><a href="mailto:albazzaztariq@gmail.com" style="color:#1a3a7a;">albazzaztariq@gmail.com</a></div>
+
+  <hr>
+
+  <p><strong>AI, ML and the Current Disconnect</strong></p>
 
   <p>AI needs a language. Python has the tooling (PyTorch, TensorFlow, Hugging Face) but is the wrong language for performance-critical computation. C and CUDA have the speed but alienate ML practitioners and require specialist knowledge to use effectively. The result is that the AI ecosystem is built on Python calling C calling CUDA &mdash; three languages, three build systems, three sets of abstractions leaking into each other.</p>
 
@@ -131,8 +152,6 @@ hr { border: none; border-top: 1px solid #ddd; margin: 36px 0; }
     <li>DR conflict detection across files at compile time before anything runs</li>
     <li>Bytecode VM specification (register-based, 32-bit fixed-width, tiered ISA)</li>
   </ul>
-
-  <p>The syntax borrows from what already exists across C, Python, Java, and JavaScript. The goal is to unify and minimize, not to invent. Verbosity is chosen over cleverness. Readability over elegance. Practicality over ideology.</p>
 
   <p>The full design rationale and conceptual basis is documented in the <a href="LANG_Complete_F.pdf">LANG Project document</a>.</p>
 
