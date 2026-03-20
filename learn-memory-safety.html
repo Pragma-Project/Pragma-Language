@@ -134,9 +134,9 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
     <div class="section" data-title="The Stack">
       <div class="step-label">Section 5 of 20</div>
       <h1>The Stack</h1>
-      <p>When a function is called, the CPU pushes a <strong>stack frame</strong> onto the call stack. This frame contains the function's local variables, its parameters, and a <strong>return address</strong> &mdash; the instruction to jump back to when the function finishes.</p>
-      <p>When the function returns, its frame is popped off. The memory is instantly reclaimed &mdash; no cleanup needed. This is why local variables in C are "free" from a performance perspective: allocation is a single pointer adjustment, and deallocation is automatic.</p>
-      <p>Click <strong>Call</strong> to push frames and <strong>Return</strong> to pop them:</p>
+      <p>Programs are made of functions. <code>main()</code> calls <code>compute()</code>, which calls <code>format()</code>, which calls <code>strlen()</code>. Each function needs its own space for local variables and parameters. The <strong>call stack</strong> is the region of memory that provides this space.</p>
+      <p>Every time a function is called, a <strong>stack frame</strong> is pushed onto the top of the call stack. That frame holds the function's local variables, its parameters, and a <strong>return address</strong> &mdash; the exact instruction to jump back to when the function finishes. When the function returns, its frame is popped off and the memory is instantly reclaimed. No cleanup needed.</p>
+      <p>The widget below shows this happening. <code>main()</code> is already running. Each time you click <strong>Call next function</strong>, the current function calls the next one in the chain, pushing a new frame. Click <strong>Return</strong> to pop the top frame &mdash; that function finishes, and control goes back to whoever called it.</p>
       <div id="stack-widget" style="margin:10px 0;">
         <div style="display:flex;gap:20px;">
           <div style="flex:1;">
@@ -144,18 +144,19 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
             <div id="stack-frames" style="display:flex;flex-direction:column;gap:3px;min-height:180px;"></div>
           </div>
           <div style="flex:1;">
-            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">Code</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">Currently Executing</div>
             <pre id="stack-code" style="font-size:11px;min-height:180px;margin:0;padding:10px 14px;"></pre>
           </div>
         </div>
-        <div style="margin-top:8px;display:flex;gap:6px;">
-          <button onclick="stackCall()" id="stack-call-btn" style="font-size:11px;padding:5px 14px;border:1px solid #a6e3a1;border-radius:4px;background:#1e1e2e;color:#a6e3a1;cursor:pointer;font-family:'Share Tech Mono',monospace;">Call</button>
+        <div style="margin-top:8px;display:flex;gap:6px;align-items:center;">
+          <button onclick="stackCall()" id="stack-call-btn" style="font-size:11px;padding:5px 14px;border:1px solid #a6e3a1;border-radius:4px;background:#1e1e2e;color:#a6e3a1;cursor:pointer;font-family:'Share Tech Mono',monospace;">Call next function</button>
           <button onclick="stackReturn()" id="stack-ret-btn" style="font-size:11px;padding:5px 14px;border:1px solid #f38ba8;border-radius:4px;background:#1e1e2e;color:#f38ba8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Return</button>
           <button onclick="stackReset()" style="font-size:11px;padding:5px 14px;border:1px solid #555;border-radius:4px;background:#1e1e2e;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Reset</button>
-          <span id="stack-status" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#333;margin-left:auto;"></span>
+          <span id="stack-status" style="font-family:'Share Tech Mono',monospace;font-size:12px;color:#333;margin-left:auto;"></span>
         </div>
       </div>
-      <p>The stack is fast and automatic, but it has a critical limitation: everything on it has a fixed lifetime tied to the function call. You can't return a pointer to a local variable &mdash; the frame it lived in is gone. For data that needs to outlive the function that created it, you need the heap.</p>
+      <p>This is why local variables in C are "free" from a performance perspective: allocation is a single pointer adjustment, and deallocation is automatic when the function returns.</p>
+      <p>But the stack has a critical limitation: everything on it has a fixed lifetime tied to the function call. You can't return a pointer to a local variable &mdash; the frame it lived in is gone the moment the function returns. For data that needs to outlive the function that created it, you need the heap.</p>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════ -->
@@ -601,19 +602,33 @@ var memDescs = {
 
 // ══════ Section 5: Stack Widget ══════
 var stackFuncs = [
-  {name:"main", vars:"int argc, char **argv", code:"int main(int argc, char **argv) {\n    result = compute(42);\n    return 0;\n}"},
-  {name:"compute", vars:"int n, int temp", code:"int compute(int n) {\n    int temp = n * 2;\n    return format(temp);\n}"},
-  {name:"format", vars:"int val, char buf[16]", code:"int format(int val) {\n    char buf[16];\n    sprintf(buf, \"%d\", val);\n    return strlen(buf);\n}"},
-  {name:"strlen", vars:"char *s, int count", code:"int strlen(char *s) {\n    int count = 0;\n    while (*s++) count++;\n    return count;\n}"}
+  {name:"main", vars:"int argc, char **argv", calls:"compute", code:"int main(int argc, char **argv) {\n    result = compute(42);\n    return 0;\n}"},
+  {name:"compute", vars:"int n, int temp", calls:"format", code:"int compute(int n) {\n    int temp = n * 2;\n    return format(temp);\n}"},
+  {name:"format", vars:"int val, char buf[16]", calls:"strlen", code:"int format(int val) {\n    char buf[16];\n    sprintf(buf, \"%d\", val);\n    return strlen(buf);\n}"},
+  {name:"strlen", vars:"char *s, int count", calls:null, code:"int strlen(char *s) {\n    int count = 0;\n    while (*s++) count++;\n    return count;\n}"}
 ];
-var stackDepth = 0;
+var stackDepth = 1; // start with main() already on the stack
+var stackEnded = false; // true when main() has returned
 var frameColors = ["#7ab3e0","#a6e3a1","#fab387","#f38ba8"];
 function stackRender() {
   var container = document.getElementById("stack-frames");
   var codeEl = document.getElementById("stack-code");
   var statusEl = document.getElementById("stack-status");
+  var callBtn = document.getElementById("stack-call-btn");
+  var retBtn = document.getElementById("stack-ret-btn");
   if(!container) return;
   container.innerHTML = "";
+
+  if(stackEnded) {
+    codeEl.innerHTML = '<span style="color:#bbb;">Program finished. main() returned to the OS.\nAll stack frames have been freed.</span>';
+    statusEl.textContent = "main() returned → program ended. Click Reset to start over.";
+    callBtn.disabled = true;
+    callBtn.style.opacity = "0.35";
+    retBtn.disabled = true;
+    retBtn.style.opacity = "0.35";
+    return;
+  }
+
   for(var i = 0; i < stackDepth; i++){
     var f = stackFuncs[i];
     var div = document.createElement("div");
@@ -621,21 +636,55 @@ function stackRender() {
     div.innerHTML = '<div style="color:'+frameColors[i]+';font-weight:700;">'+f.name+'()</div><div style="color:#ccc;font-size:10px;">'+f.vars+'</div><div style="color:#aaa;font-size:9px;">ret → '+(i>0?stackFuncs[i-1].name+'()':'OS')+'</div>';
     container.appendChild(div);
   }
-  if(stackDepth > 0){
-    codeEl.innerHTML = '<span style="color:#e0e0e0;">'+stackFuncs[stackDepth-1].code.replace(/</g,"&lt;")+'</span>';
-    statusEl.textContent = "Stack depth: " + stackDepth + " — " + stackFuncs[stackDepth-1].name + "() is executing";
+
+  var topFunc = stackFuncs[stackDepth-1];
+  codeEl.innerHTML = '<span style="color:#e0e0e0;">'+topFunc.code.replace(/</g,"&lt;")+'</span>';
+
+  // Status message
+  if(stackDepth === 1){
+    statusEl.textContent = "main() is executing. It will call compute().";
   } else {
-    codeEl.innerHTML = '<span style="color:#bbb;">No function executing. Click Call to push a frame.</span>';
-    statusEl.textContent = "Stack is empty. Click Call to begin.";
+    statusEl.textContent = "Depth: " + stackDepth + " — " + topFunc.name + "() is executing" + (topFunc.calls ? ", will call " + topFunc.calls + "()" : ", has nothing left to call") + ".";
   }
+
+  // Call button state
+  if(stackDepth >= stackFuncs.length){
+    callBtn.disabled = true;
+    callBtn.style.opacity = "0.35";
+    callBtn.textContent = "No more calls";
+  } else {
+    callBtn.disabled = false;
+    callBtn.style.opacity = "1";
+    callBtn.textContent = "Call " + stackFuncs[stackDepth].name + "()";
+  }
+
+  // Return button — always enabled when stack has frames
+  retBtn.disabled = false;
+  retBtn.style.opacity = "1";
+  retBtn.textContent = "Return from " + topFunc.name + "()";
 }
 window.stackCall = function() {
-  if(stackDepth < stackFuncs.length) { stackDepth++; stackRender(); }
+  if(stackEnded || stackDepth >= stackFuncs.length) return;
+  stackDepth++;
+  stackRender();
 };
 window.stackReturn = function() {
-  if(stackDepth > 0) { stackDepth--; stackRender(); }
+  if(stackEnded) return;
+  if(stackDepth <= 1) {
+    // Returning from main — program ends
+    stackDepth = 0;
+    stackEnded = true;
+    stackRender();
+    return;
+  }
+  stackDepth--;
+  stackRender();
 };
-window.stackReset = function() { stackDepth = 0; stackRender(); };
+window.stackReset = function() {
+  stackDepth = 1;
+  stackEnded = false;
+  stackRender();
+};
 stackRender();
 
 // ══════ Section 6: Heap Widget ══════
