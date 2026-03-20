@@ -41,7 +41,7 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
 .section .warn strong { display: block; margin-bottom: 3px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #c07820; }
 .section .danger { padding: 10px 14px; margin: 12px 0; border-radius: 0 4px 4px 0; font-size: 14px; background: #fff0f0; border-left: 4px solid #e24b4a; }
 .section .danger strong { display: block; margin-bottom: 3px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #c03030; }
-.kw { color: #7ab3e0; } .ty { color: #89dceb; } .str { color: #a6e3a1; } .num { color: #fab387; } .cm { color: #585b70; font-style: italic; } .op { color: #89b4fa; } .err { color: #f38ba8; }
+.kw { color: #8cc8ff; } .ty { color: #a0e0f0; } .str { color: #b8f0b8; } .num { color: #ffc090; } .cm { color: #999; font-style: italic; } .op { color: #a0c8ff; } .err { color: #ff9090; }
 
 .nav-bar { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 12px 64px 16px; border-top: 1px solid #e8e4f0; flex-shrink: 0; }
 .nav-bar .counter { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #888; letter-spacing: 0.06em; margin-right: auto; }
@@ -49,11 +49,11 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
 .nav-btn:hover { background: #2d1b69; color: #fff; border-color: #2d1b69; }
 .nav-btn:disabled { opacity: 0.35; cursor: default; background: #fff; color: #2d1b69; border-color: #d8cff0; }
 
-.mem-cell { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 32px; border: 1.5px solid #555; border-radius: 3px; font-family: 'Share Tech Mono', monospace; font-size: 10px; color: #cdd6f4; background: #1e1e2e; transition: all 0.3s; margin: 1px; }
-.mem-cell.owned { border-color: #a6e3a1; background: #1a2e1a; }
-.mem-cell.freed { border-color: #f38ba8; background: #2e1a1a; color: #f38ba8; }
-.mem-cell.overflow { border-color: #f5a623; background: #2e2a1a; animation: pulse-red 1s infinite; }
-.mem-cell.safe { border-color: #7ab3e0; background: #1a1e2e; }
+.mem-cell { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 32px; border: 1.5px solid #888; border-radius: 3px; font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #fff; background: #1e1e2e; transition: all 0.3s; margin: 1px; }
+.mem-cell.owned { border-color: #6fbf6f; background: #1a2e1a; color: #fff; }
+.mem-cell.freed { border-color: #e06060; background: #2e1a1a; color: #ff9999; }
+.mem-cell.overflow { border-color: #e0a030; background: #2e2a1a; color: #ffd080; animation: pulse-red 1s infinite; }
+.mem-cell.safe { border-color: #6090d0; background: #1a1e2e; color: #fff; }
 
 @media (max-width: 700px) { nav { display: none; } main { margin-left: 0; width: 100%; } .content-area { padding: 20px; } .nav-bar { padding: 12px 20px 16px; } }
 </style>
@@ -152,7 +152,7 @@ main { margin-left: 230px; height: 100vh; width: calc(100% - 230px); display: fl
           <button onclick="stackCall()" id="stack-call-btn" style="font-size:11px;padding:5px 14px;border:1px solid #a6e3a1;border-radius:4px;background:#1e1e2e;color:#a6e3a1;cursor:pointer;font-family:'Share Tech Mono',monospace;">Call</button>
           <button onclick="stackReturn()" id="stack-ret-btn" style="font-size:11px;padding:5px 14px;border:1px solid #f38ba8;border-radius:4px;background:#1e1e2e;color:#f38ba8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Return</button>
           <button onclick="stackReset()" style="font-size:11px;padding:5px 14px;border:1px solid #555;border-radius:4px;background:#1e1e2e;color:#a6adc8;cursor:pointer;font-family:'Share Tech Mono',monospace;">Reset</button>
-          <span id="stack-status" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#585b70;margin-left:auto;"></span>
+          <span id="stack-status" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#333;margin-left:auto;"></span>
         </div>
       </div>
       <p>The stack is fast and automatic, but it has a critical limitation: everything on it has a fixed lifetime tied to the function call. You can't return a pointer to a local variable &mdash; the frame it lived in is gone. For data that needs to outlive the function that created it, you need the heap.</p>
@@ -304,10 +304,10 @@ counter++;            counter++;
           <div style="width:160px;">
             <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;text-transform:uppercase;margin-bottom:4px;">Stats</div>
             <div style="font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.8;">
-              <div>Live: <span id="gc-live" style="color:#a6e3a1;">0</span></div>
-              <div>Dead: <span id="gc-dead" style="color:#f38ba8;">0</span></div>
-              <div>Pause: <span id="gc-pause" style="color:#f5a623;">0ms</span></div>
-              <div>Overhead: <span id="gc-overhead" style="color:#7ab3e0;">0%</span></div>
+              <div>Live: <span id="gc-live" style="color:#2a7a2a;font-weight:700;">0</span></div>
+              <div>Dead: <span id="gc-dead" style="color:#c03030;font-weight:700;">0</span></div>
+              <div>Pause: <span id="gc-pause" style="color:#9a6600;font-weight:700;">0ms</span></div>
+              <div>Overhead: <span id="gc-overhead" style="color:#1a3a7a;font-weight:700;">0%</span></div>
             </div>
           </div>
         </div>
@@ -410,19 +410,19 @@ println!(<span class="str">"{}"</span>, s1); <span class="cm">// compile ERROR: 
               <td style="padding:8px;">No overhead, maximum danger</td>
             </tr>
             <tr style="border-bottom:1px solid #eee;">
-              <td style="padding:8px;color:#f5a623;">GC</td>
+              <td style="padding:8px;color:#9a6600;">GC</td>
               <td style="padding:8px;">Java, Python, JS, Go, C#</td>
               <td style="padding:8px;">UAF, double-free, leaks</td>
               <td style="padding:8px;">Pauses, 2&ndash;5x memory, no low-level control</td>
             </tr>
             <tr style="border-bottom:1px solid #eee;">
-              <td style="padding:8px;color:#89dceb;">Refcount</td>
+              <td style="padding:8px;color:#2a7a9a;">Refcount</td>
               <td style="padding:8px;">Swift (ARC), Python (primary), Obj-C</td>
               <td style="padding:8px;">UAF, double-free</td>
               <td style="padding:8px;">Per-operation overhead, can't handle cycles alone</td>
             </tr>
             <tr style="border-bottom:1px solid #eee;">
-              <td style="padding:8px;color:#a6e3a1;">Borrow checker</td>
+              <td style="padding:8px;color:#2a7a2a;">Borrow checker</td>
               <td style="padding:8px;">Rust</td>
               <td style="padding:8px;">UAF, races, null (at compile time)</td>
               <td style="padding:8px;">Mandatory, steep learning curve, fights you</td>
@@ -481,7 +481,7 @@ println!(<span class="str">"{}"</span>, s1); <span class="cm">// compile ERROR: 
       <p>The <a href="memproof-explained.html" style="color:#1a3a7a;">MemProof Explained</a> page walks through the verification pipeline step by step &mdash; safe subset, IR construction, abstract interpretation, separation logic, SMT solving, and proof witnesses.</p>
       <p>The <a href="dynamic-runtime.html" style="color:#1a3a7a;">Dynamic Runtime reference</a> documents all 11 DR settings including the memory model, safety level, and allocator configuration.</p>
       <p>The <a href="features.html" style="color:#1a3a7a;">Features page</a> compares UL's approach against Python, C, and JavaScript across every major capability.</p>
-      <p><a href="feedback.html" style="color:#7ab3e0; font-family:'Share Tech Mono',monospace; font-size:13px;">Share feedback on the safety model &rarr;</a></p>
+      <p><a href="feedback.html" style="color:#1a3a7a; font-family:'Share Tech Mono',monospace; font-size:13px;">Share feedback on the safety model &rarr;</a></p>
     </div>
 
   </div>
@@ -571,7 +571,7 @@ var memFlatData = [
   {addr:"0x102C",label:"(free)",val:"??",type:"free"},
   {addr:"0x1030",label:"(free)",val:"??",type:"free"},
 ];
-var memColors = {variable:"#a6e3a1",string:"#89dceb",padding:"#585b70",frame:"#fab387",return:"#f38ba8",array:"#7ab3e0",free:"#3a3a4a"};
+var memColors = {variable:"#70cc70",string:"#60b8d0",padding:"#999",frame:"#e0a040",return:"#e06060",array:"#6090d0",free:"#666"};
 var memDescs = {
   variable:"Local variable — an integer stored on the stack.",
   string:"Character array — the string bytes stored sequentially.",
@@ -593,7 +593,7 @@ var memDescs = {
     el.textContent = cell.addr;
     el.onclick = function(){
       document.getElementById("mem-flat-info").innerHTML =
-        '<span style="color:'+memColors[cell.type]+'">'+cell.addr+'</span> — <strong>'+cell.label+'</strong> = '+cell.val+'<br>'+memDescs[cell.type];
+        '<strong style="color:#333;">'+cell.addr+'</strong> — <strong>'+cell.label+'</strong> = <strong>'+cell.val+'</strong><br><span style="color:#444;">'+memDescs[cell.type]+'</span>';
     };
     container.appendChild(el);
   });
@@ -618,15 +618,15 @@ function stackRender() {
     var f = stackFuncs[i];
     var div = document.createElement("div");
     div.style.cssText = "padding:8px 12px;border-radius:4px;background:#1e1e2e;border:1.5px solid "+frameColors[i]+";font-family:'Share Tech Mono',monospace;font-size:11px;transition:all 0.3s;";
-    div.innerHTML = '<div style="color:'+frameColors[i]+';font-weight:700;">'+f.name+'()</div><div style="color:#585b70;font-size:10px;">'+f.vars+'</div><div style="color:#585b70;font-size:9px;">ret → '+(i>0?stackFuncs[i-1].name+'()':'OS')+'</div>';
+    div.innerHTML = '<div style="color:'+frameColors[i]+';font-weight:700;">'+f.name+'()</div><div style="color:#ccc;font-size:10px;">'+f.vars+'</div><div style="color:#aaa;font-size:9px;">ret → '+(i>0?stackFuncs[i-1].name+'()':'OS')+'</div>';
     container.appendChild(div);
   }
   if(stackDepth > 0){
-    codeEl.innerHTML = '<span style="color:#a6adc8;">'+stackFuncs[stackDepth-1].code.replace(/</g,"&lt;")+'</span>';
+    codeEl.innerHTML = '<span style="color:#e0e0e0;">'+stackFuncs[stackDepth-1].code.replace(/</g,"&lt;")+'</span>';
     statusEl.textContent = "Stack depth: " + stackDepth + " — " + stackFuncs[stackDepth-1].name + "() is executing";
   } else {
-    codeEl.innerHTML = '<span style="color:#585b70;">No function executing.</span>';
-    statusEl.textContent = "";
+    codeEl.innerHTML = '<span style="color:#bbb;">No function executing. Click Call to push a frame.</span>';
+    statusEl.textContent = "Stack is empty. Click Call to begin.";
   }
 }
 window.stackCall = function() {
@@ -657,7 +657,7 @@ function heapRender() {
   });
   if(heapBlocks.length > 0){
     var last = heapBlocks[heapBlocks.length - 1];
-    ptrEl.innerHTML = "ptr → 0x" + (3000 + (heapBlocks.length-1)*16).toString(16) + (last.freed ? ' <span style="color:#f38ba8;">(DANGLING — memory freed!)</span>' : ' <span style="color:#a6e3a1;">(valid)</span>');
+    ptrEl.innerHTML = '<span style="color:#333;">ptr → 0x' + (3000 + (heapBlocks.length-1)*16).toString(16) + '</span>' + (last.freed ? ' <span style="color:#c03030;font-weight:700;">(DANGLING — memory freed!)</span>' : ' <span style="color:#2a7a2a;font-weight:700;">(valid)</span>');
   } else {
     ptrEl.textContent = "";
   }
@@ -673,7 +673,7 @@ window.heapFree = function() {
   if(heapBlocks.length === 0) return;
   var last = heapBlocks[heapBlocks.length - 1];
   if(last.freed){
-    document.getElementById("heap-status").innerHTML = '<span style="color:#f38ba8;">DOUBLE FREE — allocator metadata corrupted! Exploitable.</span>';
+    document.getElementById("heap-status").innerHTML = '<strong style="color:#c03030;">DOUBLE FREE — allocator metadata corrupted! Exploitable.</strong>';
     return;
   }
   last.freed = true;
@@ -686,7 +686,7 @@ window.heapUseAfterFree = function() {
     document.getElementById("heap-status").textContent = "Free a block first to see use-after-free.";
     return;
   }
-  document.getElementById("heap-status").innerHTML = '<span style="color:#f38ba8;">USE-AFTER-FREE — reading freed memory! Data is garbage. Exploitable.</span>';
+  document.getElementById("heap-status").innerHTML = '<strong style="color:#c03030;">USE-AFTER-FREE — reading freed memory! Data is garbage. Exploitable.</strong>';
 };
 window.heapReset = function() {
   heapBlocks = []; heapFreed = false; heapAllocCount = 0;
@@ -709,7 +709,7 @@ function overflowRender(cells) {
     el.style.borderColor = c.color;
     el.style.color = c.color;
     el.style.background = c.bg || "#1e1e2e";
-    el.innerHTML = '<div style="font-size:9px;opacity:0.6;">'+overflowLabels[i]+'</div><div>'+c.val+'</div>';
+    el.innerHTML = '<div style="font-size:9px;color:#ccc;">'+overflowLabels[i]+'</div><div style="color:#fff;font-weight:700;">'+c.val+'</div>';
     container.appendChild(el);
   });
 }
@@ -729,7 +729,7 @@ window.overflowSafe = function() {
   cells[2] = {val:"'C'", color:"#7ab3e0", bg:"#1a1e2e"};
   cells[3] = {val:"'D'", color:"#7ab3e0", bg:"#1a1e2e"};
   overflowRender(cells);
-  document.getElementById("overflow-status").innerHTML = '<span style="color:#a6e3a1;">Safe write — stayed within buffer bounds.</span>';
+  document.getElementById("overflow-status").innerHTML = '<strong style="color:#2a7a2a;">Safe write — stayed within buffer bounds.</strong>';
 };
 window.overflowBad = function() {
   var cells = overflowDefaults.map(function(v, i){
@@ -742,7 +742,7 @@ window.overflowBad = function() {
   cells[4] = {val:"'E'", color:"#f5a623", bg:"#2e2a1a"};
   cells[5] = {val:"0xDEAD", color:"#f38ba8", bg:"#2e1a1a"};
   overflowRender(cells);
-  document.getElementById("overflow-status").innerHTML = '<span style="color:#f38ba8;">BUFFER OVERFLOW — wrote past buf[3] into saved_ebp and return address! When this function returns, the CPU jumps to 0xDEAD — attacker-controlled code.</span>';
+  document.getElementById("overflow-status").innerHTML = '<strong style="color:#c03030;">BUFFER OVERFLOW</strong> — wrote past buf[3] into saved_ebp and return address! When this function returns, the CPU jumps to 0xDEAD — attacker-controlled code.';
 };
 overflowReset();
 
@@ -758,11 +758,11 @@ function gcRender() {
     var el = document.createElement("div");
     el.style.cssText = "width:36px;height:28px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:9px;transition:all 0.5s;border:1.5px solid;";
     if(obj.alive){
-      el.style.background = "#1a2e1a"; el.style.borderColor = "#a6e3a1"; el.style.color = "#a6e3a1";
+      el.style.background = "#1a2e1a"; el.style.borderColor = "#6fbf6f"; el.style.color = "#fff";
       el.textContent = obj.id;
       live++;
     } else {
-      el.style.background = "#2e1a1a"; el.style.borderColor = "#f38ba8"; el.style.color = "#f38ba8";
+      el.style.background = "#2e1a1a"; el.style.borderColor = "#e06060"; el.style.color = "#ff9999";
       el.textContent = "×";
       dead++;
     }
@@ -783,7 +783,7 @@ window.gcAllocate = function() {
 window.gcCollect = function() {
   if(gcObjects.length === 0) return;
   document.getElementById("gc-pause").textContent = "scanning...";
-  document.getElementById("gc-pause").style.color = "#f5a623";
+  document.getElementById("gc-pause").style.color = "#9a6600";
   // Simulate pause
   var pauseMs = Math.round(10 + gcObjects.length * 1.5);
   setTimeout(function(){
@@ -794,7 +794,7 @@ window.gcCollect = function() {
     gcObjects.forEach(function(o){ if(Math.random() > 0.7) o.alive = false; });
     gcRender();
     document.getElementById("gc-pause").textContent = pauseMs + "ms";
-    document.getElementById("gc-pause").style.color = pauseMs > 30 ? "#f38ba8" : "#f5a623";
+    document.getElementById("gc-pause").style.color = pauseMs > 30 ? "#c03030" : "#9a6600";
     var overhead = Math.round((pauseMs / (pauseMs + 100)) * 100);
     document.getElementById("gc-overhead").textContent = overhead + "%";
   }, pauseMs * 10);
@@ -803,7 +803,7 @@ window.gcReset = function() {
   gcObjects = []; gcIdCounter = 0;
   gcRender();
   document.getElementById("gc-pause").textContent = "0ms";
-  document.getElementById("gc-pause").style.color = "#f5a623";
+  document.getElementById("gc-pause").style.color = "#9a6600";
   document.getElementById("gc-overhead").textContent = "0%";
 };
 
