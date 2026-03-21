@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Clarity</title>
+  <style>
+    /* Catppuccin Mocha palette */
+    :root {
+      --base:    #1e1e2e;
+      --mantle:  #181825;
+      --crust:   #11111b;
+      --surface0: #313244;
+      --surface1: #45475a;
+      --surface2: #585b70;
+      --overlay0: #6c7086;
+      --overlay1: #7f849c;
+      --text:    #cdd6f4;
+      --subtext0: #a6adc8;
+      --subtext1: #bac2de;
+      --blue:    #89b4fa;
+      --lavender:#b4befe;
+      --sapphire:#74c7ec;
+      --sky:     #89dceb;
+      --teal:    #94e2d5;
+      --green:   #a6e3a1;
+      --yellow:  #f9e2af;
+      --peach:   #fab387;
+      --mauve:   #cba6f7;
+      --red:     #f38ba8;
+      --pink:    #f5c2e7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--base);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--mantle);
+      border-bottom: 1px solid var(--surface0);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--lavender);
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--subtext1);
+    }
+    .nav-links a { color: var(--subtext1); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 6rem 2rem 5rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--surface0);
+      border: 1px solid var(--surface1);
+      color: var(--mauve);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+    .hero h1 span { color: var(--mauve); }
+    .hero .tagline {
+      font-size: 1.25rem;
+      color: var(--subtext0);
+      margin-bottom: 0.8rem;
+    }
+    .hero .subline {
+      font-size: 1rem;
+      color: var(--overlay1);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-cta {
+      display: inline-block;
+      background: var(--mauve);
+      color: var(--crust);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      transition: opacity 0.15s;
+    }
+    .hero-cta:hover { opacity: 0.88; text-decoration: none; }
+    .hero-note {
+      margin-top: 0.8rem;
+      font-size: 0.82rem;
+      color: var(--overlay0);
+    }
+
+    /* ── SCREENSHOT PLACEHOLDER ── */
+    .screenshot-section {
+      max-width: 900px;
+      margin: 0 auto 5rem;
+      padding: 0 2rem;
+    }
+    .screenshot-box {
+      background: var(--mantle);
+      border: 1px solid var(--surface0);
+      border-radius: 12px;
+      height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--overlay0);
+      font-size: 0.9rem;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-title h2 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .section-title p {
+      color: var(--subtext0);
+      font-size: 1rem;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      max-width: 1000px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .feature-card {
+      background: var(--mantle);
+      border: 1px solid var(--surface0);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: border-color 0.15s;
+    }
+    .feature-card:hover { border-color: var(--surface2); }
+    .feature-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .feature-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .feature-card p {
+      font-size: 0.875rem;
+      color: var(--subtext0);
+      line-height: 1.55;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how {
+      background: var(--mantle);
+      border-top: 1px solid var(--surface0);
+      border-bottom: 1px solid var(--surface0);
+      padding: 5rem 2rem;
+      margin-bottom: 6rem;
+    }
+    .steps {
+      max-width: 780px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .steps { grid-template-columns: 1fr; }
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: var(--surface0);
+      color: var(--mauve);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    .step h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .step p {
+      font-size: 0.875rem;
+      color: var(--subtext0);
+    }
+
+    /* ── LANGUAGES ── */
+    .langs {
+      max-width: 700px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+      text-align: center;
+    }
+    .lang-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .lang-chip {
+      background: var(--surface0);
+      border: 1px solid var(--surface1);
+      border-radius: 8px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .lang-chip.ul {
+      border-color: var(--mauve);
+      color: var(--mauve);
+    }
+
+    /* ── DOWNLOAD ── */
+    .download {
+      max-width: 600px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+      text-align: center;
+    }
+    .download-box {
+      background: var(--mantle);
+      border: 1px solid var(--surface0);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+    }
+    .download-box h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .download-box p {
+      color: var(--subtext0);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .platform-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .platform-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface0);
+      border: 1px solid var(--surface1);
+      border-radius: 8px;
+      padding: 0.65rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--subtext0);
+      cursor: default;
+    }
+    .platform-btn.available {
+      background: var(--mauve);
+      border-color: var(--mauve);
+      color: var(--crust);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .platform-btn.soon { opacity: 0.5; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--crust);
+      border-top: 1px solid var(--surface0);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--overlay0);
+    }
+    footer a { color: var(--overlay1); }
+    footer a:hover { color: var(--subtext0); text-decoration: none; }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-brand"><a href="../index.html" style="color: var(--lavender); text-decoration: none;">UniLogic</a> <span style="color: var(--overlay0); font-weight: 400; margin: 0 0.4rem;">/</span> Code Clarity</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How It Works</a>
+      <a href="#download">Download</a>
+      <a href="../index.html">UniLogic Site</a>
+      <a href="https://github.com/albazzaztariq">GitHub</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Part of the UniLogic Ecosystem</div>
+    <h1>Code <span>Clarity</span></h1>
+    <p class="tagline">Real Learning Through Experience</p>
+    <p class="subline">
+      A code editor built for people who are new to programming. Build with AI. Clarity teaches you what was built, why it works, and how to do it yourself.
+    </p>
+    <a class="hero-cta" href="#download">Download for Windows</a>
+    <p class="hero-note">macOS ARM64 coming soon &nbsp;&#x2022;&nbsp; MIT License</p>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <div class="screenshot-section">
+    <div class="screenshot-box">
+      [Screenshot: Welcome screen with hello world]
+    </div>
+  </div>
+  <div class="screenshot-section" style="margin-bottom: 2rem;">
+    <div class="screenshot-box">
+      [Screenshot: AI Chat in action]
+    </div>
+  </div>
+  <div class="screenshot-section">
+    <div class="screenshot-box">
+      [Screenshot: Clarity changelog explaining code changes]
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="section-title">
+      <h2>Everything you need to start and keep learning</h2>
+      <p>Every feature is designed around one goal: make programming understandable.</p>
+    </div>
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F4AC;</div>
+        <h3>AI Chat</h3>
+        <p>Describe what you want in plain English. The model writes the code and inserts it into the editor. Bring your own API key — Anthropic, OpenAI, Google, or local models via Ollama.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x2728;</div>
+        <h3>Clarity Change Log</h3>
+        <p>Every AI-generated change produces a plain-English entry: what changed and why. Click any entry to highlight the relevant code and open a full explanation. No other tool does this.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F4A1;</div>
+        <h3>Highlight and Explain</h3>
+        <p>Select any code in the editor. Right-click and choose Explain This. Get a plain-English paragraph explaining exactly what that code does, step by step.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F527;</div>
+        <h3>Statement Expander</h3>
+        <p>Nested and chained expressions expanded into clearly readable, one-operation-per-line code. Understand complex expressions without having to mentally parse them.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F4CA;</div>
+        <h3>Runtime Toolpane</h3>
+        <p>A live panel showing the runtime model for your active language: memory management, threading, and compilation. For UniLogic, every property becomes a tunable dial.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F4DA;</div>
+        <h3>Language Guide and Tutorials</h3>
+        <p>Progressive examples from Hello World to error handling. Some examples intentionally contain bugs for you to find. Active learning, not passive reading.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x25B6;&#xFE0F;</div>
+        <h3>Build Panel</h3>
+        <p>Run or build with one click. No terminal required. Results appear in the results pane. UniLogic projects support WASM and VM targets alongside native binaries.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F50D;</div>
+        <h3>Codebase Explainer</h3>
+        <p>Two modes: Structure shows what files exist and how they relate. Execution traces what happens when the program runs — entry point, call flow, data paths.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="section-title">
+      <h2>How It Works</h2>
+      <p>Three steps from zero to understanding.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Open</h3>
+        <p>Start a new file. Pick your language. The editor is ready — no configuration, no terminal setup.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Build with AI</h3>
+        <p>Describe what you want in the chat panel. The AI writes the code. You see exactly what was added and where.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Learn from Every Change</h3>
+        <p>Click any Clarity entry to read what changed, why it works, and what concepts were used. Optionally try writing it yourself.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES -->
+  <section class="langs">
+    <div class="section-title">
+      <h2>Supported Languages</h2>
+      <p>Learn any of these, then try UniLogic when you're ready to go further.</p>
+    </div>
+    <div class="lang-chips">
+      <div class="lang-chip">C</div>
+      <div class="lang-chip">C++</div>
+      <div class="lang-chip">Python</div>
+      <div class="lang-chip">Rust</div>
+      <div class="lang-chip ul">UniLogic</div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section class="download" id="download">
+    <div class="download-box">
+      <h2>Download Code Clarity</h2>
+      <p>Native builds for Windows and macOS. No Electron. No browser. A proper application.</p>
+      <div class="platform-row">
+        <div class="platform-btn available">Windows x64</div>
+        <div class="platform-btn soon">macOS ARM64 &mdash; coming soon</div>
+      </div>
+      <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--overlay0);">Release builds available in Phase 2. Watch the repo for updates.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-links">
+      <a href="../index.html">UniLogic Main Site</a>
+      <a href="https://github.com/albazzaztariq">GitHub</a>
+      <a href="https://github.com/albazzaztariq">UniLogic Project</a>
+      <a href="../README.md">README</a>
+    </div>
+    <div>Code Clarity &nbsp;&#x2014;&nbsp; Part of the UniLogic Ecosystem &nbsp;&#x2014;&nbsp; MIT License</div>
+  </footer>
+
+</body>
+</html>
