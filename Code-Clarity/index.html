@@ -43,7 +43,7 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    /* ── NAV ── */
+    /* NAV */
     nav {
       background: var(--mantle);
       border-bottom: 1px solid var(--surface0);
@@ -71,10 +71,10 @@
     .nav-links a { color: var(--subtext1); }
     .nav-links a:hover { color: var(--text); text-decoration: none; }
 
-    /* ── HERO ── */
+    /* HERO */
     .hero {
       text-align: center;
-      padding: 6rem 2rem 5rem;
+      padding: 7rem 2rem 6rem;
       max-width: 760px;
       margin: 0 auto;
     }
@@ -92,158 +92,194 @@
       margin-bottom: 1.5rem;
     }
     .hero h1 {
-      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-size: clamp(2.8rem, 7vw, 4.2rem);
       font-weight: 700;
-      line-height: 1.15;
+      line-height: 1.1;
       color: var(--text);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
     }
     .hero h1 span { color: var(--mauve); }
     .hero .tagline {
-      font-size: 1.25rem;
-      color: var(--subtext0);
-      margin-bottom: 0.8rem;
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--lavender);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.01em;
     }
-    .hero .subline {
-      font-size: 1rem;
-      color: var(--overlay1);
-      max-width: 560px;
+    .hero .body-copy {
+      font-size: 1.05rem;
+      color: var(--subtext1);
+      max-width: 600px;
       margin: 0 auto 2.5rem;
+      line-height: 1.7;
     }
-    .hero-cta {
+    .hero-cta-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-primary {
       display: inline-block;
       background: var(--mauve);
       color: var(--crust);
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.95rem;
-      padding: 0.75rem 2rem;
+      padding: 0.8rem 2rem;
       border-radius: 8px;
       transition: opacity 0.15s;
     }
-    .hero-cta:hover { opacity: 0.88; text-decoration: none; }
-    .hero-note {
-      margin-top: 0.8rem;
-      font-size: 0.82rem;
-      color: var(--overlay0);
+    .cta-primary:hover { opacity: 0.88; text-decoration: none; }
+    .cta-secondary {
+      display: inline-block;
+      background: transparent;
+      color: var(--subtext1);
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      border: 1px solid var(--surface1);
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .cta-secondary:hover { border-color: var(--surface2); color: var(--text); text-decoration: none; }
+
+    /* SECTION COMMON */
+    section { padding: 5rem 2rem; }
+    .section-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mauve);
+      margin-bottom: 0.75rem;
+    }
+    .section-heading {
+      font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+      line-height: 1.25;
+    }
+    .section-body {
+      font-size: 1.05rem;
+      color: var(--subtext1);
+      max-width: 660px;
+      line-height: 1.7;
     }
 
-    /* ── SCREENSHOT PLACEHOLDER ── */
-    .screenshot-section {
-      max-width: 900px;
-      margin: 0 auto 5rem;
-      padding: 0 2rem;
+    /* THE PROBLEM */
+    .problem {
+      background: var(--mantle);
+      border-top: 1px solid var(--surface0);
+      border-bottom: 1px solid var(--surface0);
     }
-    .screenshot-box {
+
+    /* HOW IT WORKS */
+    .how-blocks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    @media (max-width: 640px) {
+      .how-blocks { grid-template-columns: 1fr; }
+    }
+    .how-block {
       background: var(--mantle);
       border: 1px solid var(--surface0);
       border-radius: 12px;
-      height: 420px;
+      padding: 2rem;
+      transition: border-color 0.15s;
+    }
+    .how-block:hover { border-color: var(--surface2); }
+    .how-block-accent {
+      display: inline-block;
+      width: 3px;
+      height: 1.6rem;
+      background: var(--mauve);
+      border-radius: 2px;
+      margin-bottom: 1rem;
+      vertical-align: middle;
+    }
+    .how-block h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+    .how-block p {
+      font-size: 0.9rem;
+      color: var(--subtext0);
+      line-height: 1.65;
+    }
+
+    /* SCREENSHOT PLACEHOLDER */
+    .screenshot-box {
+      background: var(--mantle);
+      border: 1px dashed var(--surface1);
+      border-radius: 10px;
+      height: 280px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--overlay0);
-      font-size: 0.9rem;
-    }
-
-    /* ── SECTION TITLES ── */
-    .section-title {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-    .section-title h2 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.4rem;
-    }
-    .section-title p {
-      color: var(--subtext0);
-      font-size: 1rem;
-    }
-
-    /* ── FEATURES ── */
-    .features {
-      max-width: 1000px;
-      margin: 0 auto 6rem;
-      padding: 0 2rem;
-    }
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.25rem;
-    }
-    .feature-card {
-      background: var(--mantle);
-      border: 1px solid var(--surface0);
-      border-radius: 10px;
-      padding: 1.5rem;
-      transition: border-color 0.15s;
-    }
-    .feature-card:hover { border-color: var(--surface2); }
-    .feature-icon {
-      font-size: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-    .feature-card h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.4rem;
-    }
-    .feature-card p {
       font-size: 0.875rem;
-      color: var(--subtext0);
-      line-height: 1.55;
+      margin-top: 1.5rem;
     }
 
-    /* ── HOW IT WORKS ── */
-    .how {
+    /* FEATURES */
+    .features {
       background: var(--mantle);
       border-top: 1px solid var(--surface0);
       border-bottom: 1px solid var(--surface0);
-      padding: 5rem 2rem;
-      margin-bottom: 6rem;
     }
-    .steps {
-      max-width: 780px;
-      margin: 0 auto;
+    .feature-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      text-align: center;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem;
     }
-    @media (max-width: 600px) {
-      .steps { grid-template-columns: 1fr; }
+    .feature-card {
+      background: var(--base);
+      border: 1px solid var(--surface0);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      transition: border-color 0.15s;
     }
-    .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background: var(--surface0);
-      color: var(--mauve);
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
-    .step h3 {
-      font-size: 1rem;
+    .feature-card:hover { border-color: var(--surface2); }
+    .feature-card h3 {
+      font-size: 0.95rem;
       font-weight: 600;
       color: var(--text);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.25rem;
     }
-    .step p {
-      font-size: 0.875rem;
+    .feature-card p {
+      font-size: 0.82rem;
       color: var(--subtext0);
+      line-height: 1.55;
     }
+    .feature-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--mauve);
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .feature-card-inner {
+      display: flex;
+      align-items: flex-start;
+    }
+    .feature-card-text { flex: 1; }
 
-    /* ── LANGUAGES ── */
+    /* LANGUAGES */
     .langs {
-      max-width: 700px;
-      margin: 0 auto 6rem;
-      padding: 0 2rem;
       text-align: center;
     }
     .lang-chips {
@@ -251,34 +287,37 @@
       flex-wrap: wrap;
       gap: 0.75rem;
       justify-content: center;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
     }
     .lang-chip {
       background: var(--surface0);
       border: 1px solid var(--surface1);
       border-radius: 8px;
-      padding: 0.5rem 1.25rem;
-      font-size: 0.9rem;
-      font-weight: 500;
+      padding: 0.5rem 1.4rem;
+      font-size: 0.95rem;
+      font-weight: 600;
       color: var(--text);
+      letter-spacing: 0.02em;
     }
     .lang-chip.ul {
       border-color: var(--mauve);
       color: var(--mauve);
+      background: rgba(203, 166, 247, 0.08);
     }
 
-    /* ── DOWNLOAD ── */
+    /* DOWNLOAD */
     .download {
-      max-width: 600px;
-      margin: 0 auto 6rem;
-      padding: 0 2rem;
-      text-align: center;
+      background: var(--mantle);
+      border-top: 1px solid var(--surface0);
     }
     .download-box {
-      background: var(--mantle);
+      background: var(--base);
       border: 1px solid var(--surface0);
-      border-radius: 12px;
-      padding: 2.5rem 2rem;
+      border-radius: 14px;
+      padding: 3rem 2rem;
+      text-align: center;
+      max-width: 560px;
+      margin: 2rem auto 0;
     }
     .download-box h2 {
       font-size: 1.5rem;
@@ -289,22 +328,22 @@
     .download-box p {
       color: var(--subtext0);
       font-size: 0.9rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
     }
     .platform-row {
       display: flex;
-      gap: 1rem;
+      gap: 0.9rem;
       justify-content: center;
       flex-wrap: wrap;
     }
     .platform-btn {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       background: var(--surface0);
       border: 1px solid var(--surface1);
       border-radius: 8px;
-      padding: 0.65rem 1.25rem;
+      padding: 0.7rem 1.4rem;
       font-size: 0.875rem;
       font-weight: 500;
       color: var(--subtext0);
@@ -314,16 +353,23 @@
       background: var(--mauve);
       border-color: var(--mauve);
       color: var(--crust);
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
+      transition: opacity 0.15s;
     }
-    .platform-btn.soon { opacity: 0.5; }
+    .platform-btn.available:hover { opacity: 0.88; text-decoration: none; }
+    .platform-btn.soon { opacity: 0.45; }
+    .download-note {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--overlay0);
+    }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer {
       background: var(--crust);
       border-top: 1px solid var(--surface0);
-      padding: 2rem;
+      padding: 2.5rem 2rem;
       text-align: center;
       font-size: 0.82rem;
       color: var(--overlay0);
@@ -342,166 +388,218 @@
 <body>
 
   <nav>
-    <div class="nav-brand"><a href="../index.html" style="color: var(--lavender); text-decoration: none;">UniLogic</a> <span style="color: var(--overlay0); font-weight: 400; margin: 0 0.4rem;">/</span> Code Clarity</div>
+    <div class="nav-brand">
+      <a href="../index.html" style="color: var(--lavender); text-decoration: none;">UniLogic</a>
+      <span style="color: var(--overlay0); font-weight: 400; margin: 0 0.4rem;">/</span>
+      Code Clarity
+    </div>
     <div class="nav-links">
-      <a href="#features">Features</a>
+      <a href="#problem">The Problem</a>
       <a href="#how">How It Works</a>
+      <a href="#features">Features</a>
       <a href="#download">Download</a>
-      <a href="../index.html">UniLogic Site</a>
       <a href="https://github.com/albazzaztariq">GitHub</a>
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- 1. HERO -->
   <section class="hero">
     <div class="hero-badge">Part of the UniLogic Ecosystem</div>
     <h1>Code <span>Clarity</span></h1>
-    <p class="tagline">Real Learning Through Experience</p>
-    <p class="subline">
-      A code editor built for people who are new to programming. Build with AI. Clarity teaches you what was built, why it works, and how to do it yourself.
+    <p class="tagline">From Vibe Coder to Real Developer</p>
+    <p class="body-copy">
+      AI tools like Claude and Cursor generate code. But when they get stuck, you're stuck too.
+      Code Clarity teaches you what's actually happening &mdash; so you can fix it, extend it, and own it.
+      It takes you from "it works but I don't know why" to "I built this and I understand every line."
     </p>
-    <a class="hero-cta" href="#download">Download for Windows</a>
-    <p class="hero-note">macOS ARM64 coming soon &nbsp;&#x2022;&nbsp; MIT License</p>
+    <div class="hero-cta-row">
+      <a class="cta-primary" href="#download">Download for Windows</a>
+      <a class="cta-secondary" href="https://github.com/albazzaztariq">View Source on GitHub</a>
+    </div>
   </section>
 
-  <!-- SCREENSHOTS -->
-  <div class="screenshot-section">
-    <div class="screenshot-box">
-      [Screenshot: Welcome screen with hello world]
+  <!-- 2. THE PROBLEM -->
+  <section class="problem" id="problem">
+    <div class="section-inner">
+      <div class="section-label">The Problem</div>
+      <p class="section-heading">AI generates code. Nobody teaches you what it means.</p>
+      <p class="section-body">
+        Every AI coding tool assumes you already know how to code.
+        Every learning platform assumes you'll stop building to go study.
+        Neither works for the next generation of developers who start with AI-generated code.
+      </p>
     </div>
-  </div>
-  <div class="screenshot-section" style="margin-bottom: 2rem;">
-    <div class="screenshot-box">
-      [Screenshot: AI Chat in action]
-    </div>
-  </div>
-  <div class="screenshot-section">
-    <div class="screenshot-box">
-      [Screenshot: Clarity changelog explaining code changes]
-    </div>
-  </div>
+  </section>
 
-  <!-- FEATURES -->
+  <!-- 3. HOW IT WORKS -->
+  <section id="how">
+    <div class="section-inner">
+      <div class="section-label">How It Works</div>
+      <p class="section-heading">You build. Clarity explains every step.</p>
+      <div class="how-blocks">
+
+        <div class="how-block">
+          <div class="how-block-accent"></div>
+          <h3>Build with AI, Learn from Every Change</h3>
+          <p>Ask the AI to build something. It writes the code. But instead of a black box, Clarity shows you exactly what changed and why &mdash; in plain English you actually understand.</p>
+          <div class="screenshot-box">[Screenshot placeholder: Clarity Change Log]</div>
+        </div>
+
+        <div class="how-block">
+          <div class="how-block-accent"></div>
+          <h3>Walk Me Through This Code</h3>
+          <p>One button. Clarity walks you through the entire file &mdash; what each function does, how they connect, where data flows. Adjusted to your level: complete beginner gets analogies, experienced developer gets architecture and patterns.</p>
+          <div class="screenshot-box">[Screenshot placeholder: Codebase Walkthrough]</div>
+        </div>
+
+        <div class="how-block">
+          <div class="how-block-accent"></div>
+          <h3>Explain Every Line</h3>
+          <p>Click Explain and every line gets an inline comment describing what it does. Not documentation-style &mdash; human-style. "This creates a list of prices" not "Initialize float array with capacity n."</p>
+          <div class="screenshot-box">[Screenshot placeholder: Inline Line Explainer]</div>
+        </div>
+
+        <div class="how-block">
+          <div class="how-block-accent"></div>
+          <h3>Understand the Machine</h3>
+          <p>The Runtime panel shows you what happens when your code runs. Python uses garbage collection. C uses manual memory. Rust uses ownership. Switch between all of them and see the difference. You stop guessing and start understanding.</p>
+          <div class="screenshot-box">[Screenshot placeholder: Runtime Panel]</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. FEATURES -->
   <section class="features" id="features">
-    <div class="section-title">
-      <h2>Everything you need to start and keep learning</h2>
-      <p>Every feature is designed around one goal: make programming understandable.</p>
-    </div>
-    <div class="feature-grid">
+    <div class="section-inner">
+      <div class="section-label">Features</div>
+      <p class="section-heading">Everything you need to go from zero to understanding.</p>
+      <div class="feature-grid">
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F4AC;</div>
-        <h3>AI Chat</h3>
-        <p>Describe what you want in plain English. The model writes the code and inserts it into the editor. Bring your own API key — Anthropic, OpenAI, Google, or local models via Ollama.</p>
-      </div>
+        <div class="feature-card">
+          <div class="feature-card-inner">
+            <div class="feature-dot"></div>
+            <div class="feature-card-text">
+              <h3>Clarity Change Log</h3>
+              <p>Every AI edit explained in plain English, instantly.</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x2728;</div>
-        <h3>Clarity Change Log</h3>
-        <p>Every AI-generated change produces a plain-English entry: what changed and why. Click any entry to highlight the relevant code and open a full explanation. No other tool does this.</p>
-      </div>
+        <div class="feature-card">
+          <div class="feature-card-inner">
+            <div class="feature-dot"></div>
+            <div class="feature-card-text">
+              <h3>AI Chat</h3>
+              <p>Bring your own model &mdash; Claude, GPT, Ollama, whatever you use.</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F4A1;</div>
-        <h3>Highlight and Explain</h3>
-        <p>Select any code in the editor. Right-click and choose Explain This. Get a plain-English paragraph explaining exactly what that code does, step by step.</p>
-      </div>
+        <div class="feature-card">
+          <div class="feature-card-inner">
+            <div class="feature-dot"></div>
+            <div class="feature-card-text">
+              <h3>Language Guide</h3>
+              <p>What Python, C, and Rust give you &mdash; and what they don't.</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F527;</div>
-        <h3>Statement Expander</h3>
-        <p>Nested and chained expressions expanded into clearly readable, one-operation-per-line code. Understand complex expressions without having to mentally parse them.</p>
-      </div>
+        <div class="feature-card">
+          <div class="feature-card-inner">
+            <div class="feature-dot"></div>
+            <div class="feature-card-text">
+              <h3>Teach Me the Basics</h3>
+              <p>A 12-page crash course in programming concepts, built in.</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F4CA;</div>
-        <h3>Runtime Toolpane</h3>
-        <p>A live panel showing the runtime model for your active language: memory management, threading, and compilation. For UniLogic, every property becomes a tunable dial.</p>
-      </div>
+        <div class="feature-card">
+          <div class="feature-card-inner">
+            <div class="feature-dot"></div>
+            <div class="feature-card-text">
+              <h3>Build from Scratch</h3>
+              <p>Guided project from raw idea to working, runnable code.</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F4DA;</div>
-        <h3>Language Guide and Tutorials</h3>
-        <p>Progressive examples from Hello World to error handling. Some examples intentionally contain bugs for you to find. Active learning, not passive reading.</p>
-      </div>
+        <div class="feature-card">
+          <div class="feature-card-inner">
+            <div class="feature-dot"></div>
+            <div class="feature-card-text">
+              <h3>Statement Expander</h3>
+              <p>Unpack nested, chained code into readable step-by-step form.</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x25B6;&#xFE0F;</div>
-        <h3>Build Panel</h3>
-        <p>Run or build with one click. No terminal required. Results appear in the results pane. UniLogic projects support WASM and VM targets alongside native binaries.</p>
-      </div>
+        <div class="feature-card">
+          <div class="feature-card-inner">
+            <div class="feature-dot"></div>
+            <div class="feature-card-text">
+              <h3>Memory Check</h3>
+              <p>Catch C memory bugs before they crash your program.</p>
+            </div>
+          </div>
+        </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F50D;</div>
-        <h3>Codebase Explainer</h3>
-        <p>Two modes: Structure shows what files exist and how they relate. Execution traces what happens when the program runs — entry point, call flow, data paths.</p>
-      </div>
+        <div class="feature-card">
+          <div class="feature-card-inner">
+            <div class="feature-dot"></div>
+            <div class="feature-card-text">
+              <h3>4 Assist Levels</h3>
+              <p>Beginner to no-assist. You choose how much help you get.</p>
+            </div>
+          </div>
+        </div>
 
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="how" id="how">
-    <div class="section-title">
-      <h2>How It Works</h2>
-      <p>Three steps from zero to understanding.</p>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Open</h3>
-        <p>Start a new file. Pick your language. The editor is ready — no configuration, no terminal setup.</p>
       </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>Build with AI</h3>
-        <p>Describe what you want in the chat panel. The AI writes the code. You see exactly what was added and where.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>Learn from Every Change</h3>
-        <p>Click any Clarity entry to read what changed, why it works, and what concepts were used. Optionally try writing it yourself.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- LANGUAGES -->
-  <section class="langs">
-    <div class="section-title">
-      <h2>Supported Languages</h2>
-      <p>Learn any of these, then try UniLogic when you're ready to go further.</p>
-    </div>
-    <div class="lang-chips">
-      <div class="lang-chip">C</div>
-      <div class="lang-chip">C++</div>
-      <div class="lang-chip">Python</div>
-      <div class="lang-chip">Rust</div>
-      <div class="lang-chip ul">UniLogic</div>
     </div>
   </section>
 
-  <!-- DOWNLOAD -->
+  <!-- 5. SUPPORTED LANGUAGES -->
+  <section class="langs" id="languages">
+    <div class="section-inner">
+      <div class="section-label">Supported Languages</div>
+      <p class="section-heading">Learn any of these. Then try UniLogic when you're ready to go further.</p>
+      <div class="lang-chips">
+        <div class="lang-chip">C</div>
+        <div class="lang-chip">C++</div>
+        <div class="lang-chip">Python</div>
+        <div class="lang-chip">Rust</div>
+        <div class="lang-chip ul">UniLogic</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. DOWNLOAD -->
   <section class="download" id="download">
-    <div class="download-box">
-      <h2>Download Code Clarity</h2>
-      <p>Native builds for Windows and macOS. No Electron. No browser. A proper application.</p>
-      <div class="platform-row">
-        <div class="platform-btn available">Windows x64</div>
-        <div class="platform-btn soon">macOS ARM64 &mdash; coming soon</div>
+    <div class="section-inner">
+      <div class="section-label">Download</div>
+      <p class="section-heading">Native. No Electron. No browser. A proper application.</p>
+      <div class="download-box">
+        <h2>Download Code Clarity</h2>
+        <p>Windows x64, built native. macOS coming soon.</p>
+        <div class="platform-row">
+          <a class="platform-btn available" href="https://github.com/albazzaztariq/releases">Windows x64</a>
+          <div class="platform-btn soon">macOS &mdash; coming soon</div>
+        </div>
+        <p class="download-note">Release builds available in Phase 2. Watch the repo for updates.</p>
       </div>
-      <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--overlay0);">Release builds available in Phase 2. Watch the repo for updates.</p>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- 7. FOOTER -->
   <footer>
     <div class="footer-links">
+      <a href="https://github.com/albazzaztariq">GitHub Repo</a>
       <a href="../index.html">UniLogic Main Site</a>
-      <a href="https://github.com/albazzaztariq">GitHub</a>
-      <a href="https://github.com/albazzaztariq">UniLogic Project</a>
-      <a href="../README.md">README</a>
     </div>
-    <div>Code Clarity &nbsp;&#x2014;&nbsp; Part of the UniLogic Ecosystem &nbsp;&#x2014;&nbsp; MIT License</div>
+    <div>Code Clarity &mdash; Part of the UniLogic Ecosystem &mdash; MIT License</div>
   </footer>
 
 </body>
