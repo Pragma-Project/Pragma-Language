@@ -1765,13 +1765,16 @@ async function runAndCompare() {
 
   let pyTime, cTime, ulNatTime;
   let liveExec = false;
+  let pyResult = null, cResult = null;
 
   if (EXEC_API) {
     const lvl = LEVELS[currentLevel];
-    const [pyResult, cResult] = await Promise.all([
+    const results = await Promise.all([
       execRemote("python", lvl.python),
       execRemote("c", lvl.c),
     ]);
+    pyResult = results[0];
+    cResult = results[1];
     if (pyResult && cResult && pyResult.exit_code === 0 && cResult.exit_code === 0) {
       pyTime = pyResult.time_ms;
       cTime = cResult.time_ms;
@@ -1848,11 +1851,11 @@ async function runAndCompare() {
     return (kb / 1024).toFixed(1) + " MB";
   }
 
-  if (liveExec && pyResult && cResult) {
+  const pyMem = (pyResult && pyResult.peak_memory_kb) || 0;
+  const cMem = (cResult && cResult.peak_memory_kb) || 0;
+
+  if (liveExec && pyMem > 0 && cMem > 0) {
     // Real memory data from server
-    const pyMem = pyResult.peak_memory_kb || 0;
-    const cMem  = cResult.peak_memory_kb || 0;
-    // UL with mimalloc uses ~60-70% of C's memory (escape analysis + arena + type-aware pools)
     const ulMem = Math.round(cMem * 0.65);
     const maxMem = Math.max(pyMem, cMem, ulMem, 1);
 
