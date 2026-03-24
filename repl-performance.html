@@ -528,7 +528,7 @@ h1 {
     <button class="level-btn active" data-level="0">Level 1: Basics</button>
     <button class="level-btn" data-level="1">Level 2: Functions</button>
     <button class="level-btn" data-level="2">Level 3: Loops</button>
-    <button class="level-btn" data-level="3">Level 4: Complex</button>
+    <button class="level-btn" data-level="3">Level 4: Recursion</button>
   </div>
   <button class="run-btn" id="run-btn">Run &amp; Compare</button>
   <span style="margin-left:auto; display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
@@ -1399,7 +1399,7 @@ const LEVELS = [
     c: `#include <stdio.h>\n\nint main() {\n    int total = 0;\n    for (int i = 1; i <= 100; i++)\n        total += i;\n    printf("%d\\n", total);\n\n    int fact = 1;\n    for (int n = 10; n > 1; n--)\n        fact *= n;\n    printf("%d\\n", fact);\n    return 0;\n}`
   },
   {
-    name: "Level 4: Complex",
+    name: "Level 4: Recursion",
     ul: `function fib(int n) returns int\n  if n <= 1\n    return n\n  end if\n  return fib(n - 1) + fib(n - 2)\nend function\n\nfunction is_even(int n) returns bool\n  return n % 2 == 0\nend function\n\nint i = 0\nint sum = 0\nwhile i < 15\n  int f = fib(i)\n  if is_even(f)\n    sum += f\n  end if\n  print f\n  i++\nend while\nprint sum`,
     python: `def fib(n):\n    if n <= 1:\n        return n\n    return fib(n - 1) + fib(n - 2)\n\ndef is_even(n):\n    return n % 2 == 0\n\nsum_ = 0\nfor i in range(15):\n    f = fib(i)\n    if is_even(f):\n        sum_ += f\n    print(f)\nprint(sum_)`,
     c: `#include <stdio.h>\n\nint fib(int n) {\n    if (n <= 1) return n;\n    return fib(n - 1) + fib(n - 2);\n}\n\nint is_even(int n) {\n    return n % 2 == 0;\n}\n\nint main() {\n    int sum = 0;\n    for (int i = 0; i < 15; i++) {\n        int f = fib(i);\n        if (is_even(f))\n            sum += f;\n        printf("%d\\n", f);\n    }\n    printf("%d\\n", sum);\n    return 0;\n}`
